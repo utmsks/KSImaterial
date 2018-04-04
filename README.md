@@ -7,8 +7,8 @@
 
 ## 実習用資料
 ### PCハードウェア、Windowsインストール
-- PCハードウェア2018
-- Windowsインストール2018
+- [PCメンテナンス(2018)](https://sites.google.com/g.ecc.u-tokyo.ac.jp/ks2018-tsuchiya/pcメンテナンス2018)
+- [Windowsインストール(2018)](https://sites.google.com/g.ecc.u-tokyo.ac.jp/ks2018-tsuchiya/windowsインストール2018)
 
 ### 文書処理
 - Sumatra PDF のインストール
@@ -60,4 +60,3 @@
 - shogi-serverによる将棋対戦
 - Shell scriptで液晶ディスプレイを操作する
 - Wake On LAN
-
