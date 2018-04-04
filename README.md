@@ -10,7 +10,7 @@
 ## 実習用資料
 ### PCハードウェア、Windowsインストール
 - [PCメンテナンス(2018)](https://sites.google.com/g.ecc.u-tokyo.ac.jp/ks2018-tsuchiya/pcメンテナンス2018)
-- [Windowsインストール(2018)](https://sites.google.com/g.ecc.u-tokyo.ac.jp/ks2018-tsuchiya/windowsインストール2018)
+- [Windowsインストール(2018)](https://sites.google.com/a/utmsks.net/material/home/window-10-install-manual-2018)
 
 ### 文書処理
 - Sumatra PDF のインストール
