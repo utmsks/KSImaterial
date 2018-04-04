@@ -5,6 +5,9 @@
 - 受講者は各自の進度、興味、関心に従って主体的に実習を進めてください。
 - 実習中に補足・訂正が行われる場合があります。アナウンスに注意してください。
 
+## Can Do List
+[2018年度計算数学 I Can Do List](candolist.md)
+
 ## 実習用資料
 ### PCハードウェア、Windowsインストール
 - [PCメンテナンス(2018)](https://sites.google.com/g.ecc.u-tokyo.ac.jp/ks2018-tsuchiya/pcメンテナンス2018)
