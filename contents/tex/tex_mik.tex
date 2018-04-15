@@ -72,9 +72,8 @@ TUGboat~\emph{11}, No.~4,  1990.\\
 \item 八登崇之，「日本人の知らない\TeX---\TeX の過去・現在・未来」，
 \TeX ユーザの集い2010．\\
 \url{http://zrbabbler.sp.land.to/texconf10.html}
-\item 寺田侑祐，「近年の\TeX の動向」，
-\href{http://www.mathlibre.org/wiki/index.php?%E6%95%B0%E5%AD%A6%E3%82%BD%E3%83%95%E3%83%88%E3%82%A6%E3%82%A7%E3%82%A2%E3%81%A8%E3%83%95%E3%83%AA%E3%83%BC%E3%83%89%E3%82%AD%E3%83%A5%E3%83%A1%E3%83%B3%E3%83%88%2F18}%
-{数学ソフトウェアとフリードキュメントXVIII}．
+\item 寺田侑祐，「\href{https://www.slideshare.net/doraTeX/the-history-of-tex-and-its-recent-advances}{近年の\TeX の動向}」，
+\href{http://www.mathlibre.org/msfd/18-ja.html}{数学ソフトウェアとフリードキュメントXVIII}．
 \item Arno Trautmann, \textit{%
   An overview of \TeX, its children and their friends $\ldots$\,}\\
 \url{http://mirrors.ctan.org/info/tex-overview/tex-overview.pdf}
@@ -180,7 +179,7 @@ u\pTeX で「和文の部分」がUnicode化されたりしているが，これ
 \item \verb!\numexpr 4-(3*2)+\count0!のように内部整数・長さなどを
   式の形で表現できる．
 \item 使用可能なレジスタが各種類ごとに256個から32768個まで激増した．
-  
+
 これにより，たくさんパッケージ読み込んだときに発生しうる
 \begin{lstlisting}
 ! No room for a new \count .
@@ -263,7 +262,7 @@ Hàn Thế Thành氏による\TeX の拡張であり，海外で主に利用さ�
 \end{itemize}
 といったものである．micro-typographyについては，
 \begin{itemize}
-\item Hàn Thế Thành, \textit{Micro-typographic extensions 
+\item Hàn Thế Thành, \textit{Micro-typographic extensions
   to the \TeX\ typesetting system}, dissertation.
   \url{http://www.pragma-ade.com/pdftex/thesis.pdf}
 \item R.~Schlicht, \textit{The \PKG{microtype} package}.
@@ -367,13 +366,13 @@ DVIを拡張した\FNAME{xdv}形式で出力し，それを\FNAME{xdvipdfmx}に�
 OpenTypeレイアウトエンジンを採用しており，これによって
 OpenTypeフォント自身に含まれる合字・アクセント位置などの情報が
 利用できる．
-\end{itemize} 
+\end{itemize}
 \XeLaTeX（\XeTeX 上で\LaTeX を動かしたもの）上でこれらの機能を扱うために作られたのが，
 \texttt{fontspec}パッケージ(\S\ref{sec:fontspec})である．
 \end{itemize}
 日本語で読める\XeTeX に関する情報としては，本文書の最初に挙げたもの以外に
 \begin{itemize}
- \item 
+ \item
  八登崇之，「\XeLaTeX で日本語する件について」，\\
 \hfill\url{http://zrbabbler.sp.land.to/xelatex.html}
  \item 清水美樹，\href{http://supportdoc.net/support-latex/}%
@@ -555,7 +554,7 @@ $\pi \simeq \directlua{tex.print(math.pi())}$
 \end{lstlisting}
 でタイプセットすると，\FNAME{lualatex_test.pdf}が生成されるはずである．
 \begin{curve}
-\TeX~Liveではこれでよいが，MiK\TeX では実はうまくいかない．\\\ 
+\TeX~Liveではこれでよいが，MiK\TeX では実はうまくいかない．\\\
 \end{curve}
 
 \medskip
@@ -624,7 +623,7 @@ Times New RomanとIPA明朝．
 \verb+\texttt+,~\verb+\ttfamily+で指定される，標準のタイプライタ体．\\
 \verb+\verb+や\ENV{verbatim}環境でもこのフォントが用いられる．
 \end{description}
-何も指定しないと，それぞれ順に``Latin Modern Roman'', ``\textsf{Latin Modern Sans}'', 
+何も指定しないと，それぞれ順に``Latin Modern Roman'', ``\textsf{Latin Modern Sans}'',
 ``{\fontspec[Ligatures=TeX]{lmmono10-regular.otf}Latin Modern Mono}''が使われる．
 これらは\TeX 標準のComputer Modernを
 ベースにしたOpenTypeフォントである．
