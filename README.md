@@ -5,9 +5,12 @@
 - 実習中に補足・訂正が行われる場合があります。アナウンスに注意してください。
 
 ## Can Do List
-[2018年度計算数学 I Can Do List](candolist.md)
+* [2018年度計算数学 I Can Do List](candolist.md)
 
 ## 実習用資料
+### 実習のためのTips
+- [Windows Updateを実行する](windowsupdate.md)
+
 ### PCハードウェア、Windowsインストール
 - [PCメンテナンス(2018)](https://sites.google.com/g.ecc.u-tokyo.ac.jp/ks2018-tsuchiya/pcメンテナンス2018)
 - [Windowsインストール(2018)](https://sites.google.com/a/utmsks.net/material/home/window-10-install-manual-2018)
