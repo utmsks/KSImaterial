@@ -1,0 +1,1827 @@
+%#!luajitlatex
+\IfFileExists{luatex85.sty}{\RequirePackage{luatex85}}{}
+\documentclass{ltjsarticle}
+\usepackage{mystyle,showexpl}
+\lstset{pos=l, width=.4\textwidth,
+  explpreset={numbers=left,numberstyle=\tiny,literate={\\\\}{}0 }}
+\hypersetup{pdftitle={TeX 実習}}
+\title{\TeX 実習}
+
+%%% prettyref
+\usepackage{prettyref}
+\makeatletter
+  \newrefformat{ex}{課題\nobreak\ref{#1}}
+  \newrefformat{sec}{\S\ref{#1}}
+  \newrefformat{ssec}{\S\ref{#1}}
+  \newrefformat{fig}{図\nobreak\ref{#1}}
+\makeatother
+
+%%% \paragraph{} で「■課題 xx」という見出しをつける
+%%% このような使い方は行儀が悪いのだが……
+\makeatletter
+\newcount\assignment@count
+\assignment@count=1
+\let\orig@paragraph=\paragraph
+\def\paragraph#1{%
+  \orig@paragraph{課題\the\assignment@count}\leavevmode%
+  \global\advance\assignment@count1
+  \protected\edef\@currentlabel{\the\assignment@count}\relax
+}
+\makeatother
+
+%%% 更新時刻
+\makeatletter
+\def\UPDTIME{%
+ \expandafter\@UPD@a\romannumeral-`0\pdfcreationdate!}
+\def\@UPD@a#1#2#3#4#5#6{% Year
+  #3#4#5#6/\@UPD@b}
+\def\@UPD@b#1#2#3#4#5#6#7#8{% Month, Day, Hour, Min
+  #1#2/#3#4~#5#6:#7#8:\@UPD@c
+}
+\def\@UPD@c#1#2#3!{% Sec
+  #1#2}
+\makeatother
+
+\begin{document}
+\baselineskip1.75\zw
+\maketitle
+
+本文章は，\TeX 実習の実際の中身である．
+行うためには実習用マシンに\TeX システムをインストールする必要がある．
+計算数学実習資料集の
+「\href{https://github.com/utmsks/KSImaterial/blob/master/contents/tex/tex_practice.md}{\TeX 実習(2018)}」
+のページ内にある「\TeX~Liveのインストール」を参照すること．
+
+
+\TeX~Liveをインストールした後は，各自の知識に沿って実習を進めてほしい，
+\begin{itemize}
+\item 今まで\TeX を全く触ったことがない人は\prettyref{sec:primer}へ．
+\item 「\TeX・\LaTeX の典型的な間違い」については\prettyref{sec:typeset}へ．
+\item \prettyref{sec:primer}や\prettyref{sec:typeset}を読んだら，
+ それについての演習が\prettyref{sec:kadai}にあるので取り組んで欲しい．
+\item 日本語で\TeX 環境を書く際の文字コードに関する注意や，u\pTeX の話題は\prettyref{sec:chrcode}へ．
+\item 各種パッケージを有効活用して相互参照，画像挿入，可換図式を組む方法については\prettyref{sec:ref}へ．
+\item 伝統的な\pLaTeX は知っているが，\pLaTeX が利用できない場合への対処法や，
+最近の\TeX の発展について知りたい人は実習資料集にある「\pTeX 系列以外による日本語文書作成」を
+参照すること．
+\item バリバリ使いこなしていて，以上の範囲などとっくに知っているという人はTAを呼ぶこと．
+\end{itemize}
+
+以下，\url{about:blank}のような部分は外部リンクで，緑字の部分
+\footnote{Webブラウザ上では動作しないが，SumatraPDF などの PDF リーダーであれば動作する．}
+は文書内リンクである．
+
+\bigskip
+
+\emph{\TeX ソース等の表記では，以下の字体(Inconsolata)を使っている}：
+\begin{center}
+\begin{tabular}{ccccc}
+\toprule
+数字の0&大文字のオー&数字の1&小文字のエル&大文字のアイ\\
+\cmidrule(lr){1-2}\cmidrule(lr){3-5}
+\Large\tt 0&\Large\tt O
+&\Large\tt 1&\Large\tt l&\Large\tt I\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vfill
+
+{\scriptsize\raggedleft
+Last update: {\tt\UPDTIME}.
+\par}
+
+\newpage
+\tableofcontents
+
+\newpage
+\section{\pLaTeX はじめの一歩}\label{sec:primer}
+日本人が普通「\TeX を用いて文書を書く」という場合，実際に使っているのは
+\emph{\pLaTeX}である．これらは，
+\begin{itemize}
+\item Knuth氏による，もともとの（プログラムとしての）\TeX
+\item Leslie Lamport氏による，\href{http://www.latex-project.org/}%
+  {\emph{\LaTeX}}という\TeX のマクロパッケージ
+\end{itemize}
+を，アスキー\footnote{当時．現在は株式会社KADOKAWA内の
+アスキー・メディアワークス ブランドカンパニー．}が
+それぞれ日本語化したものである．
+細かく言うと，プログラム側は\pTeX\ (publishing \TeX)と呼ばれ，
+\LaTeX を日本語対応させたマクロパッケージが\pLaTeX である% \footnote{%
+%   どちらも公式ページは\url{http://ascii.asciimw.jp/pb/ptex/}であるが，
+%   W32\TeX・\TeX~Live中の\pTeX は公式のものにかなり手が加えられている．
+% }
+．日本語では横書きの他に縦書きも行われるが，
+\pTeX・\pLaTeX は縦組みの組版もサポートしている．
+
+\subsection{最初の例}
+\label{ssec:first}
+まず適当なエディタを使い，次の内容を持った\FNAME{first.tex}を作る．
+このような\TeX が理解できるようなテキストファイルを\emph{\TeX ソース}という．
+\begin{lstlisting}[numbers=left,numberstyle=\tiny,xleftmargin=3\zw]
+\documentclass{jsarticle}
+\begin{document}
+ようこそ，\TeX の世界へ！
+\[
+  \int_0^\infty e^{-x^2}\,dx = \frac{\sqrt{\pi}}{2}.
+\]
+ちょっとチェックしちゃった。
+\end{document}
+\end{lstlisting}
+\begin{itemize}
+\item \emph{大文字と小文字，
+全角文字と半角文字は厳密に区別されるので，間違えないように注意．
+特に，半角バックスラッシュ~\SYM\textbackslash}~から始まる文字列は\TeX では
+何らかの命令として扱われる．
+\item Windowsで作業をしている関係で，
+実際に編集を行うテキストエディタでは，半角バックスラッシュは
+半角円記号~\SYM{\char165}~のように
+表示されることになるだろう．
+\item 保存先はどこでもいいが，
+以降の説明では「ドキュメント」のところに保存したとする．
+\item 本実習では関係ないが，OSXや最近の多くのLinuxなど，
+\emph{Unicode~(UTF-8)を用いて\TeX ソースを作成する環境下では，
+u\pLaTeX の使用を検討すべきである}．\prettyref{ssec:uptex}を参照．
+\end{itemize}
+
+\medskip
+
+1行目が\FNAME{first.tex}で用いる\emph{クラスファイル}を指定している箇所であり，
+このクラスファイルが文書全体の大まかなレイアウトを規定する．
+ここでは，奥村晴彦氏による
+\href{http://oku.edu.mie-u.ac.jp/~okumura/jsclasses/}{\pLaTeXe 新ドキュメントクラス}%
+の一つである\PKG{jsarticle}クラスを利用する．
+
+\newpage
+
+\subsection{タイプセット}
+\label{ssec:typeset}
+次に「コマンド プロンプト」を起動し，
+\begin{lstlisting}
+C:\Users\...> #\underline{cd\ Documents}#
+C:\Users\...\Documents> #\underline{platex\ first.tex}#
+\end{lstlisting}
+と入力\footnote{ここでも，半角バックスラッシュは実際の画面では半角円記号で表示されているは
+ずである．}すると，
+\begin{lstlisting}
+This is e-pTeX, Version 3.14159265-p3.5-130605-2.6 (sjis) (TeX Live 2016
+/W32TeX) (preloaded format=platex)
+ restricted \write18 enabled.
+entering extended mode
+……（中略）……
+Output written on first.dvi (1 page, 828 bytes).
+Transcript written on first.log.
+\end{lstlisting}
+のようなメッセージが出て%
+\footnote{最初に「\texttt{e-}」という奇妙な文字列が見えるが，
+  それについてはあまり気にしなくてもよい．}，
+「ドキュメント」の中に\FNAME{first.dvi}という
+中間形式のファイルが生成される．
+このように\TeX ソースからDVIファイルを生成することは
+\emph{タイプセット}，または\emph{コンパイル}と呼ばれる．
+
+\medskip
+
+\TeX を用いて文書を作成する場合，「DVIファイルを表示して中身を確認する」ことが
+伝統的であったが，最近では「DVIからPDFファイルを生成し，それを最終成果物とする」
+ことが（個人では）多くなり，それに伴い
+PDFファイルを中身の確認にも用いることが多くなってきた\footnote{%
+完全にPDFファイルに移行した，というわけではない．
+DVIからPostScriptファイルに変換し，
+それを成果物とする，というのもよく行われている．}．
+
+本実習においても，\dvipdfmx というプログラムによって
+\FNAME{first.dvi}からPDFファイル\FNAME{first.pdf}を生成させ，
+それを表示するという方針をとることにする．コマンドプロンプト上で
+\begin{lstlisting}
+C:\Users\...\Documents> #\underline{dvipdfmx\ first.dvi}#
+\end{lstlisting}
+と入力すると，
+\begin{lstlisting}
+first.dvi -> first.pdf
+[1]
+7531 bytes written
+\end{lstlisting}
+というメッセージが出て，PDFファイル\FNAME{first.pdf}が
+無事に生成される．
+
+\medskip
+2012年後半以降の\TeX システムならば，
+% \href{http://blog.preining.info/software-projects/ptex2pdf/}{\FNAME{ptex2pdf}}
+\FNAME{ptex2pdf}という
+Luaスクリプトを使うことで，
+\pLaTeX によるタイプセットとその後の\dvipdfmx の処理をまとめて
+\begin{lstlisting}
+C:\Users\...\Documents> #\underline{ptex2pdf\ -l\ first.tex}#
+\end{lstlisting}
+で行うことができる\footnote{Luaを別途インストールする必要はない．\TeX\ Liveに含まれている
+\LuaTeX というプログラムがその役割を果たすため．}．
+
+\begin{lstlisting}
+> ptex2pdf -l -ot "-synctex=1 -kanji=utf8" -od "-p jisb5" hoge.tex
+\end{lstlisting}
+のようにオプションを指定すると，次の2行の代わりとなる．
+\begin{lstlisting}
+> platex -synctex=1 -kanji-utf8 hoge.tex
+> dvipdfmx -p jisb5 hoge.dvi
+\end{lstlisting}
+
+\paragraph{}
+\FNAME{first.tex}の3行目
+「\hbox{\ltjsetparameter{xkanjiskip=0pt}%
+  \verb*+ようこそ，\TeX の世界へ！+}」を
+それぞれ次のようにする．2つはエラーが出るが，それは何故か？\hskip.5\zw
+また，残りの1つはどのようになるか？
+\begin{itemize}\ltjsetparameter{xkanjiskip=0pt}
+\item \verb*+ようこそ，￥ＴｅＸ の世界へ！+
+\item \verb*+ようこそ，\TeXの世界へ！+
+\item \verb*+ようこそ，\TEX の世界へ！+
+\end{itemize}
+
+
+\subsection{エラーが起きたら}
+タイプセット中に，エラーが発生することがある．
+以下は典型的なエラーの例で，2行目の``\verb+\begin{document}+''を
+``\verb+\Begin{document}+''と間違えたことによって発生したエラーである：
+\begin{lstlisting}
+! Undefined control sequence.
+<recently read> \Begin
+
+l.2 \Begin
+          {document}
+?
+\end{lstlisting}
+このようなエラーメッセージが表示されると入力待ち状態になっているので，
+\begin{itemize}
+\item ``\verb+x+''と入力するとタイプセットはここで終了する．その後，
+  画面上のエラーメッセージを参照して\FNAME{first.tex}の内容を修正することになる．
+\item 一部のエラーについては，``\verb+h+''と入力することで
+  ヘルプが表示されることがある：
+\begin{lstlisting}
+! Undefined control sequence.
+<recently read> \Begin
+
+l.2 \Begin
+          {document}
+? #\underline{h}#
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+?
+\end{lstlisting}
+この場合なら，メッセージに従って``\verb+I\begin+''と入力することでエラーを修正することができるが，
+もちろん後からソースファイル\FNAME{first.tex}の側も直しておかなければならない．
+\end{itemize}
+
+\newpage
+エラーメッセージの内容については，\TeX~Wiki中の
+「\href{http://oku.edu.mie-u.ac.jp/~okumura/texwiki/?LaTeX\%20\%E3\%81\%AE\%E3\%82\%A8\%E3\%83\%A9\%E3\%83\%BC\%E3\%83\%A1\%E3\%83\%83\%E3\%82\%BB\%E3\%83\%BC\%E3\%82\%B8}%
+{\LaTeX のエラーメッセージ}」や
+「\href{http://oku.edu.mie-u.ac.jp/~okumura/texwiki/?TeX\%20\%E3\%81\%AE\%E3\%82\%A8\%E3\%83\%A9\%E3\%83\%BC\%E3\%83\%A1\%E3\%83\%83\%E3\%82\%BB\%E3\%83\%BC\%E3\%82\%B8}%
+{\TeX のエラーメッセージ}」
+を参照してほしい．大体は自分の\TeX ソース側にエラーがあることが多いが，
+次のような事態が起こったときは話が別である．
+\begin{itemize}
+\item ``\verb+! This can't happen+''というエラーメッセージが出たとき．
+\item \pLaTeX が「不正な処理」などが原因で\emph{強制終了}されたとき．
+\end{itemize}
+上のどちらかの症状が発生したときは
+\pTeX のバグの可能性があるので，発生した元のソースをとっておくと共に，TAに連絡すること．
+
+\subsection{日本語フォントの埋め込み}
+さて，\prettyref{ssec:typeset}で作ったPDFファイル\FNAME{first.pdf}には，
+欧文文字用のフォントは埋め込まれているが，和文文字を表示する際に使う日本語フォントは
+埋め込まれていない．この\FNAME{first.pdf}をAdobe ReaderやSumatraPDF等で
+表示させる際には，ソフト側が適当な日本語フォントを代わりに用いて日本語部分を表示することになる．
+だが，この「日本語フォントは埋め込まず，表示の際には
+適当にシステム内の別のフォントで代替して表示する」というアプローチが不都合な場合があり，
+そのような場合には日本語フォントもPDF内に埋め込むことになる\footnote{%
+当然ながら，「PDF内にフォントを埋め込む」場合には，フォントのライセンスによって
+許されていることを確認しないといけない．}．
+
+\medskip
+ここでは，\TeX~Liveに同梱されているIPAフォント（\href{http://ipafont.ipa.go.jp/}{公式サイト}）
+をPDF内に埋め込むことにする．それには，コマンドプロンプトにおいて，
+\begin{lstlisting}
+C:\Users\...> #\underline{kanji-config-updmap\ ipa}#
+\end{lstlisting}
+または
+\begin{lstlisting}
+C:\Users\...> #\underline{updmap\ --setoption\ kanjiEmbed\ ipa}#
+\end{lstlisting}
+と入力すればよく，以降の\dvipdfmx の実行で作られるPDFファイルには，日本語フォントとして
+IPA明朝・IPAゴシックが埋め込まれることになる．
+
+Mac~OS~Xに商用・高品質なヒラギノフォントが付属していることは有名である%
+\footnote{「ヒラギノを買ったらMacがおまけについてきた」という有名なジョークがある．}．
+これを使いたい場合には，シンボリックリンクを貼るという前処理（ここでは解説しない）をした後に，
+\begin{lstlisting}
+$ #\underline{kanji-config-updmap\ hiragino-pron}#
+\end{lstlisting}
+または
+\begin{lstlisting}
+$ #\underline{updmap\ --setoption\ kanjiEmbed\ hiragino-pron}#
+\end{lstlisting}
+を端末で実行すれば良い．
+
+\medskip
+なお，\FNAME{kanji-config-updmap}や\FNAME{updmap}は自分のユーザーアカウントに対してのみ
+設定を行う．システム全体で設定したい場合は，\FNAME{kanji-config-updmap-sys}や
+\FNAME{updmap-sys}のように\hskip\ltjgetparameter{xkanjiskip}\FNAME{-sys}をつけたコマンドを使う．
+
+\newpage
+\subsection{この先は}
+ひとまず\pLaTeX によって文書を作成する基本的な方法が身についたので，
+後は\LaTeX の文法を勉強すればよい．
+
+本文書では，書体の変更とか箇条書きの書き方とかそういう
+基本的な\LaTeX の文法については解説しない．
+代わりに，Web上で参照できる入門ページとして
+\begin{itemize}
+\item \href{http://oku.edu.mie-u.ac.jp/~okumura/texwiki/}{\TeX~Wiki}中の「\TeX 入門」
+\item 教育用計算機システム自習教材「\href{http://hwb.ecc.u-tokyo.ac.jp/current/}{はいぱーワークブック}」%
+  中の「27.~\LaTeX」
+\item 渡辺徹，「好き好き\LaTeXe 初級編」，2004．\\
+\url{http://mytexpert.sourceforge.jp/index.php?%B9%A5%A4%AD%B9%A5%A4%ADLaTeX2e%2F%BD%E9%B5%E9%CA%D4}
+% \item 吉永徹美氏の「\href{http://www.h4.dion.ne.jp/~latexcat/index.html}{SMALL \LaTeX\
+%       LAB}」中の「\LaTeX 入門」 % リンク切れ
+\end{itemize}
+を挙げておく．その他参考となるページには，
+\begin{itemize}
+\item 上田氏の「\href{http://www.fugenji.org/~thomas/texlive-guide/}{\TeX~Live を使おう}」
+\item 熊澤吉起氏の\href{http://www.biwako.shiga-u.ac.jp/sensei/kumazawa/index.html}{Webサ
+      イト}中の「\href{http://www.biwako.shiga-u.ac.jp/sensei/kumazawa/tex.html}{\TeX}」に
+      は多数のパッケージの使用例がある．
+\item Scott Pakin, \textit{The Comprehensive \LaTeX\ Symbol List}.\\
+\url{http://www.ctan.org/pkg/comprehensive}\\
+\hfill または\FNAME{C:\texlive\2016\texmf-dist\doc\latex\comprehensive\symbols-a4.pdf}
+\end{itemize}
+があり，\TeX~Wiki中の「国内リンク」からも多くのページが辿れる．
+\medskip
+
+本格的に学習する際には，\emph{まとまった参考書を入手することを強くお勧め}する．
+「はいぱーワークブック」の「27.12~参考文献」にいくつか本があげられているし，
+\TeX~Wikiの「\TeX の本」にもたくさんの本が紹介されている．
+
+しかし，\emph{当たり前のことだが，一番大事なのは自分の書く文章の中身である}．
+文書の価値は，あくまでもその内容によって上からおさえられるので，
+\TeX・\LaTeX を適切に使い読みやすく見栄えの良い文書を作ったとしても，
+それは文書の価値を上げることにはならない．%
+%\footnote{一方，悪い組版によって，
+%不当に価値が低く見られる可能性は十分にあるのだが．}．
+
+\newpage
+\subsection{日々の作業の小技}
+
+\subsubsection{Sync\TeX}
+\label{ssec:synctex}
+\TeX を作って長い文章を作成していると，PDFの表示画面から\TeX ソースの
+該当箇所の編集画面へと，またはその逆のジャンプができると便利である．
+そのための機能として，少し前には``source special''という機構が使われてきたが，
+最近の\pTeX などには\href{http://itexmac.sourceforge.net/SyncTeX.html}{\emph{Sync\TeX}}%
+という機能が備わっており，そちらの方がより洗練されている．
+
+\medskip
+Sync\TeX の機能を実習用マシンで使うには，以下の設定を行う．
+\begin{description}
+ \item[\TeX 側の指定] \pLaTeX によるタイプセット時に\hskip\ltjgetparameter{xkanjiskip}%
+  \texttt{-synctex=1}オプションを指定する．
+ \item[SumatraPDF側の設定] 「設定」→「オプション」と辿り，「逆順検索コマンドラインの設定」
+	    に次のように入力する．
+\begin{lstlisting}
+"C:\Program Files (x86)\EmEditor\Emeditor.exe" %f /l %l
+\end{lstlisting}
+\end{description}
+この設定を行った後で，Sync\TeX を有効にしてタイプセットされたPDFを表示している
+SumatraPDFのウィンドウをダブルクリックすると，
+EmEditor側が\TeX ソースの対応する箇所へとジャンプする\footnote{%
+ エディタ側を設定すれば，開いている\TeX ソースからPDFの該当行へのジャンプすることも
+ 可能であるが，筆者はEmEditor Freeでそのような設定を行うことができなかった．
+}．
+
+\subsubsection{\FNAME{latexmk}}
+PDF作成のために毎回タイプセット・\dvipdfmx を実行するのは面倒である\footnote{%
+\TeX を使うのであれば，コマンドプロンプトを使えるようになっておくのが良い．
+}．
+相互参照(\prettyref{ssec:ref})を使うと
+複数回のタイプセットが必要になったり，さらに文献参照や索引などでは
+外部プログラムを途中で起動しないといけない．
+先に説明した\FNAME{ptex2pdf}を使うと\pLaTeX・\dvipdfmx の
+1回の実行でまとめられるとはいっても，それでも面倒なことには変わりはない．
+
+\medskip
+\FNAME{ptex2pdf}より本格的に自動化を行うためのプログラムが
+\href{http://users.phys.psu.edu/~collins/software/latexmk-jcc/}{\FNAME{latexmk}}%
+である．本実習の「\TeX~Liveのインストール」通りに設定したのでは導入されないが，
+以下のコマンド\footnote{%
+  \texttt{latexmk}と\texttt{--repository}の間の改行は，
+  本資料の表示の都合によるものであり，実際には入力しない．
+  ただし，スペースは入力する必要がある．
+}\footnote{%
+  \texttt{tlmgr}(\TeX~Live Manager)は\TeX~Liveのパッケージ管理ツール．
+}
+をコマンドプロンプトに入力することで導入することができる：
+\begin{lstlisting}
+C:\Users\...\Documents> #\underline{tlmgr\ install\ latexmk }#
+                            #\underline{--repository=ftp://beta.ks.prv/mirror/texlive/tlnet}#
+\end{lstlisting}
+\begin{itemize}
+  \item 上のコマンドを実行した際に``You don't have permission to \ldots''といったエラーメッセージが出た場合は，
+  コマンドプロンプトを「管理者として実行」により再度起動した上で，同じコマンドを実行すれば良い．
+  \item \verb|--repository=|以下は実習環境でのみ必要なオプションで，
+  受講生の自宅などの環境では単に
+  \verb|tlmgr install latexmk|とすれば良いだろう．
+\end{itemize}
+
+\FNAME{latexmk}は標準では欧文用\LaTeX を用いる設定になっているので．
+そのままでは日本語の入った\TeX ソースを処理できない．
+これを解決するには，\FNAME{C:\Users\...\.latexmkrc}\footnote{%
+  \FNAME{...}には自分のユーザ名が入る．つまり，ホームディレクトリ直下に．}%
+\hskip\ltjgetparameter{xkanjiskip}に以下の内容を保存する：
+\begin{lstlisting}[numbers=left,numberstyle=\tiny,xleftmargin=3\zw]
+$dvipdf="dvipdfmx %O -o %D %S";
+$latex="platex %O %S";
+$pdf_mode=3;
+$pdf_previewer = '"C:\Program Files (x86)\SumatraPDF\SumatraPDF.exe" %O %S';
+\end{lstlisting}
+この設定さえしてしまえば，
+\begin{lstlisting}
+C:\Users\...\Documents> #\underline{latexmk\ first.tex}#
+\end{lstlisting}
+で必要な回数のタイプセットと，その後のPDF作成まで自動でやってくれる．
+
+\texttt{-pv}オプションをつけると，PDFを作成した後にPDFビューア（ここでは4行目に指定したと
+おりSumatraPDF）が起動する．おもしろいのは\hskip\ltjgetparameter{xkanjiskip}%
+\texttt{-pvc}オプションで，\TeX ソースの更新を自
+動的に感知し，自動でPDFを更新してくれる．
+
+\medskip
+上に述べた\hskip\ltjgetparameter{xkanjiskip}%
+\FNAME{.latexmkrc}の設定はほぼ最小限のものである．よりきちんとした設定については
+\begin{itemize}
+ \item \href{http://oku.edu.mie-u.ac.jp/~okumura/texwiki/}{\TeX~Wiki}中の
+「latexmk」
+ \item konoyonohana氏によるブログ「\href{http://konoyonohana.blog.fc2.com/}{天地有情}」中の
+「latexmkとptex2pdf」
+\end{itemize}
+などを参照してほしい．
+
+\subsubsection{統合開発環境}
+\TeX のタイプセットのために毎回コマンドプロンプトを開くのは面倒であるし，
+コマンドプロンプトの扱いに慣れていない人も少なからずいるだろう．
+それを避けるためには，\TeX works などの統合開発環境
+(又は Emacs や Vim などの高機能テキストエディタ)
+を用いると良い．
+例えば \TeX works\footnote{スタートメニューから「TeXworks editor」を選択すると起動できる}
+では，画面左上のボタンをクリックすることでタイプセットを実行できる．
+また，\LaTeX コマンドの補完などの便利機能も利用できる．
+
+ただし，「慣れていない」というだけの理由でこれらを用いるのは，
+本実習では\emph{推奨しない}．
+この機会にコマンドプロンプトに慣れておくと良いだろう．
+
+
+
+\newpage
+\section{\LaTeX の作法}\label{sec:typeset}
+\LaTeX を用いればいつでも読みやすい文書が作れる……というわけではない．
+\LaTeX には\LaTeX の約束事があり，それを守らないと悲惨な結果が生まれてしまう．
+ここでは，ついやってしまいがちな間違いを並べておく．
+以下のページもあわせて参照すると良い：
+\begin{itemize}
+\item 山本裕，「SICE著者のための\LaTeX べからず集」，
+  計測と制御 第34巻11号，計測自動制御学会，1995．
+  % \url{http://www-ics.acs.i.kyoto-u.ac.jp/ics/HowToWriteTeXDocuments.pdf}
+  \url{http://doi.org/10.11499/sicejl1962.34.11_889}
+\item 小田忠雄，「数学の常識・非常識---由緒正しい\TeX 入力法」，
+  数学通信，第4巻第1号，1999．
+  \url{http://www2.kobe-u.ac.jp/~mhsaito/documents/oda.pdf}
+\item 斎藤新悟，「よくあるわけではない\TeX の間違い」，\TeX ユーザの集い2012．\\
+  \url{http://oku.edu.mie-u.ac.jp/texconf12/presentations/saito.pdf}
+\item Donald~E. Knuth, \textit{The \TeX book}, Addison-Wesley, 1984.\\
+  \LaTeX の本ではないが，特にChapter~18は数式を入力する際に重宝する．
+\item 三美印刷株式会社，「\TeX 組版から印刷・製本までの工程」，
+  \TeX ユーザの集い2011．\\
+  \url{http://oku.edu.mie-u.ac.jp/texconf11/presentations/sanbi.pdf}
+\item 丸田一郎，「使ってはいけない\LaTeX のコマンド・パッケージ・作法」\\
+  \url{http://ichiro-maruta.blogspot.jp/2013/03/latex.html}
+\end{itemize}
+しかし，この章で書いたのは一般的なことでしかない．
+\emph{論文誌の投稿規定や各出版社の組版ルールがある場合には，
+当然ながらそちらを優先し，勝手な変更や超絶技巧はしないこと．}
+
+\subsection{数式}
+特に数式を入力する際には，その記号はどのような（組版上の）役割で用いられているか，
+ということを気にするのが大事である．
+
+\subsubsection{「数式」と「数式以外」}
+\begin{LTXexample}[caption={間違い：数式を数式モードに入れていない},width=.5\textwidth]
+f(x)は[0,1]で連続，f(0)=-1かつ
+f(1)=1なので，f(x)=0となる0<x<1が存在する．
+\end{LTXexample}
+\begin{LTXexample}[caption={間違い：地の文まで数式モードに入れている},width=.5\textwidth]
+$f(x)は[0,1]で連続，f(0)=-1かつ
+f(1)=1なので，f(x)=0となる0<x<1が存在する．$
+\end{LTXexample}
+\begin{LTXexample}[caption=正しい入力,width=.5\textwidth]
+$f(x)$は$[0,1]$で連続，
+$f(0)=-1$かつ$f(1)=1$なので，
+$f(x)=0$となる$0<x<1$が存在する．
+\end{LTXexample}
+
+\subsubsection{基本}
+\begin{LTXexample}[caption=sinなどの関数名は専用の命令を使って立体で表記すること．]
+誤：$sin x$, $\mathrm{sin} x$\\
+正：$\sin x$
+\end{LTXexample}
+1行目左は$s\cdot i\cdot n\cdot x$の意味に解釈されてしまう．
+1行目右も空白が足りない．
+なお，\cs{sin}のような専用命令が予め準備されていない状況もあるが，その場合は定義すれば良い．
+例えば，\cs{dom}を使いたいならば
+\begin{quote}
+  \verb@\newcommand\dom{\mathop{\mathrm{dom}}}@
+\end{quote}
+をプリアンブルに記述すれば良い．
+
+\medskip
+
+\begin{LTXexample}[caption=和文文字を数式中そのまま使用するのは有害である．]
+誤：$a+b+…+z$, $f(a,b,…,z)$\\
+正：$a+b+\cdots+z$
+\end{LTXexample}
+
+
+\begin{LTXexample}[caption=省略記号は周りの記号によって使い分けること．]
+誤：$f(a,b,\cdots,z)$\\
+正：$f(a,b,\ldots,z)$
+\end{LTXexample}
+
+\PKG{amsmath}パッケージ\footnote{アメリカ数学会による，数式組版の機能を
+拡張するパッケージ．数学科の諸君なら，\PKG{amssymb}パッケージと共に
+いつでも読み込むようにしておこう．
+基本的なマニュアルは，%
+\href{http://www.ring.gr.jp/pub/text/CTAN/macros/latex/required/amslatex/math/amsldoc.pdf}%
+{User's Guide for the \texttt{amsmath} Package}．
+実習用マシンにも
+\FNAME{C:￥texlive￥2016￥texmf-dist￥doc￥latex￥amslatex￥math￥amsldoc.pdf}にある．
+}を読み込んでいるなら，\cs{dotsb}などの命令も参照．
+なお，\LaTeX で標準で用意されている\cs{dots}命令だが，
+\PKG{amsmath}パッケージを読み込んでいるかで動作が変わり，
+\begin{itemize}
+ \item \PKG{amsmath}パッケージ未使用なら，\cs{dots}と\cs{ldots}は等価
+ \item \PKG{amsmath}パッケージ読み込み時は，\cs{dots}は後ろの記号によってある程
+  度使い分けをする
+\end{itemize}
+となっている．
+
+
+\subsubsection{括弧類}
+
+\begin{LTXexample}[width=.3\textwidth,caption=中身に対して小さすぎる括弧を使うのは良くない．]
+誤：$\displaystyle(\frac{a}{2}+\frac{b}{3})c$\\
+正：$\displaystyle
+      \left(\frac{a}{2}+\frac{b}{3}\right)c$
+\end{LTXexample}
+この\cs{left}, \cs{right}による自動調整も万能ではなく，次のように「望ましくない」サイズの括弧
+を選択する可能性もある．
+\begin{LTXexample}[width=.3\textwidth]
+$\left||x|+|y|\right|$
+\end{LTXexample}
+
+手動で大きさを指定するには，\verb+\big+,~\verb+\Big+, \verb+\bigg+,~$\ldots$を利用する．
+開き括弧として用いる時は\verb+\bigl+のように最後に\verb+l+を，
+閉じ括弧として用いる時は\verb+\bigr+のように最後に\verb+r+をつける．
+\begin{LTXexample}
+$\bigl||x|+|y|\bigr|$,
+$\Biggl(\biggl(\Bigl(\bigl((
+  )\bigr)\Bigr)\biggr)\Biggr)$
+\end{LTXexample}
+このように，「全ての括弧をなりふり構わず
+\cs{left},~\cs{right}で組む」というのは良い方法とは言えない．この後の注意も参照．
+
+\medskip
+\begin{curve}
+{\bfseries\cs{left}\texttt{...}\cs{right}によって空白が余計に入る？}\\
+%
+\verb+\left...\right+を覚えると，
+中身に応じて自動的に括弧の大きさが変わってくれることから
+なんでもかんでも括弧を\cs{left}\texttt{...}\cs{right}で書いてしまう人がいる．
+しかし，次の2つを見比べて欲しい：
+\begin{LTXexample}
+$f\left(x\right), f\left(A^B_D\right)$\\
+$f(x)           , f\bigl(A^B_D\bigr)$
+\end{LTXexample}
+
+上の1行目は括弧を\cs{left}\texttt{...}\cs{right}で書いたもの，2行目はそれと同じ大きさの括弧を
+（それが適切なサイズかは抜きにして）手動で組んだものである．
+1行目の方が，$f$と括弧の間・括弧とコンマの間にそれぞれ空白thin~space~(\verb+\,+)が
+余計に入っていることが分かる．
+
+しかし，それは\TeX の仕様である．\TeX は数式中の要素をいくつかに分類し，
+その分類に応じて要素と要素の間に入る空白を決定するのだが，次のようになっている：
+\begin{itemize}
+ \item ``$f$''は「通常の文字」， ``,''は「句読点」である．
+ \item 2行目中の``$($''~(\verb+(+), ``$\bigl($''~(\verb+\bigl(+)は「開き括弧」，
+``$)$''~(\verb+)+), ``$\bigr)$''~(\verb+\bigr)+)は「閉じ括弧」である．
+\item \cs{left}\texttt{...}\cs{right}の部分は，それ自身で「内部数式」である\footnote{%
+  よって，\cs{left}と\cs{right}で囲んだ部分の途中で改行することはできない．}．
+\item \TeX は，「普通の文字」と「開き括弧」の間・「閉じ括弧」と「句読点」の間には
+空白を入れないが，「普通の文字」と「内部数式」の間・「内部数式」と「句読点」の間には
+thin~space~(\verb+\,+)を入れる．
+\end{itemize}
+
+この状況を改善するのが\href{http://www.ctan.org/pkg/mleftright}{\PKG{mleftright}パッケージ}
+である．このパッケージが提供する\cs{mleft},~\cs{mright}を\cs{left},~\cs{right}の
+代わりに使うと，周囲の空白が正しくなるようになっている．
+
+\begin{LTXexample}
+$f\mleft(x\mright), f\mleft(A^B_D\mright)$\\
+$f(x)             , f\bigl(A^B_D\bigr)$
+\end{LTXexample}
+\end{curve}
+
+
+\medskip
+
+
+\begin{LTXexample}[caption={絶対値やノルムに用いる``$|$'',~``$\|$''には左右の区別がなく
+ 注意が必要．}]
+誤：$|-x|$\\
+正：$|{-x}|$\\
+正：$\lvert -x \rvert$（要amsmath）
+\end{LTXexample}
+1行目では負号``$-$''が二項演算子扱いになってしまっており，
+2行目では$-x$全体を波括弧でグループ化することでそれを防いでいる．
+
+\medskip
+
+\begin{LTXexample}[width=.3\textwidth,caption=「本来の意味」と異なる使い方で
+記号を使う場合も注意．]
+誤：$x\in ]a,b]$\\
+正：$x\in \mathopen{]}a,b]$,
+    $x\in \left]a,b\right]$
+\end{LTXexample}
+普通に\hskip\ltjgetparameter{xkanjiskip}\verb+]+と入力すると
+「閉じ括弧扱い」になるが，ここでは開き括弧の意味で用いているので
+空白に異常が生じる．\verb+\mathopen+ によって，強制的に「開き括弧」扱いにすることで解決．
+
+\medskip
+
+\begin{LTXexample}[width=.3\textwidth, caption={山括弧~$\langle$~$\rangle$~は
+不等号~$<$~$>$~と違うものである．この間違いが最も多く見られる．}]
+誤：$<a,b>$\\
+正：$\langle a,b\rangle$, $\left<a,b\right>$
+\end{LTXexample}
+
+\subsubsection{その他}
+\begin{LTXexample}[caption={句読点の意味でコロン~\textbf{:}~を使う場合%
+  は\texttt{\textbackslash colon}を用いる．}]
+誤：$f:A\rightarrow B$\\
+正：$f\colon A\rightarrow B$
+\end{LTXexample}
+
+\begin{LTXexample}[caption={関係演算子として使うコロン~\textbf{:}~はそのままでよい．}]
+正：$a:b=1:2$
+\end{LTXexample}
+\begin{curve}
+垂直方向のスペーシングという点では，定義に使う``$\coloneqq$''を
+ 下の1行目のようにそのまま記述してもよい．しかし，1行目ではコロンと等号の垂直位置が
+微妙に合っておらず，それを気にする人も多いだろう．
+
+\begin{LTXexample}
+$f:=a^2-b+c^d$\\
+$f\coloneqq a^2-b+c^d$（mathtools等要）
+\end{LTXexample}
+その場合は，2行目のように，例えば\PKG{mathtools}パッケー
+ ジで定義されている\cs{coloneqq}などを使えば良い．
+\end{curve}
+\medskip
+
+\begin{LTXexample}[caption=集合の内包的記法]
+$\{\,x\mid x>5\,\}$\\
+$\{\,x:x>5\,\}$\\
+$\{x:x>5\}$\\
+$\{x\mid x>5\}$\\
+$\{x|x>5\}$←誤
+\end{LTXexample}
+\textit{The~\TeX book}ではなぜか1,~2行目のような記法が紹介されて
+いる\footnote{\cs{mid}は関係演算子扱いの縦棒．}が，
+実際の数学書を見ると3,~4行目のように括弧の内側を空けない書き方のほうが多い．
+何はともあれ，5行目のように記述するのは誤り．
+
+
+\begin{LTXexample}[caption=複数の行中数式をつなげる場合は一旦数式モードを抜けること．]
+誤：$f(x) = x^2, g(x) = x^2+1$\\
+正：$f(x) = x^2$, $g(x) = x^2+1$
+\end{LTXexample}
+\textit{The~\TeX book}では，\verb+...$, \ $...+と余分に空白を空ける方法も紹介されている．
+
+\medskip
+
+また，標準のクラスファイルでは\ENV{eqnarray}環境にバグがあることが知られている．
+\href{http://oku.edu.mie-u.ac.jp/~okumura/jsclasses/}{\pLaTeXe 新ドキュメントクラス}など，
+修正されているクラスも存在するが，
+「\PKG{amsmath}パッケージを読み込んだ上で
+\ENV{align}環境を用いる」ことが一番良い解決法であろう．次の記事が状況を解説している：
+\begin{quote}
+Lars Madsen, \textit{Avoid eqnarray!}, The Prac\TeX\ Journal, 2006, No.~4.\\
+\url{http://tug.org/pracjourn/2006-4/madsen/madsen.pdf}
+\end{quote}
+
+
+% \begin{curve}
+% \begin{gtfamily}
+% \bfseries\mathversion{bold}%
+% 文中数式\verb+$...$+の周囲の空白
+% \end{gtfamily}\\
+% この実習資料では，「\verb@この$f(x)$は単調増加@」のように
+% 文中数式\verb+$...$+と前後の和文文字の間に空白を入れていないが，
+% 「\verb*@この $f(x)$ は単調増加@」のように，
+% 間に半角空白を入れる解説もある（というかそちらのほうが多い）．
+
+% ……
+
+% \end{curve}
+
+\subsection{地の文}
+数式ではない，いわゆる「地の文」を打つときにも注意が必要である．
+以下は\emph{英文}を入力する際の基本的な注意である：
+\begin{itemize}
+\item 当たり前だが，\emph{英文を打つときは半角英数字を利用すること}．
+\item 句読点の役割を果たす~{\bf;}~~{\bf,}~については，
+\emph{直前の文字との間には空白を入れず}，直後にスペースを打つ．
+\item ピリオド~{\bf.}（や疑問符~{\bf?}~，感嘆符~{\bf!}~，コロン~{\bf:}~）の直前にも空白は入れない．
+直後にはほとんどの場合に空白を1つ入れる．
+\TeX は，標準で通常の単語間空白と文間空白を区別する：
+\begin{itemize}
+\item 大文字直後のピリオドは省略を意味するものと扱い，
+  直後の空白は単語間空白となる．\\
+  文間空白だと認識させたい時はピリオドの直前に\verb*+\@+を補う．
+\item 小文字直後のピリオドは文の終了を意味するものと扱い，
+  直後の空白は文間空白となる．\\
+  単語間空白だと認識させたい時は\verb*+\ +を使用する．
+\end{itemize}
+\begin{tabbing}
+\hskip6\zw \=あいうえおあいうえおあ\=\kill
+文間空白
+  \>AA\@. ccc. ddd
+  \>\verb*+AA\@. ccc. ddd+\\
+単語間空白
+  \>AA. ccc.\ ddd
+  \>\verb*+AA. ccc.\ ddd+
+\end{tabbing}
+最近では，単語間空白と文間空白の大きさを一緒にして組む場合(\verb+\frenchspacing+)も多く，
+その場合には上の使い分けは見た目には影響しないことになる．
+
+\item 引用符には\emph{左右の区別}が存在し，
+  左右とも同じ \verb+"+ \verb+'+ で入力してはならない．\\
+  なお，数式中の~{\mathversion{bold}${}'$}~は引用符とは別の記号である．
+\begin{tabbing}
+ああ\=あいうえおあいうえおあいうえお\=\kill
+誤\>"def 'ghi' jkl", $f$'\>
+  \verb@"def 'ghi' jkl'', $f$'@\\
+正\>``def `ghi' jkl'', $f'$\>
+  \verb@``def `ghi' jkl'', $f'$@
+\end{tabbing}
+\item 開き括弧~{\bf(}~~{\bf[}~~{\bf\{}~や開引用符~{\bf``}~~{\bf`}~の直後，それに
+閉じ括弧~{\bf)}~~{\bf]}~~{\bf\}}~や閉引用符~{\bf''}~~{\bf'}~の直前にはスペースは入れない．
+\item 手書きでやテキストファイルではあまり区別していないが，
+  {\bf-}~(hyphen), {\bf--}~(en-dash), {\bf---}~(em-dash), {\mathversion{bold}$-$}（負号）の
+  4種類の記号は明確に区別される：
+\begin{tabbing}
+ああ\=あいうえおあいうえおあいうえお\=\kill
+1.\>$P$-generic filter, well-defined
+  \>\verb+$P$-generic filter, well-defined+\\
+2.\>pp.~29--42, 13:00--14:00
+  \>\verb+pp.~29--42, 13:00--14:00+\\
+  \>範囲を表す「～」は欧文では用いられない\footnotemark ．\\
+  \>Jech--Sochor Theorem
+  \>\verb+Jech--Sochor Theorem+\\
+  \>2人以上の人名を並べる場合．Jech-Sochor Theoremとハイフンで済ませる場合もあるが，\\
+  \>それだと「Jech-Sochorという1人の人なのか」と誤解される危険がある．\\
+3.\>This fact---it is easy to prove---is very useful.\\
+  \>\verb+This fact---it is easy to prove---is very useful.+
+\end{tabbing}
+\end{itemize}
+\footnotetext{なお，上の入力中にある（いわゆる半角
+ の）\texttt{\char`\~} は，「ここでの改行を禁止する空白」を表す．}
+
+また，しばしば次のように
+強制改行(\verb+\\+)，中黒「・」，全角空白「　」を使って
+レイアウトしているような例を見る：
+\begin{lstlisting}
+$\mathbb{R}$に右半開区間位相を入れたものを$\mathcal{S}$とおく．
+すなわち，$\mathcal{S}$の位相の基は$\{[a,b[\mid a<b\}$である．
+このとき，次が成立する．\\
+　1. $\mathcal{S}$はHausdorff空間である．\\
+　2. $\mathcal{S}$は第2可算公理を満たさない．\\
+　3. $\mathcal{S}$はLindel\"of空間である．\\
+　4. $\mathcal{S}\times\mathcal{S}$はLindel\"of空間でない．
+\end{lstlisting}
+しかし，このような書き方は見た目がみすぼらしくなるだけでなく，
+文書内の論理的構造がわかりにくくなるため，基本的には使わないこと．
+きちんと\ENV{itemize}, \ENV{enumerate}などの\LaTeX で
+用意されている環境を使うのがよい．
+
+\newpage
+\section{\S1と\S2に関連した課題}\label{sec:kadai}
+
+本節には課題をたくさん載せているが，
+当然ながら全部取り組まなければならないというものではない．
+あと，「課題」と名乗ってはいるが，提出不要である．
+
+\subsection{\TeX ソースの例}
+\paragraph{}
+以下のソースファイルを自分で入力し，そこからPDFファイルを作成せよ．
+全角文字と半角文字を間違えないようにすること%
+\footnote{特に，7行目の「I」は半角英大文字であって，
+全角英文字「Ｉ」や全角ローマ数字ではない．}．
+
+また，一般的に言えることだが，「一度に多量の文章を記述してタイプセットをする」と，
+エラー対応や誤植チェックがやりにくい．そのため，タイプセットに時間がかかるのでなければ，
+\emph{ソースを打っている途中にこまめにタイプセットし，様子を見る}のが良い．
+
+\lstinputlisting[numbers=left,numberstyle=\tiny,xleftmargin=3\zw]{KS_2u.tex}
+
+\subsection{数学の文章を\TeX で書く練習}
+以下の数学の問題を解き，\TeX によって解答を作れ．
+その際，\emph{\prettyref{sec:typeset}のような間違いを起こさないように}注意せよ．
+
+\paragraph{}
+関数$f\colon \mathbb R^2\rightarrow\mathbb R$を
+\[
+ f(x,y):=
+\begin{cases}
+ 0&\text{if\ }(x,y)=(0,0),\\
+ (x^3-y^3)/(x^2+y^2)&\text{otherwise}
+\end{cases}
+\]
+で定める．この$f$が連続関数であることを示せ．
+
+\paragraph{}
+$n\in\mathbb N$に対し，
+\[
+ I_n:=\int_0^{\pi/2} \cos^n \theta\,d\theta
+\]
+の値を求めよ．なお，$\mathbb{N}$に0を含めるか否かについては，どちらでもよい．
+
+\paragraph{}\
+\[
+ A:=\begin{pmatrix}
+     2/5&11/5\\-1&2
+    \end{pmatrix}
+\]
+に対し，
+\begin{enumerate}
+\def\labelenumi{(\arabic{enumi})}
+ \item $A\,{}^t\!A$を求め，対角化せよ．${}^t$は転置の記号である．
+ \item 前問を用いて，正定値対称行列$B$で$B^2=A\,{}^t\!A$となるものを求めよ．
+ \item 前問を用いて，$A$を正定値対称行列と直交行列の積として表せ．
+\end{enumerate}
+
+\paragraph{}
+$T$をHausdorff空間とする．$T$内の点列$(p_n)_{n\in\mathbb N}$が
+点$p$と点$q$に収束するならば，$p=q$であることを示せ．
+
+\paragraph{}
+2次元トーラス$T^2$の整係数ホモロジー群を求めよ．
+
+\paragraph{}
+直後の\prettyref{ex:sorgenfrey}の問題文にある$\mathcal{S}$（Sorgenfrey直線）に関する1.--3.の性質を
+証明し，\TeX ソースの形で解答を書け．その際，本章に今まで記述したような
+間違いを起こさないように注意せよ．
+なお，位相空間が\emph{Lindelöf空間}であるとは，任意の開被覆から
+\emph{可算}部分被覆がとれることを言う．
+
+
+\subsection{\TeX ソースの修正練習}
+
+\paragraph{}\label{ex:sorgenfrey}
+\prettyref{sec:typeset}の最後に挙げられていた「悪い例」：
+\begin{lstlisting}
+$\mathbb{R}$に右半開区間位相を入れたものを$\mathcal{S}$とおく．
+すなわち，$\mathcal{S}$の位相の基は$\{[a,b[\mid a<b\}$である．
+このとき，次が成立する．\\
+　1. $\mathcal{S}$はHausdorff空間である．\\
+　2. $\mathcal{S}$は第2可算公理を満たさない．\\
+　3. $\mathcal{S}$はLindel\"of空間である．\\
+　4. $\mathcal{S}\times\mathcal{S}$はLindel\"of空間でない．
+\end{lstlisting}
+をきちんとした\TeX ソースに書き直せ．
+
+\medskip
+以下の2つの課題については，問題になっているソースファイルを実習資料集の
+「\href{https://github.com/utmsks/KSImaterial/blob/master/contents/tex/tex_practice.md}{\TeX 実習}」
+からダウンロードして取り組むこと（このPDFからリンクをたどっても良い）．
+
+\medskip
+
+\paragraph{}
+\href{https://github.com/utmsks/KSImaterial/blob/master/contents/tex/KS_3a.tex}{\FNAME{KS\_3a.tex}}%
+はタイプセットが正常にできない（エラーが発生する）ソースである．
+タイプセットが可能になるように修正せよ．
+
+\paragraph{}\label{ex:fix}
+\href{https://github.com/utmsks/KSImaterial/blob/master/contents/tex/KS_3b.tex}{\FNAME{KS\_3b.tex}}%
+はタイプセット自体は可能だが，誤植や見た目の良くない点を含んでいる．
+\prettyref{sec:typeset}の記述を参考にしてソースを修正せよ．
+
+\newpage
+\section{文字コードとu\pTeX}
+\label{sec:chrcode}
+\subsection{文字コード}
+文字をコンピュータで扱うためには，「使用出来る文字」の集合と，それに属する各文字から
+バイト列への対応を決めておかないといけない．これを\emph{文字コード}という．
+日本語用の文字コードは，
+\begin{quote}
+ JIS~(ISO-2022-JP), EUC-JP, Shift\_JIS, Unicode
+\end{quote}
+という4種類の系統が広く使われる．Unicodeはいくつか符号化方式を定めているが，よく使われるのは
+文字を1--4バイトの可変長で符号化する\emph{UTF-8}である．
+
+\medskip
+\TeX~Liveの\pLaTeX の標準設定では，「\TeX ソースの文字コードを自動判別する」
+という気の利いた機能は無効になっている\footnote{%
+\texttt{-guess-input-enc}オプション．
+Windows用バイナリでは，単純に設定ファイル\FNAME{texmf.cnf}中で無効にされているだけ
+である（ちなみに，W32\TeX では標準で有効になっている）．
+Mac~OS~X用やLinux用のバイナリには，そもそもそのような機能は実装されていない．
+}．デフォルトでは，\TeX ソースの文字コードとして期待されるものは
+\begin{description}
+ \item[Windows] Shift\_JIS及びJIS
+ \item[その他（Mac~OS~X，Linux等）] UTF-8及びJIS
+\end{description}
+となっている．WindowsでUTF-8の\TeX ソースを扱いたい場合は，
+\texttt{-kanji=utf8}を指定する．
+\begin{lstlisting}
+> platex -kanji=utf8 hoge.tex
+\end{lstlisting}
+\FNAME{ptex2pdf}を使う場合は，（\texttt{-kanji=utf8}を\FNAME{platex}に渡すため）
+\texttt{-ot}を前置し，次のようにする：
+\begin{lstlisting}
+> ptex2pdf -l -ot -kanji=utf8 hoge.tex
+\end{lstlisting}
+
+
+\subsection{\pTeX で扱える文字の範囲}
+\label{ssec:izon}
+\pLaTeX の背後で動いている\pTeX は，
+1990年以前からある古いプログラムであり，扱える文字集合としては
+JIS~X~0208規格内に限定されている．漢字で言えば第1・第2水準の範囲に相当しており，
+そこからはみ出している以下のような文字はそのままでは使えない．
+\begin{description}
+ \item[「Windowsの機種依存文字」] Windowsで広く使われてきた文字コードは，
+Shift\_JISを拡張した
+	    \href{http://unicode.org/Public/MAPPINGS/VENDORS/MICSFT/WINDOWS/CP932.TXT}{\emph{CP932}}と呼ばれるものである．
+以下のような文字はCP932には規定されているが，文字集合JIS~X~0208内にはない．
+多くの文字が2箇所の符号位置に重複されていることもあり，いろいろな問題を引き起こしてきた．
+\begin{itemize}
+ \item 全角丸付き数字①--⑳，全角ローマ数字Ⅰ--Ⅹ・ⅰ--ⅹ
+ \item 全角単位記号，例えば「㌘」「㌔」「㎏」「㎡」
+ \item {\Large №℡㍾㍽㍼㊤㈱}などの一部の記号
+ \item {\Large 彅﨑鄧閒}などの一部の漢字
+\end{itemize}
+% 上綱氏による「\href{http://www.asahi-net.or.jp/~ax2s-kmtn/index.html}{CyberLibrarian}」中
+% の「\href{http://www.asahi-net.or.jp/~ax2s-kmtn/ref/mdc_img.html}{Windowsの機種依存文字
+% 	    （画像）}」に一覧が載っている．
+
+\newpage
+ \item[「Macintoshの機種依存文字」] 同様に，Macでも
+\href{http://unicode.org/Public/MAPPINGS/VENDORS/APPLE/JAPANESE.TXT}{MacJapanese}%
+というShift\_JISの拡張が用いられてきた．
+MacJapanese側にしかない文字は以下のようなものである．
+\newcommand\textpared[1]{\leavevmode
+  \resizebox{1\zw}{1pt}{\smash{(\kern-.05em#1\kern-.05em)}\vrule width 0pt height 1pt}}
+\begin{itemize}
+ \item 全角丸付き数字①--⑳❶--❾，全角ローマ数字Ⅰ--Ⅹ・ⅰ--ⅹ
+ \item 括弧でくくられた全角の\textpared{1}--\textpared{20}，\textpared{a}--\textpared{z}など
+ \item 全角単位記号，例えば「㌘」「㌔」「㎏」「㎡」
+ \item {\Large №℡㊤∮ゔ♣}などの一部の記号
+\end{itemize}
+% これも，CyberLibrarian中の%
+% 「\href{http://www.asahi-net.or.jp/~ax2s-kmtn/ref/mdcmc_img.html}{Macintoshの機種依存文字
+% 	    （画像）}」に一覧が載っている．
+
+ \item[半角カナ]
+「ｱｲｳ」のようないわゆる半角カナは，しばしば「電子メールでは使うべきではない」と言われている．
+これは，Shift\_JISやその独自拡張では表現可能である一方で，電子メールで伝統的に使われてきたJISコードでは
+表現不可能であるからである．
+
+ \item[JIS~X~0213で追加された文字]
+2000年に制定されたJIS~X~0213という規格では，扱える文字の数がJIS~X~0208の6879字から11000字以上へと
+大幅に増やされた．その中にはいくつかの非漢字と共に，
+{\Large 廹既海溫㑨愙𦥑𡈽}などのJIS第3・第4水準漢字が追加されている．
+
+ \item[JIS~X~0213にもないが，Unicode中に収録されている文字]
+最近では，「世界中の文字を1つの文字コードで表そう」という理念のもとに作られた
+Unicodeが普及している．Unicode中には非常に多くの文字が含まれており，
+その中の大部分はJIS~X~0213にすら規定されていない．
+\end{description}
+
+なお，Unicodeでは以上に述べた文字は大体\footnote{JIS~X~0213中の一部の半濁点付き仮名や，声
+調記号は合成文字として表すことになる．}表現可能である．
+\pTeX ではUnicode~(UTF-8)で記述された\TeX ソースもタイプセット可能であるが，
+\emph{\pTeX の内部処理は従来通りのEUC-JP・Shift\_JIS}なので，
+本節に述べた上記種類の文字は依然としてそのままでは扱えない．
+
+JIS~X~0208を超えた上記種類の文字を使いたい場合は，
+\begin{itemize}
+\item 齋藤修三郎氏による\href{http://psitau.kitunebi.com/otf.html}{\PKG{otf}パッケージ}%
+を使い，Unicodeの文字を（コード番号で）入力する
+\item 使うプログラムを\pTeX から\emph{u\pTeX}~(\prettyref{ssec:uptex})に変えたり，
+または\XeTeX, \LuaTeX を使う（「\pTeX 系列以外による日本語文書作成」を参照）．
+\end{itemize}
+から選ぶのが良いだろう．Unicodeにすら存在しなかったり，区別されていない微妙な字形の差%
+を気にしたい場合は，\PKG{otf}パッケージを使うことになるが，それについては省略する．
+
+\newpage
+
+\subsection{Windowsの機種依存文字を\pTeX でそのまま入力すると……}
+\label{ssec:izoneg}
+ここでは失敗例として，Windowsの機種依存文字を直接含む\TeX ソースを
+\pLaTeX で処理させたらどのようになるかを述べることにしよう．
+
+まず，Windowsの機種依存文字を直接含む次のソース：
+\begin{lstlisting}[numbers=left,numberstyle=\tiny,xleftmargin=3\zw]
+\documentclass{jsarticle}
+\usepackage[T1]{fontenc}
+\begin{document}
+「Ⅰ」，「彅」，「ｱｲｳ」
+\end{document}
+\end{lstlisting}
+を\emph{UTF-8}で記述（「Ⅰ」は全角ローマ数字），\pLaTeX でタイプセット%
+\footnote{Windows上の\TeX Liveでは，\pLaTeX 実行時にオプションとして
+       \hskip\ltjgetparameter{xkanjiskip}\texttt{-guess-input-enc}または\hskip\ltjgetparameter{xkanjiskip}\texttt{-kanji=utf8}を指定しない
+       とうまくいかない．}し，
+PDFファイルを作ると
+\begin{quote}
+ \large 「âĚă」，「å¡Ě」，「ï¡śï¡šï¡ş」
+\end{quote}
+のような出力が得られる．
+Windowsの機種依存文字や半角カナが正しく和文文字と認識されていないことわかるだろう．
+
+\begin{curve}
+「彅」はUnicodeでは\texttt{U+5F45}で，UTF-8では\texttt{E5 BD 85}という3バイトで符号化される．
+欧文部分は2行目によりT1エンコーディングを使うが，それによってこのバイト列を
+解釈すると「å¡Ě」となる．
+
+また，半角カナ「ｱ」は\texttt{EF BD B1}と符号化されるが，
+T1エンコーディングでこのバイト列を解釈すると「ï¡ś」となる．
+\end{curve}
+
+\medskip
+一方，普段Windows上で書いているように，\emph{Shift\_JIS（上記のように正確にはCP932だが）
+でソースを記述}し，タイプセットすると
+\begin{description}
+\item[Windowsの機種依存文字]
+\pTeX では和文文字として認識されるので，タイプセットしたあとの
+    dviファイル中には文字情報が残る．
+
+これにより，dvioutでdviファイルを表示すると問題なく機種依存文字が表示できる
+\footnote{dvioutを悪く言うつもりはないが，
+「最終成果物は\dvipdfmx で変換したPDFであるが，途中ではdvioutを確認に用いる」という
+使い方は，あまりおすすめしない．}．
+ \item[半角カナ] タイプセットで，つまりdviファイルの段階で例えば「ｱｲｳ」が「śšş」と化ける．
+\begin{curve}
+ これも，Shift\_JISでは半角カナ「ｱｲｳ」は\texttt{B1 B2 B3}と符号化されるが，
+\pTeX ではこのバイト列は欧文文字の列とみなされ，T1エンコーディングで組まれるからである．
+\end{curve}
+\end{description}
+
+しかし，\dvipdfmx によりPDFに変換させると，この段階で機種依存文字は抜け落ちる．
+例えば，すぐ上で作ったdviファイルを\dvipdfmx で処理し，PDFファイルを作成すると
+\begin{lstlisting}
+[1
+** WARNING ** No character mapping available.
+ CMap name: H
+ input str: <2d>
+]
+char=0x9348(37704)
+Tried to set a nonexistent character in a virtual font]
+\end{lstlisting}
+のようなメッセージが画面に出力される．
+そして，PDFファイルを見ると，
+\begin{quote}
+ \large 「　」，「　」，「 śšş 」
+\end{quote}
+のように機種依存文字部分は空白になってしまう．\FNAME{a.dvi}からきちんと
+機種依存文字も含んだPDFを作成することは不可能ではないが，
+ここでは言及しない．
+
+
+\subsection{u\pTeX}
+\label{ssec:uptex}
+
+\prettyref{ssec:izon}で書いたように，\pTeX はJIS X 0208の和文文字しか
+そのままでは取り扱えない．
+この不便な状態を解決するため，\pTeX の和文処理をUnicode化したのが田中琢爾氏による
+% \href{http://homepage3.nifty.com/ttk/comp/tex/uptex.html}{\emph{u\pTeX}}
+\emph{u\pTeX}である．
+\begin{itemize}
+ \item Unicodeに収録されている漢字をそのまま\TeX ソース中に書けるようになった．
+但し，後に説明するように基本多言語面(BMP)外の文字を扱うには注意が必要．
+ \item Unicode ブロックごとに「和文扱い」「欧文扱い」を切り替えることができ，
+これによって欧文用\LaTeX における多言語組版がそのままu\pTeX で使えるようになった\footnote{%
+\pTeX では「和文」「欧文」の分別は固定なので，例えばギリシャ文字を「そのまま」入力して
+ギリシャ語をタイプセットすることはできない．}．
+\end{itemize}
+が主な特徴であり，詳しい解説は公式ページや，
+八登氏による「\href{http://zrbabbler.sp.land.to/uplatex.html}{u\pLaTeX を使おう}」
+を参照．
+
+\medskip
+u\pLaTeX（u\pTeX 対応した\LaTeX）で文書を書くのは，
+従来の\pLaTeX で文書を書くのとほとんど変わらない．以下の点に注意すればよい：
+\begin{itemize}
+\item \emph{\TeX ソースの文字コードを\emph{UTF-8}とすること．}\\
+  Mac~OS~XやLinuxでは標準でこの設定になっていることが多いが，
+  WindowsではまだまだShift\_JISが主流であるため，
+  「保存するときに明示的にUTF-8を指定」という作業が必要かもしれない．
+\item \emph{クラスファイルはu\pLaTeX 用のものを使用する．}\\
+\pLaTeX で標準で用意されている\PKG{jarticle},~\PKG{jbook},~\PKG{tarticle}などを
+用いていた場合は，それぞれ先頭に\PKG{u}をつけた
+\PKG{ujarticle},~\PKG{ujbook},~\PKG{utarticle}クラスを用いる．
+\href{http://oku.edu.mie-u.ac.jp/~okumura/jsclasses/}{\pLaTeXe 新ドキュメントクラス}を
+用いていた場合には\texttt{uplatex}オプションを追加するだけで良い．
+\item \emph{\PKG{otf}パッケージを利用する際は，
+\texttt{uplatex}オプションを指定する．}
+%%% なお，\texttt{jis2004}オプションは\texttt{uplatex}オプションとは共存できない．
+%%% ↑現行では解決
+\end{itemize}
+
+例えば，\prettyref{ssec:first}「最初の例」で出したソースをu\pLaTeX 対応にした
+\FNAME{firstu.tex}は，
+\begin{lstlisting}[numbers=left,numberstyle=\tiny,xleftmargin=3\zw]
+\documentclass[uplatex]{jsarticle}
+\begin{document}
+ようこそ，\TeX の世界へ！
+\[
+  \int_0^\infty e^{-x^2}\,dx = \frac{\sqrt{\pi}}{2}.
+\]
+ちょっとチェックしちゃった。
+\end{document}
+\end{lstlisting}
+となり，1行目のクラスファイルだけを変えればよい．
+
+タイプセットは
+\begin{lstlisting}
+> uplatex firstu.tex
+\end{lstlisting}
+でよく，以下のようなメッセージが出て\FNAME{firstu.dvi}が作成されるはずである．
+\begin{lstlisting}
+This is e-upTeX, Version 3.14159265-p3.5-u1.11-130605-2.6 (utf8.uptex) (TeX Live
+ 2016/W32TeX) (preloaded format=uplatex)
+ restricted \write18 enabled.
+entering extended mode
+……（中略）……
+Output written on firstu.dvi (1 page, 840 bytes).
+Transcript written on firstu.log.
+\end{lstlisting}
+そこからPDFファイルを作成する方法は以前と同じであり，
+\begin{lstlisting}
+> dvipdfmx firstu.dvi
+\end{lstlisting}
+とすればよい．\S2.2で紹介した\FNAME{ptex2pdf}を使う場合は，\texttt{-u}を追加する．
+\begin{lstlisting}
+> ptex2pdf -l -u  firstu.tex
+\end{lstlisting}
+
+\paragraph{}
+\leavevmode
+Windowsの機種依存文字などを含んだu\pLaTeX 用\TeX ソースを
+作り，そこからこれらの文字が正常に含まれているPDFファイルを作成せよ．
+
+\medskip
+
+Unicodeには基本多言語面に収録されていない文字もたくさん存在する．
+JIS~X~0213で規定されている漢字の内，{\Large 𦥑𡈽}などの300字程度が該当するし，また
+それ以外にも例えば某牛丼チェーンの「吉」の字（正しくは，上半分が土になっている）がある．
+u\pTeX 自身はこれらのBMP外の文字をきちんと和文文字として認識するが，
+\emph{u\pTeX 標準の日本語フォントでは}事情によりBMP外の文字の出力はサポートされて
+いない．事情については
+\begin{quote}
+ 田中琢爾，「u\pTeX, u\pLaTeX  --- 内部unicode版\ \pTeX, \pLaTeX\ の実装」．\\
+% \url{http://homepage3.nifty.com/ttk/comp/tex/01uptex_doc_utf8.txt}\\
+% \hfill または，
+ \FNAME{C:\texlive\2016\texmf-dist\doc\uptex\base\01uptex_doc_utf8.txt}
+\end{quote}
+の「主な仕様」の$\langle 15\rangle$を参照されたい．BMP外の文字もそのまま扱いたいのならば，
+\begin{lstlisting}[numbers=left,numberstyle=\tiny,xleftmargin=3\zw]
+\documentclass[uplatex]{jsarticle}
+\usepackage[english]{babel}
+\usepackage[main=japanese]{pxbabel}
+\begin{document}
+臼と𦥑，碕と𥔎，土と𡈽
+\end{document}
+\end{lstlisting}
+のようにBabelの機能を利用する\footnote{とはいいながら，
+実際は八登崇之氏による\href{http://zrbabbler.sp.land.to/pxbase.html}{\PKG{pxbabel}パッ
+ケージ}の機能である．
+}のが簡単である．
+
+\newpage
+\begin{curve}
+\pTeX とu\pTeX では，命令名に使える文字が若干異なる．
+例えば，次のソースを\pLaTeX でタイプセットすると「さーばー」という結果を得るが，
+u\pLaTeX では「\texttt{!~Undefined control sequence.}」というエラーが発生する．
+
+\begin{lstlisting}[numbers=left,numberstyle=\tiny,xleftmargin=3\zw]
+\ifdefined\ucs
+  \documentclass[uplatex]{jsarticle}% upLaTeX の場合
+\else
+  \documentclass{jsarticle}%          pLaTeX の場合
+\fi
+\begin{document}
+\newcommand\サーバ{さーば}
+\サーバー
+\end{document}
+\end{lstlisting}
+\pLaTeX では音引き「ー」は命令名に使えないので，「\verb+\+\hbox{}\verb+サーバー+」は
+命令「\verb+\+\hbox{}\verb+サーバ+」の直後に音引き，と扱われる．
+一方，u\pLaTeX では音引きは命令名に使えるので，「\verb+\+\hbox{}\verb+サーバー+」は
+それ自身が1つの命令だと認識されるが，こんな名前の命令は定義されていないのでエラーが発生す
+ る，というわけだ．
+
+同様の非互換性は，中黒「・」，単独の濁点「゛」，単独の半濁点「゜」，繰り返し記号「ゝ」「ゞ」
+ 「ヽ」「ヾ」，同上記号「仝」にも見られる．
+\end{curve}
+
+\newpage
+\section{雑多な話題}\label{sec:ref}
+
+\subsection{ソースコードの組版}
+プログラムのソースコードの組版には，
+\href{http://www.ctan.org/pkg/listings}{\PKG{listings}パッケージ}を利用するのが
+便利である．例えば，
+\lstinputlisting[
+  numbers=left,numberstyle=\tiny
+]{listings_eg.tex}
+をタイプセットすると，
+\begin{lstlisting}[basicstyle=\fontspec{TeXGyreCursor}, %
+  numbers=left, numberstyle=\tiny, language={[90]Fortran}, %
+  keywordstyle=\bfseries\color{blue}, % キーワードは太字青色に
+  commentstyle=\bfseries\color{green!50!black},  % コメントは太字緑色に
+]
+! test.f90
+program test
+  implicit none
+  integer i, j
+  do i = 1,26
+     j = 2**i
+     print *, i, (1d0+1d0/j)**j
+  end do
+end program test
+\end{lstlisting}
+のようになり，キーワードやコメントの書体を自動的に変えることができたりする．
+このソースのように，タイプセット時のオプションは\verb+\lstset+命令の引数や
+\ENV{lstlisting}環境のオプション指定で行うことができる．
+
+\newpage
+\TeX ソース中に直に書くのではなく，外部のソースファイルをそのまま組版したい場合は，
+\begin{lstlisting}
+\lstinputlisting{test.f90}
+\lstinputlisting[language={[90]Fortran}]{test.f90}
+\end{lstlisting}
+などのようにすればよい．
+
+\medskip
+\emph{\PKG{listings}パッケージは日本語との相性が良くないことが知られている}\footnote{%
+\LuaTeX-jaの下で\PKG{listings}パッケージを使用する場合は，自動的に日本語対応強化用の
+パッチを適用するので特に何もしなくても良い．}．
+\pLaTeX・u\pLaTeX においては，My\TeX pertプロジェクト（渡辺徹氏）の
+\href{http://mytexpert.sourceforge.jp/index.php?FrontPage}{Wiki}内から
+ダウンロードできる\PKG{jlisting.sty}と併用することになる．
+
+\subsection{相互参照}
+\label{ssec:ref}
+\subsubsection{相互参照の基本}
+節番号，式番号などを「第3.1節」などと手動でソース中に直に書いてしまうと，文章構成の
+変更で番号が変わった時の対応が非常に大変である．しかし，\LaTeX は
+これらの節番号，式番号などを自動で振ってくれる仕組みが整理されている．
+
+相互参照は，
+\begin{enumerate}
+ \item 参照したい箇所で，\verb+\label{...}+\hskip\ltjgetparameter{xkanjiskip}%
+によってラベルを割り当てる．
+ラベルは比較的自由な名前にできるが，管理のためには
+「図は\texttt{fig:}で始める」
+「式は\texttt{eq:}で始める」などの
+自分なりのルールを作っておくとわかりやすい．
+ \item ラベルを付けた節，式，図，……の番号を出力するには，
+\verb+\ref{...}+\hskip\ltjgetparameter{xkanjiskip}%
+の引数にラベルを与える．
+ \item \verb+\pageref{...}+\hskip\ltjgetparameter{xkanjiskip}を用いると，
+ラベルの存在箇所のページ番号が出力される．
+\end{enumerate}
+と，基本的には\verb+\label+と\verb+\ref+を対にして用いる．
+
+\medskip
+\verb+\ref{...}+\hskip\ltjgetparameter{xkanjiskip}%
+では\emph{番号のみ}出力されることには注意が必要である．
+数式の参照では番号を()でくくることが多いが，
+その際は\verb+(\ref{...})+\hskip\ltjgetparameter{xkanjiskip}%
+とする必要がある．\PKG{amsmath}パッケージに用意されている
+\verb+\eqref{...}+\hskip\ltjgetparameter{xkanjiskip}%
+を使えば，式番号の周囲の括弧を自動で補ってくれる．
+
+節番号，図番号なども同様で，「節」「図」などの接頭辞・接尾辞は自分で入力しないといけない．
+これを解決するためのパッケージとして
+\href{http://www.ctan.org/pkg/cleveref}{\PKG{cleveref}パッケージ}や
+\href{http://www.ctan.org/pkg/prettyref}{\PKG{prettyref}パッケージ}などが
+存在している\footnote{「\TeX~Liveのインストール」中の設定では導入されないようである．}が，詳細は
+ここでは述べず，各自調べてもらうことにする．
+% 「\href{https://sites.google.com/site/6eskymemo/note/tex-lyx/prettyref}%
+% {\LaTeX の相互参照をprettyrefで少し手抜きする}」という外部Webページに譲ることにする．
+
+\medskip
+
+いつまでも一般的な事項だけを述べていては仕方がないので，
+ここで例を上げることにしよう．次の内容の
+\FNAME{reftest.tex}を作る：
+
+\begin{lstlisting}[numbers=left,numberstyle=\tiny,xleftmargin=3\zw]
+\documentclass{jsarticle}
+\usepackage{amsmath}
+\begin{document}
+
+第\ref{sec:hoge}節にある2次方程式(\ref{eq:quad})の解は
+\begin{equation}
+  x=\frac{-3\pm \sqrt{5}}{2}\label{eq:sol}である
+\end{equation}
+
+\section{ほげほげ}\label{sec:hoge}
+
+\begin{equation}
+  x^2+3x+1=0 \label{eq:quad}
+\end{equation}
+の解は，\pageref{eq:sol}ページ中の
+\eqref{eq:sol}である．% 要amsmath
+\end{document}
+\end{lstlisting}
+
+いつものように
+\begin{lstlisting}
+> platex reftest.tex
+\end{lstlisting}
+とタイプセットすると，
+\begin{lstlisting}
+LaTeX Warning: Reference `eq:quad' on page 1 undefined on input line 5.
+LaTeX Warning: There were undefined references.
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+\end{lstlisting}
+のような警告メッセージが表示される．
+\begin{lstlisting}
+> dvipdfmx reftest
+\end{lstlisting}
+によってPDFを作成し，そのPDFを見ると
+\begin{quote}
+\large 第\hbox{}\textbf{??}\hbox{}節にある2次方程式(\hbox{}\textbf{??}\hbox{})の解は
+\end{quote}
+のように，番号が入るべきところが\hskip\ltjgetparameter{xkanjiskip}%
+\textbf{??}\hskip\ltjgetparameter{xkanjiskip}と伏字になっている．
+
+このように，1回のタイプセットでは相互参照は正しく解決されない．これは
+相互参照の情報（どのラベルが，どの番号に対応し，何ページにある）が1回補助ファイルに
+書き出されるからである．
+もう一回
+\begin{lstlisting}
+> platex reftest.tex
+> dvipdfmx reftest
+\end{lstlisting}
+とタイプセット（と\dvipdfmx）を行えば，補助ファイルの情報が読み込まれて，
+\begin{quote}
+\large 第1節にある2次方程式(2)の解は
+\end{quote}
+と正しく表示される．
+
+
+\subsubsection{\PKG{showkeys}パッケージ}
+相互参照のためにたくさん\verb+\label+を使っていると，式や節に
+どのラベルを振ったかわからなくなることがよくある．
+\href{http://www.ctan.org/pkg/showkeys}{\PKG{showkeys}パッケージ}\footnote{%
+マニュアルは実習用マシンの\FNAME{C:￥texlive￥2016￥texmf-dist￥doc￥latex￥tools￥showkeys.pdf}にもある．
+}を利用すると，
+以下のようにラベルが文章中に
+出力されるので管理しやすくなる：
+\begin{itemize}
+ \item \verb+\label+を指定した場所の近くに，そのラベルを
+\,\fbox{\normalfont\small\ttfamily hogehoge}\,のような形式で出力する．
+
+\medskip
+ \item \verb+\ref+や\verb+\pageref+では，
+引数に指定したラベルを\hskip\ltjgetparameter{xkanjiskip}%
+\hbox{%
+   \hbox to 0pt{%
+       \vrule\raise .75em%
+       \hbox{%
+         \underline{%
+           \setbox2=\hbox{\normalfont\footnotesize\ttfamily hogehoge}\dp2=0pt\box2         }
+       }%
+       \hss
+     }%
+   42}%
+のように右上に小さく出力する\footnote{本文と多少かぶっているが，これは仕様である．}．
+\end{itemize}
+
+\subsubsection{\PKG{hyperref}パッケージ}
+また，PDFファイルを（印刷せず）画面上で見る場合には，PDF中に
+文書構造をしおりとして持っていたり，あるいは相互参照元や
+外部のWebページに1クリックで飛べる（ハイパーリンク）と非常に便利である．
+これらの機能を\LaTeX で提供するのが
+\href{http://www.ctan.org/pkg/hyperref}{\PKG{hyperref}パッケージ}\footnote{%
+マニュアルは実習用マシンの\FNAME{C:￥texlive￥2016￥texmf-dist￥doc￥latex￥hyperref￥manual.pdf}にもある．
+}である．
+
+\PKG{hyperref}パッケージ自体は多くの機能を持つ\footnote{いろいろなパッケージと
+干渉することがあるので，できるだけプリアンブルの後ろの方で
+読み込んだほうが良い．}が，本節では
+\verb+\section+などの文書構造をしおりとしてPDF内に埋め込む場合の注意についてのみ述べる．
+
+\medskip
+以下の内容の\FNAME{hytest.tex}を作り，
+普通にタイプセットを2回，その後PDF生成をしてほしい：
+\begin{lstlisting}[numbers=left,numberstyle=\tiny,xleftmargin=3\zw]
+\documentclass{jsarticle}
+\usepackage[dvipdfmx]{hyperref}% dvipdfmx を使うので
+\begin{document}
+\section{最初の節}\label{sec:jpn}
+ほげほげ
+\newpage
+現在の節は\pageref{sec:jpn}ページから始まる．
+\subsection{first subsection}
+\end{document}
+\end{lstlisting}
+すると，2ページ目の「現在の節は1ページから始まる．」の「1」の部分が赤枠で囲まれ，
+その部分をクリックすると1ページ目に飛べるようになる．
+
+\medskip
+さて，PDFのしおりを見ると，\verb+\section+,~\verb+\subsection+で作った見出しが
+（階層構造込みで）含まれ，それぞれをクリックすると各節の最初に飛べる……のだが，
+1つめのしおりが「%
+\hbox{}{\makeatletter\rmfamily\ltj@allalchar “Å‘›‡Ì’ß}\hbox{}%
+」といったわけのわからない文字列に化けている．
+\begin{curve}
+ 「最初の例」をShift\_JISで符号化すると
+\texttt{8DC5 8F89 82CC 90DF}となる．これをバイトごとに区切り，
+各バイトをPDFDocEncodingというエンコーディングで読んだものがこの「%
+\hbox{}{\makeatletter\rmfamily\ltj@allalchar “Å‘›‡Ì’ß}\hbox{}%
+」である．
+\end{curve}
+
+\medskip
+この症状を治すには，従来は
+\begin{lstlisting}
+  \usepackage{atbegshi}
+  \AtBeginShipoutFirst{\special{pdf:tounicode 90ms-RKSJ-UCS2}}
+\end{lstlisting}
+なとどいう「オマジナイ」を書く必要があった．しかし，
+今では八登崇之氏による\href{http://www.ctan.org/tex-archive/language/japanese/pxjahyper}%
+{\PKG{pxjahyper}パッケージ}\footnote{%
+マニュアルは実習用マシンの\FNAME{C:￥texlive￥2016￥texmf-dist￥doc￥platex￥pxjahyper￥pxjahyper.pdf}にもある．
+}を読み込むだけで良くなった．
+
+というわけで，\FNAME{hytest.tex}のプリアンブルを
+\begin{lstlisting}[xleftmargin=3\zw]
+\documentclass{jsarticle}
+\usepackage[dvipdfmx]{hyperref}
+\usepackage{pxjahyper}
+\begin{document}
+\end{lstlisting}
+のように変更し，タイプセットを2回，PDF生成を行えば，しおりも「最初の例」
+と化けないPDFが作成できる．
+
+\subsection{画像}
+\emph{\TeX は，本来画像の挿入や色の設定の機能を持たない}．
+DVIファイルを扱う各ソフトウェアが，
+画像などを扱えるように独自の方法で対応しているに過ぎないのである．
+そのため，画像や色を\TeX で扱う際には，
+「どのソフトで成果物を確認するか」
+ということを常に意識しなければならない．
+
+本節では，\prettyref{sec:primer}のような
+「DVIファイルを\dvipdfmx で常にPDFファイルに変換し，
+それを表示や印刷などに使う」という方針の下で画像を挿入する方法を
+概略だけ説明する．詳しくは
+\begin{itemize}
+ \item \href{http://oku.edu.mie-u.ac.jp/~okumura/texwiki/}{\TeX~Wiki}中の「\TeX 入門/図表」
+ \item 「\href{http://hwb.ecc.u-tokyo.ac.jp/current/}{はいぱーワークブック}」%
+  中の「27.11~グラフィックス」
+\end{itemize}
+を参照して欲しい．
+
+\medskip
+
+以下，「ドキュメント」の中で作業することにする．まず，
+「ドキュメント」に，例で使う2つの画像ファイル
+\href{https://github.com/utmsks/KSImaterial/blob/master/contents/tex/fig1.png}{\FNAME{fig1.png}}%
+と
+\href{https://github.com/utmsks/KSImaterial/blob/master/contents/tex/fig2.pdf}{\FNAME{fig2.pdf}}%
+をダウンロードしておく．
+
+次に，以下の内容を持った\FNAME{grapheg.tex}を作る．
+\begin{lstlisting}[numbers=left,numberstyle=\tiny,xleftmargin=3\zw]
+\documentclass{jsarticle}
+\usepackage[dvipdfmx]{graphicx}
+\begin{document}
+\begin{figure}
+  \centering
+  \includegraphics{fig1.png}
+  \caption{意味のないPNG形式の図}
+  \label{fig:png}
+\end{figure}
+\begin{figure}
+  \centering
+  \includegraphics{fig2.pdf}
+  \caption{意味のないPDF形式の図}
+  \label{fig:pdf}
+\end{figure}
+これでこの文書中には図\ref{fig:png}と
+図\ref{fig:pdf}が挿入される．
+\end{document}
+\end{lstlisting}
+
+さて，画像挿入の際には，タイプセットを行う前に，
+画像がどれくらいのサイズであるかの情報(BoundingBox)を収めた
+ファイルを作成しなければならない．コマンドプロンプトで
+\begin{lstlisting}
+> extractbb fig1.png
+> extractbb fig2.pdf
+\end{lstlisting}
+を実行すると，
+BoundingBoxが格納された\FNAME{fig1.xbb},~\FNAME{fig2.xbb}が生成される．
+その後のタイプセットはいつも通りである．
+\begin{lstlisting}
+> platex grapheg.tex
+> platex grapheg.tex
+> dvipdfmx grapheg.dvi
+\end{lstlisting}
+
+\medskip
+
+画像ファイルが増えるたびに\FNAME{extractbb}を実行しないといけないのは
+面倒だ，という人は，\pLaTeX 実行時に\hskip\ltjgetparameter{xkanjiskip}%
+\texttt{-shell-escape}オプションを追加して
+\begin{lstlisting}
+> platex -shell-escape grapheg.tex
+\end{lstlisting}
+または，\FNAME{ptex2pdf}を使うなら
+\begin{lstlisting}
+> ptex2pdf -l -ot -shell-escape grapheg.tex
+\end{lstlisting}
+のようにすれば，\FNAME{extractbb}は自動で実行される．
+しかし，この\hskip\ltjgetparameter{xkanjiskip}%
+\texttt{-shell-escape}オプションは外部のプログラムを実行可能にするものなので，
+セキュリティ上の問題を引き起こすこともある\footnote{そのため，
+標準ではいくつかの「安全だとわかっている」プログラムに限り実行が許可されている．
+\FNAME{extractbb}をそのリストに追加するには，
+\href{http://oku.edu.mie-u.ac.jp/~okumura/texwiki/}{\TeX~Wiki}中の「\TeX 入門/図表」
+を参照すること．}．
+そのため，面倒だが手動で\FNAME{extractbb}を実行することを勧める．
+
+
+\subsection{図式}
+数学では，
+\[
+  \xymatrix{
+     & C \ar@/_/[ld]_{f} \ar@/^/[rd]^{g} \ar@{-->}[d]^{(f,g)} \\
+   A & A\times B \ar[l]^{\pi_1} \ar[r]_{\pi_2} & B
+  }
+\]
+のような図式を使う（上は直積のuniversalityを表したものである）．
+このような図式を記述するには\hskip\ltjgetparameter{xkanjiskip}%
+\href{http://www.ctan.org/pkg/xypic}{\emph{\Xy-pic}}%
+というパッケージを使うのが便利である．
+\Xy-pic は文法が独特であり，慣れるのはなかなか大変である．
+詳しい使い方は，
+\begin{quote}
+Kristoffer~H. Rose. \textit{Xy-pic User's Guide}, 2013.
+\url{http://mirrors.ctan.org/macros/generic/diagrams/xypic/doc/xyguide.pdf}.\\
+または，\FNAME{C:\texlive\2016\texmf-dist\doc\generic\xypic\xyguide.pdf}
+\end{quote}
+や，公式ページに言及されているいくつかのスライド，
+さらに阿部紀行氏のページ%
+「\href{http://www.math.sci.hokudai.ac.jp/~abenori/}{あべのりページ}」%
+の「\TeX の話」→「\Xy-pic 入門」などを参照して欲しい．
+
+
+……といっても，これだけでは実習資料としてはどう考えても不十分なので，
+上の図式
+\[
+  \xymatrix{
+     & C \ar@/_/[ld]_{f} \ar@/^/[rd]^{g} \ar@{-->}[d]^{(f,g)} \\
+   A & A\times B \ar[l]^{\pi_1} \ar[r]_{\pi_2} & B
+  }
+\]
+の出力に使ったソースを例にとって説明する．
+
+この図式の出力は，プリアンブルに
+\begin{lstlisting}
+\usepackage[all]{xy}
+\end{lstlisting}
+と入力することでXy-picを読み込んだ上で，
+\begin{lstlisting}
+ \[
+  \xymatrix{
+     & C \ar@/_/[ld]_{f} \ar@/^/[rd]^{g} \ar@{-->}[d]^{(f,g)} \\
+   A & A\times B \ar[l]^{\pi_1} \ar[r]_{\pi_2} & B
+  }
+\]
+\end{lstlisting}
+というソースで行った．
+
+図式中に登場する$A$,~$B$などのオブジェクトは，
+\ENV{tabular},~\ENV{array}環境などのように表の形で入力する．
+\texttt{\&}\hskip\ltjgetparameter{xkanjiskip}が列の区切り，
+\verb+\\+が行の区切りである．
+図中$C$は第1行第1列……のように見えるが，第2行第2列の$A\times B$の真上にくるように
+タイプセットしたいので，ソース中では\emph{第1行第2列}の位置に指定する．
+
+\verb+\ar+で始まるのが図式中の矢印である．
+\begin{itemize}
+ \item \verb+[...]+は始点から見て相対的にどのオブジェクトに向かう
+ 矢印なのかを指定する．例えば，\verb+\ar[llu]+ならば，
+ 相対的に2つ左，1つ上のオブジェクトに向かって矢印を書くことになる．
+ \item 矢印には上下にラベルを付けられる．進行方向向かって左側に付けたい場合は
+ \hskip\ltjgetparameter{xkanjiskip}\verb+^+\hskip\ltjgetparameter{xkanjiskip}で，
+ 右側には\hskip\ltjgetparameter{xkanjiskip}\verb+_+%
+ \hskip\ltjgetparameter{xkanjiskip}で通常の添字のように記述する．上のソース中の
+ \verb+\ar[l]^{\pi_1}+\hskip\ltjgetparameter{xkanjiskip}と
+ \verb+\ar[r]_{\pi_2}+\hskip\ltjgetparameter{xkanjiskip}を比較して欲しい．
+ \item \verb+@{...}+\hskip\ltjgetparameter{xkanjiskip}
+ は線種の指定である．通常の矢の他に可換図式で良く使うものとしては
+\[
+ \xymatrix{ A\ar@{=}[r] & B\ar@{-->}[r] & C \ar@{->>}[r] & D}
+\]
+などがあるが，
+これらは
+\begin{lstlisting}
+\[
+ \xymatrix{ A\ar@{=}[r] & B\ar@{-->}[r] & C \ar@{->>}[r] & D}
+\]
+\end{lstlisting}
+によって出力できる．
+
+\newdir{ >}{{}*!/-.75em/@{>}}
+\item monomorphismを表すのに
+\[\xymatrix{A\ar@{ >->}[r]&B}\]
+という矢印を用いることがある．
+安直に
+\begin{lstlisting}
+\[\xymatrix{ A\ar@{>->}[r] & B }\]
+\end{lstlisting}
+とすると
+\[\xymatrix{A\ar@{>->}[r] & B}\]
+となり，矢印と$A$とがかぶってしまう．これを直すためには
+\begin{lstlisting}
+\newdir{ >}{{}*!/-.75em/@{>}}% プリアンブルにでも記述，分量は各自調整
+\[\xymatrix{ A\ar@{ >->}[r] & B }\]
+\end{lstlisting}
+とすればよい．
+
+\item 矢印を少し曲げたい場合には，
+\verb+@/^/+,~\verb+@/_/+\hskip\ltjgetparameter{xkanjiskip}でそれぞれ
+進行方向左側・右側に曲がる．
+\end{itemize}
+
+\paragraph{}
+次の図式（five lemmaの図）をタイプセットせよ．
+\[
+ \xymatrix{
+A\ar[r]^f\ar[d]_\alpha&B\ar[r]^g\ar[d]_\beta
+&C\ar[r]^h\ar[d]_\gamma&D\ar[r]^i\ar[d]_\delta&E\ar[d]_\epsilon\\
+A'\ar[r]_{f'}&B'\ar[r]_{g'}&C'\ar[r]_{h'}&D'\ar[r]_{i'}&E'
+}
+\]
+
+\paragraph{}
+次の各図式をタイプセットせよ．
+\begin{align*}
+\xymatrix{
+ 1\ar[r]^a\ar[dr]_z&A\ar@{-->}[d]^x\ar[r]^f&A\ar@{-->}[d]^x\\
+&N\ar[r]_s&N
+}&&
+\xymatrix{
+X\ar@/^/[r]^f\ar@/_/[r]_g&Y\ar[dr]_{e}\ar@{->>}[r]^q&Q\ar@{-->}[d]^e'\\
+&&A
+ }
+\end{align*}
+
+
+
+\paragraph{}
+次の図式をタイプセットせよ．
+\[
+ \xymatrix{
+&&&&Y'\ar[dd]_e\ar[r]&Y\ar[dd]^p\\
+Z'\times_C D\ar[r]\ar[d]_z\ar@{}[dr]|{\text{p.b.}}
+&Z'\ar[r]\ar[d]_c&Y'\ar@(ur,l)@{=}[rru]
+\ar@{->>}[r]&e(Y')\ar@{_{(}->}[dr]\ar[d]_m&\\
+D\ar[r]\ar[d]_p
+&C\ar@{->>}[rr]&&B'\ar@{->>}[r]&X'\ar[r]\ar[d]_{f'}&X\ar[d]^f&&\\
+B\ar@{->>}[rrrr]&&&&A'\ar@{->>}[r]&A
+}.
+\]
+
+\newpage
+
+\subsection{難しい小ネタ}
+
+\paragraph{}
+以下の内容のソースファイルを\FNAME{twice.tex}として保存し，タイプセットせよ．
+そして，なぜそのような出力結果が得られるのかを説明せよ．
+\begin{lstlisting}[xleftmargin=3\zw, numbers=left, numberstyle=\tiny]
+\let\Enddoc\fi
+\iffalse
+
+あいうえお
+
+\Enddoc
+\documentclass{jsarticle}
+\begin{document}
+
+かきくけこ
+
+\def\Enddoc{\end{document}}
+\makeatletter
+\let\@@let=\let
+\def\let#\char35#1#\char35#2\iffalse{%
+  \global\@@let\let\@@let}
+\@@input \jobname.tex
+\end{lstlisting}
+%%% 答え：
+%%% 1. \iffalse .. \fi は読み飛ばされるので
+%%%    2--6 行目は読み飛ばされる．よって，
+%%%    > \documentclass{jsarticle}
+%%%    > \begin{document}
+%%%    >
+%%%    > かきくけこ
+%%%    >
+%%%    > \def\Enddoc{\end{document}}
+%%%    > \makeatletter
+%%%    > \let\@@let=\let
+%%%    > \def\let#\char35#1#\char35#2\iffalse{%
+%%%    >   \global\@@let\let\@@let}
+%%%    が順に実行される．
+%%% 2. さて，この後，17 行目の \@@input で，twice.tex 自身が
+%%%    もう一回読み直されることになる．
+%%% 3. このとき，1--2 行目は 15, 16 行目の \let の再定義により
+%%%    > \global\@@let\let\@@let
+%%%    （つまり，再定義された \let を下に戻す）処理に置き換わる．
+%%% 4. その後，3, 4, 5 行目と順に進み，6 行目の \Enddoc に到達するが，
+%%%    1 回目の読み込み時に 12 行目において \Enddoc は
+%%%    > \end{document}
+%%%    という内容になっている．
+%%% 5. 以上より，今度は 6 行目でタイプセット処理が終わる．
+%%%
+%%% 結果として，タイプセット全体では次のソースを処理しているのと
+%%% ほとんど変わらない状況となる：
+%%%    > \documentclass{jsarticle}
+%%%    > \begin{document}
+%%%    >
+%%%    > かきくけこ
+%%%    >
+%%%    >
+%%%    > あいうえお
+%%%    >
+%%%    > \end{document}
+
+\paragraph{}
+\<\emph{（幻の``\texttt{This can't happen}''を拝もう）}
+
+
+\TeX\ - \LaTeX\ Stack Exchange中の
+\href{http://tex.stackexchange.com/questions/31517/shortest-code-causing-emergency-stop-error}%
+{Shortest code causing ``Emergency stop.''~error}という投稿によれば，
+以下の1行からなる\TeX ソース：
+\begin{lstlisting}[numbers=left,numberstyle=\tiny,xleftmargin=3\zw, literate={\$}{\#}1]
+\halign{$&&$\cr\multispan{300}\cr}
+\end{lstlisting}
+が``\texttt{This can't happen}''を引き起こすそうだが，残念ながら
+\begin{lstlisting}[numbers=left,numberstyle=\tiny,xleftmargin=3\zw, literate={\$}{\#}1]
+\documentclass{article}
+\begin{document}
+\halign{$&&$\cr\multispan{300}\cr}
+\end{document}
+\end{lstlisting}
+を筆者の環境の\pLaTeX でタイプセットしてもそうはならなかった．
+
+\medskip
+しかし，「\pTeX・\pLaTeX はバグが少ない，やったね！」とは決して言えない．
+\pTeX の日本語対応には不完全なところがまだ残っており，
+短い\TeX ソース（本質的には1行）で，\pLaTeX でタイプセットすると
+\begin{lstlisting}
+! This can't happen (disc4).
+\end{lstlisting}
+というエラーを発生させるものが存在する．
+さて，誰か自力でそれを発見できないだろうか？
+
+%%%%% これが解ける人は「もう引き返せない」人でしょう．
+%%%%% TA 用に答えも載せておきます（以下の 3 行）：
+%%% \documentclass{jsarticle}
+%%% \begin{document}
+%%% \discretionary{}{}{あ}\unskip
+
+\end{document}

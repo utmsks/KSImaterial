@@ -1,0 +1,196 @@
+\documentclass{jsarticle}
+
+\usepackage{amsmath}
+
+\usepackage{listings}
+\usepackage{plistings}
+\usepackage{showexpl}
+\def\lstlistingname{\emph{例}}
+\lstset{pos=l,basicstyle=\tt,basewidth=0.55em,escapechar=\#,xleftmargin=2zw,lineskip=-0.5zw,%
+  explpreset={numbers=left,numberstyle=\tiny,literate={\\\\}{}0 }}
+% \usepackage{cleveref}
+
+\title{\LaTeX レポート添削}
+\author{2017年度 計算数学TA}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{\LaTeX で「良い」コードを書くために}
+修正内容を具体的に指摘する前に，\LaTeX で行儀の良いコードを書くための原則を述べておく.
+\begin{enumerate}
+    \renewcommand{\labelenumi}{(\theenumi)}
+  \item\label{item:iterate} \emph{同じことの繰り返しは手動ではやらない．}\\
+    同じことの繰り返しは機械にやらせるべきである．
+  \item\label{item:number} \emph{文章の構造から決まる数値をソースコード中に直接書かない．}\\
+    例えば定理番号(例えば「定義1.2.3」)やページ番号などは，
+    後々文章を修正した際に変更されることがある．
+    これらを直接書いていたら，ひとつひとつ番号を修正する必要が生じて，非常に面倒である．
+  \item\label{item:structure} \emph{数式や文章の「構造」を意識し，それをソースコードに反映させる．}\\
+    元々\LaTeX は，文章の「構造」と「見た目」を分離して記述するように意図して設計されている．
+    そのようにすることで，後から「見た目」を修正するときに，「構造」ごとに一斉に修正することが容易にできる．
+\end{enumerate}
+
+\section{提出されたレポートの修正内容}
+\subsection{定理環境について}
+数学の授業や文章においては，「定理3.1.4」などの見出しとともに定理の中身を記述することが多い．
+よく使われる形式なので，当然パッケージが用意されている．
+使用例を挙げておくと，以下の通りとなる．
+
+\begin{lstlisting}[numbers=left,numberstyle=\tiny,xleftmargin=3zw]
+\documentclass{jsarticle}
+\usepackage{amsthm}
+\theoremstyle{definition}
+\newtheorem{thm}{定理}[section]
+\newtheorem{prop}[thm]{命題}
+\newtheorem{defn}[thm]{定義}
+\newtheorem*{rmk}{注意}
+
+\begin{document}
+\section{定理環境の使い方}
+\begin{thm}
+  \label{thm:sample}
+  これは定理環境です．
+\end{thm}
+定理\ref{thm:sample}はすごく偉大な定理である．
+\end{document}
+\end{lstlisting}
+
+4--7 行目のように定理環境を定義した後に，\verb|\begin{thm}|と\verb|\end{thm}|などで囲って%
+\footnote{実は，これらの代わりに\verb|\thm|や\verb|\endthm|などと書いてもある程度は動作するが，上記の\verb|\begin|，\verb|\end|を用いた書き方をするべきである．
+}利用する．
+このようにすることで，定理番号も自動で割り振られる．
+上記のソースコードについて，簡単に解説をしておく．
+
+\begin{itemize}
+  \item 3行目の\verb|\theoremstyle{definition}|は，それ以降の\verb|\newtheorem|で定義される定理環境のstyleを設定している．デフォルトのstyleでは定理環境中では文字が斜体になるが，通常\emph{日本語の}文章では斜体にしないため，この設定を行っている．
+  \item 4行目の\verb|[section]|や5行目の\verb|[thm]|などのオプションは，定理などの番号の付け方を指定している．
+    前者はsection番号を頭につけるように，後者は番号を複数の環境を引き継ぐようにしている．
+    また，7行目の\verb|\newtheorem*|は，番号の割り振りを行わないものである．
+  \item 12行目の\verb|\label|と15行目の\verb|\ref|のペアにより，定理番号の参照を行っている．
+    これらを用いることで自動的に割り振られた番号を利用できるため，順番の入れ替えや新たな定理の挿入などを行った際にも番号が自動的に修正される．
+    なお，このlabelの名前は，\verb|thm3|のように番号でつけるのではなく，定理の中身を反映した名前にしておくと，後々の修正の際に問題が起きにくい．
+\end{itemize}
+
+また，定理環境に関連したコメントをいくつか載せておく．
+\begin{itemize}
+  \item 「例」や「用語」なども，定理などと同様の形で見出しとして使われている場合には\verb|\newtheorem|(または\verb|\newtheorem*|)を用いると良いだろう．
+  \item 証明についても，「証明．」や「Proof.」などと直接書くのではなく，証明のための環境を用いるべきである．
+    例えば\textsf{amsthm}で定義されている\verb|proof|環境を用いる\footnote{\verb|\begin{proof}|と\verb|\end{proof}|で囲う．}と良いだろう．
+  \item 定理環境の右下に終了記号をつける場合は，例えば\textsf{thmtools}パッケージを用いて以下のように定理環境を定義すると良い．
+    \begin{lstlisting}
+      \declaretheoremstyle[qed=\qedsymbol]{mythmstyle}
+      \declaretheorem[style=mythmstyle,title=定理]{thm}
+    \end{lstlisting}
+\end{itemize}
+
+
+\subsection{箇条書きについて}
+箇条書きを直接書くべきではない．
+\verb|itemize|環境や\verb|enumerate|環境を用いて以下のように書くのが良い．
+詳細については例えば「美文書作成入門」の第3.20節%
+\footnote{これは第7版の場合．旧版の場合は異なっているかもしれない．}%
+「箇条書き」を参照．
+
+\begin{LTXexample}[caption={番号なし},width=0.3\textwidth]
+\begin{itemize}
+  \item hoge
+  \item fuga
+\end{itemize}
+\end{LTXexample}
+
+\begin{LTXexample}[caption={番号あり},width=0.3\textwidth]
+\begin{enumerate}
+  \item hoge
+  \item fuga
+\end{enumerate}
+\end{LTXexample}
+
+また，番号の形式を変更したい場合は以下のようにすれば良い．
+\begin{LTXexample}[caption={括弧つき番号},width=0.3\textwidth]
+\begin{enumerate}
+  \renewcommand{\labelenumi}{(\theenumi)}
+  \item hoge
+  \item fuga
+\end{enumerate}
+\end{LTXexample}
+
+\begin{LTXexample}[caption={括弧つきアルファベット},width=0.3\textwidth]
+\begin{enumerate}
+  \renewcommand{\theenumi}{\alph{enumi}}
+  \renewcommand{\labelenumi}{(\theenumi)}
+  \item hoge
+  \item fuga
+\end{enumerate}
+\end{LTXexample}
+
+なお，これらのitemの番号も\verb|\label|と\verb|\ref|で参照することができる．
+後々itemを入れ替える可能性を考慮すると，直接書くのではなくこれらを利用して参照した方が良いだろう．
+
+\subsection{数式の細部について}
+以下に間違いの例を載せる．
+いずれも実習資料の2章「\LaTeX の作法」に修正方法が載っているので，参照してほしい．
+\begin{itemize}
+  \item 「\verb|fは[a,b]上の関数|」や「\verb|$fは[a,b]上の関数$|」など，数式モードを適切に使えていない．
+  \item 「関数$f$の実部」の表記として\verb|$Ref$|を使っているなど，数式中で立体にするべきものをしていない．
+  \item 非推奨である\verb|eqnarray|を使っている．
+  \item 絶対値記号をただ単に\verb+$|x|$+と書いている．
+\end{itemize}
+
+\subsection{その他}
+\begin{itemize}
+  \item 例えば \verb|\section*{1章 調和関数}| などのように，sectionの番号を直接記述するべきではない．
+    この場合は，予め \verb|\renewcommand{\thesection}{\arabic{section}章}| と書いておき，\verb|\section{調和関数}| とすると良いだろう．
+  \item \verb|{\bf 太字}| は非推奨である．代わりに \verb|\textbf{太字}| を用いるべきである．
+    \verb|\rm| や \verb|\it| などについても同様．
+  \item 無闇に \verb*|\ | などの空白をあけるコマンドを使用しない．
+    特に，行頭に毎回 \verb*|\ | を挿入したり，空白の調整のために \verb*|\ \ \ \ | のように連続で使用するのは問題がある．
+    前者については，(手書きではなく\TeX による)通常の数学の文章ではそのようなインデントはするべきではない．
+    どうしても必要な場合でも，環境を用いるなどして \verb*|\ | を繰り返し入力することは避けるべきである．
+    後者の最も簡単な解決策は \verb|\hspace| コマンドを用いることである．
+    ただし，それよりも適した方法が存在する場合(例えば右寄せにしたい場合など)が多い．
+\end{itemize}
+
+% \subsection{arata}
+% % sectionのナンバリング
+% % \verb|\section*{1章 調和関数}| →
+% % \verb|\renewcommand{\thesection}{\arabic{section}章}| \verb|\thesection|に「章」を含めてしまうのは問題があるかも？
+
+% \begin{lstlisting}
+% % \section{調和関数}定理等
+% % Def 1.1.1 \\ → \newtheorem を使う
+% % 箇条書きとそのカスタマイズ
+% % (1), (2), … → \begin{enumerate}\renewcommand{\labelenumi}{(\theenumi)}〜\end{enumerate}
+% % (a), (b), … → \begin{enumerate}
+% %                     \renewcommand{\theenumii}{\alph{enumii}}
+% %                     \renewcommand{\labelenumi}{(\theenumi)}
+% %                 \end{enumerate}
+% % 絶対値記号→\lvert\rvert
+% % \| → \lVert, \rVert
+% % 相互参照を使う
+% % Prop 1.2.3 → Prop~\ref{…}
+% % eqnarray* 環境 → align* 環境 (AMS-LaTeX)
+% % {\bf …} → \textbf{…}
+% % \mathrm{Re} → \operatorname{Re} または \DeclareMathOperator{\RealPart}{Re}して \RealPart (\Re は定義済みなので \DeclareMathOperator で再定義することはできない）(AMS-LaTeX)
+% \dots,\cdots, → カンマ区切りの場合は \dotsc (AMS-LaTeX)
+% \end{lstlisting}
+
+% \subsection{wakatsuki}
+% \begin{itemize}
+%   % \item a\verb|\defi|直書き → begin{defi}
+%   % \item \verb|$Ref$|
+%   % \item 「例．」直書き → newtheorem
+%   % \item subsection*{Def1.1}, section*{1章}
+%   % \item 定理番号直書き → label, ref を使う
+%   % \item Proof直書き
+%   % \item label{0}, label{thm1}
+%   % \item 数式に入れるべきものを入れていない
+%   % \item s.t.が数式内に
+%   % \item theoremstyleは一回でok
+%   \item \verb|\begin{dfn}...\thmend\end{dfn}| のthmendを毎回書いている
+%   % \item \verb|\ \ \ \ \ \ | → hspace?
+% \end{itemize}
+
+
+\end{document}

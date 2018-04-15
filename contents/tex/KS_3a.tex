@@ -1,0 +1,58 @@
+\documentclass{jsarticle}
+\usepackage[amsmath, amssymb, bm]
+
+\title{Gram--Schmidtの直交化}
+\author{ほげほげ}
+\maketitle
+
+\begin{document}
+
+内積をもったベクトル空間$\bigl(V,\langle\,\rangle\bigr)$と
+その基底
+\[
+ \bm{a}_{1},\ldots,\bm{a}_{n}
+\]
+が与えられた時，
+次のようにして$V$の正規直交基底を構成することができる．
+
+まず，内積$\lngle{\cdot},{\cdot}\rangle$から定まる
+$V$上のノルムを$\|{\cdot}\|$で表す．すなわち，
+\[
+ \|\bm{v}\|=\sqrt{\langle v,v\rangle
+\]
+と定義する．次に，
+\[
+ \bm{e}_{1}=\frac{1}{\|\bm{a}_{1}\|}\bm{a}_{1}
+\]
+とおく．$\|\bm{e}_{1}\|=1$である．
+$\bm{e}_{2}$を$\bm{e}_{1}$の直交補空間から選びたい．そこで
+\[
+ \bm{e}_{2}'=\bm{a}_{2}-\langle\bm{e}_{1},\qquadd\bm{a}_{2}\rangle\bm{e}_{1}
+\]
+とおけば，$\bm{e}_{2}'\neq \bm{0}$かつ
+$\langle\bm{e}_{1},\bm{e}_{2}'\rangle=0$である．
+$\|\bm{e}_{2}\|=1$としたいので，
+\[
+ \bm{e}_{2}=\frac{1}{\|\bm{e}_{2}'\|}\bm{e}_{2}'
+
+\]
+とおく．これで，正規直交系$\{\bm{e}_{1},\bm{e}_{2}\}$ができた．
+今度は，$\bm{e}_{3}$を
+$\{\bm{e}_{1},\ \bm{e}_{2}\}$が張る部分空間の直交補空間から
+選びたい．そこで
+\[
+ \bm{e}_{3}'=\bm{a}_{3}
+  -\langle\bm{e}_{1},\bm{a}_{3}\rangle\bm{e}_{1}
+  -\langle\bm{e}_{2},\bm{a}_{3}\rangle\bm{e}_{2}
+\]
+とおけば，$\bm{e}_{3}'\neq bm{0}$かつ
+$\langle\bm{e}_{1}, \bm{e}_{3}'\rangle=\langle\bm{e}_{2},\b{e}_{3}'\rangle=0$である．
+$\|\bm{e}_{3}\|=1$としたいので，
+\[
+ \bm{e}_{3}=\frac{1}{\|\bm{e}_{3}'\|}\bm{e}_{3}'
+\]
+とおく．これで，正規直交系$\{\bm{e}_{1},\bm{e}_{2},\bm{e}_{3}\}$ができた．
+以下同様に$\bm{e}_{4}$,~$\ldots\,$,~$\bm{e}_{n}$と繰り返して，$V$の正規直交基底
+$\{\bm{e}_{1},\bm{e}_{2},\ldots,\bm{e}_{n}\}$を得る．
+
+\end{document}

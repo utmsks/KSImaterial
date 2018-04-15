@@ -1,0 +1,23 @@
+\documentclass{jsarticle}
+\usepackage{courier}
+\usepackage[dvipdfmx]{xcolor}
+\usepackage{listings}
+\lstset{
+  basicstyle=\ttfamily, % タイプライタ体の利用
+  numbers=left, numberstyle=\tiny, % 行番号の表示
+  keywordstyle=\bfseries\color{blue}, % キーワードは太字青色に
+  commentstyle=\bfseries\color{green!50!black},  % コメントは太字緑色に
+}
+\begin{document}
+\begin{lstlisting}[language={[90]Fortran}]
+! test.f90
+program test
+  implicit none
+  integer i, j
+  do i = 1,26
+     j = 2**i
+     print *, i, (1d0+1d0/j)**j
+  end do
+end program test
+\end{lstlisting}
+\end{document}

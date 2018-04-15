@@ -1,0 +1,98 @@
+\documentclass{jsarticle}
+\usepackage{amsmath, amssymb,amsthm}
+
+\theoremstyle{definition}
+\newtheorem*{thm}{定理}
+
+\title{計算数学I\quad \TeX 初級者向けの写経課題}
+\begin{document}
+\maketitle
+
+本文章は，高木貞治『代数的整数論』の「第1章 代数的整数」の一部を
+引用，改変したものである．
+
+\bigskip
+
+代数的の数とは，有理数を係数とする代数方程式の根をいう．
+その方程式が一次ならば，根は有理数である．
+故に有理数は代数的な数の特別の場合である．
+有理係数の方程式を，しばしば，次のような標準的の形に書いて取扱う．
+
+\begin{enumerate}
+\renewcommand{\labelenumi}{(\arabic{enumi}${}^\circ$)}
+\item 首項の係数で割れば，他の係数は有理数で，方程式の形は
+  \[
+    x^n+a_1x^{n-1}+\cdots+a_n=0,\qquad \text{$a_i$は有理数．}
+  \]
+\item 係数の分母を払って，公約数を取り去れば，方程式は
+  \[
+    a_0x^n+a_1x^{n-1}+\cdots+a_n=0.
+  \]
+  左辺は所謂原始的多項式である．
+  即ち$a_0$,~$a_1$, $\ldots\,$,~$a_n$は整数で，それらの最大公約数は1．
+  なお$a_0>0$と仮定してもよい．
+\end{enumerate}
+
+\begin{thm}
+代数的の数の和は，再び代数的の数となる．
+\end{thm}
+
+\begin{proof}
+二つの代数的の数$\alpha$,~$\beta$に対し，
+$\xi=\alpha+\beta$が代数的の数となることを示す．
+$\alpha$,~$\beta$は代数的の数であるから，それぞれを根にもつ有理係数方程式
+\begin{align}
+  x^m+a_1x^{m-1}+\cdots+a_m&=0,\label{alpha}\\
+  x^n+b_1x^{n-1}+\cdots+b_n&=0 \label{beta}
+\end{align}
+が存在する．
+
+次に，$\mu=0$,~1, $\ldots\,$,~$m-1$と$\nu=0$,~1, $\ldots\,$,~$n-1$に対して，
+\begin{equation}
+  \alpha^{\mu}\beta^{\nu}\label{multi}
+\end{equation}
+を辞書式順序で並べたものを
+$\omega_1$,~$\omega_2$, $\ldots\,$,~$\omega_l$\ \ ($l=mn$)%
+と書けば，各$i=1$,~2, $\ldots\,$,~$l$に対して，対応する$\mu$と$\nu$を用いて
+\[
+  \xi\omega_i=(\alpha+\beta)\alpha^{\mu}\beta^{\nu}
+  =\alpha^{\mu+1}\beta^{\nu}+\alpha^{\mu}\beta^{\nu+1}
+\]
+が成り立つ．
+
+$0\leq\mu\leq m-2$かつ$0\leq\nu\leq n-2$ならば，
+$\xi\omega_i$は\eqref{multi}の二つの数の和に等しい．
+また，もし$i=m-1$または$j=n-1$ならば，\eqref{alpha},~\eqref{beta}より
+\begin{align*}
+  \alpha^m+a_1\alpha^{m-1}+\cdots+a_m&=0,\\
+  \beta^n+b_1\beta^{n-1}+\cdots+b_0&=0
+\end{align*}
+であるから，$\alpha^m=-a_1\alpha^{m-1}-\cdots-a_m$と
+$\beta^n=-b_1\beta^{n-1}-\cdots-b_0$を代入することによって，
+$\xi\omega_i$を$\omega_1$,~$\omega_2$, $\ldots\,$,~$\omega_l$たちの
+有理係数の線型結合として表すことができる．
+
+以上をまとめると，$i=1$,~2, $\ldots\,$,~$l$と$j=1$,~2, $\ldots\,$,~$l$に対して
+有理数$c_{ij}$が存在して
+\[
+  \xi\omega_i=\sum_{j=1}^lc_{ij}\omega_j
+\]
+が成り立つ．これを用いて，$l$次正方行列の行列式に関する方程式
+\[
+  \begin{vmatrix}
+    c_{11}-\xi &c_{12}     &\cdots &c_{1l}\\
+    c_{21}     &c_{22}-\xi &\cdots &c_{2l}\\
+    \vdots     &\vdots     &\ddots &\vdots\\
+    c_{l1}     &c_{l2}     &\cdots &c_{ll}-\xi
+  \end{vmatrix}
+  =0
+\]
+を考える．左辺を展開すれば，
+\[
+  \xi^l+{\tilde{c}}_1\xi^{l-1}+\cdots+{\tilde{c}}_l=0
+\]
+を得る．
+ここに，各${\tilde{c}}_i$は有理数$c_{ij}$たちの整式として表される実数である．
+特に，各${\tilde{c}}_i$も有理数であるから，$\xi$は代数的の数である．
+\end{proof}
+\end{document}

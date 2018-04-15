@@ -1,0 +1,114 @@
+%%%
+\RequirePackage{float,mflogo,metalogo,graphicx,
+  xcolor,booktabs,listings,amsmath,amssymb,mleftright, mathtools}
+\usepackage[all]{xy}
+\definecolor{red}{HTML}{FF2800}
+\definecolor{blue}{HTML}{0041FF}
+\definecolor{green}{HTML}{35A168}
+
+\ifdefined\directlua
+  \ltjsetparameter{alxspmode={`\\,allow}}
+  \ltjsetparameter{alxspmode={`\$,allow}}
+  \usepackage{luatexja-adjust}
+  \usepackage{luatexja-fontspec}
+  \usepackage{luatexja-otf}
+  \directlua{luatexja.otf.enable_ivs()}
+  \setmainjfont[BoldFont=ipaexg.ttf]{ipaexm.ttf}
+  \setsansjfont{ipaexg.ttf}
+  \usepackage{stfloats}\fnbelowfloat
+  \normalsize
+  \usepackage[textwidth=45\zw,lines=40,papersize={182mm,257mm}]{geometry}
+  \def\headfont{\normalfont\gtfamily\bfseries\mathversion{bold}}
+  \def\emph#1{\textbf{\textgt{\mathversion{bold}#1}}}
+\else
+  \usepackage{zxjatype}
+  \setjamainfont[BoldFont=ipaexg.ttf]{ipaexm.ttf}
+  \setjasansfont{ipaexg.ttf}
+  \setjamonofont{ipaexg.ttf}
+  \let\zw\jsZw\normalsize
+  \setpagelayout*{textwidth=45\zw,lines=40,papersize={182mm,257mm}}
+  \advance\footskip6mm
+  \def\headfont{\normalfont\bfseries\mathversion{bold}}
+  \def\emph#1{\textbf{\mathversion{bold}#1}}
+\fi
+\normalsize
+\lstset{basicstyle=\small\tt,basewidth=0.55em,escapechar=\#,xleftmargin=2\zw}
+\def\lstlistingname{\emph{例}}
+\baselineskip1.75\zw
+
+\setmonofont[BoldFont=Inconsolatazi4-Bold.otf]{Inconsolatazi4-Regular.otf}
+
+\usepackage[labelfont=bf,justification=raggedright,%
+  singlelinecheck=false]{caption}
+\DeclareCaptionLabelSeparator{wquad}{\hskip1\zw}
+\captionsetup{labelsep=wquad}
+
+\DeclareRobustCommand\pTeX{p\kern-.15em\TeX}
+\DeclareRobustCommand\pLaTeX{p\LaTeX}
+\DeclareRobustCommand\pLaTeXe{p\LaTeXe}
+\ifdefined\eTeX\else
+  \DeclareRobustCommand\eTeX{$\varepsilon$-\TeX}
+\fi
+\newcommand\pdfLaTeX{pdf\LaTeX}
+\def\pdfTeX{pdf\TeX}
+\def\dvipdfmx{DVIPDFM$x$}
+\def\cs#1{\texttt{\textbackslash#1}}
+
+\def\floatpagefraction{0.0}
+\def\textfraction{0.0}
+\def\topfraction{1.0}
+\setcounter{totalnumber}{100}
+\setcounter{tocdepth}{2}
+
+\usepackage[
+  unicode=true,
+  urlcolor=blue,
+  urlbordercolor=blue,
+  linkcolor=green!75!black,
+  linkbordercolor=green!75!black,
+  pdftitle={TeX 実習},
+  colorlinks=true,
+]{hyperref}
+
+\Hy@AtBeginDocument{%
+  \def\@pdfborder{0 0 1}% Overrides border definition set with colorlinks=true
+  \def\@pdfborderstyle{/S/U/W 1}% Overrides border style set with colorlinks=true
+                                % Hyperlink border style will be underline of width 1pt
+}
+
+\date{\today}
+\author{}
+\def\@maketitle{%
+    \newpage\null
+    \vskip 2em
+    \begin{center}%
+      \let\footnote\thanks
+      {\LARGE \@title \par}%
+      \vskip 2em
+      {\large \@date}%
+    \end{center}%
+    \par\vskip 1.5em
+    \ifvoid\@abstractbox\else\centerline{\box\@abstractbox}\vskip1.5em\fi
+  }
+
+
+%%% ￥ は \ に置換される．
+\catcode`\￥=13\global\let￥\textbackslash
+\makeatletter
+%%% \FNAME 中では \ _ がそのまま使用可能，￥
+\def\FNAME{\catcode`\;=0 \catcode`\\=12 \catcode`\_=12\relax\@FNAME}
+\def\@FNAME#1{\texttt{#1}\catcode`\_=8 \catcode`\\=0 \catcode`\;=12\relax}
+%%別名
+\let\ENV=\texttt
+\DeclareRobustCommand\PKG[1]{\textsf{#1}}
+\def\SYM#1{\texttt{\textbf{#1}}}
+
+
+%%% 危険な曲がり角
+\font\mf=manfnt at10pt
+\def\curve{\par\vskip-\lastskip\medskip\hangindent=2.5\zw\hangafter=-2\small\parindent=1\zw%
+\leftskip0pt\noindent\null\hskip-2.5\zw\hbox to 2.5\zw{\mf\char'177\hss}%
+\everypar{\hangindent=0pt\everypar{}}\ignorespaces}
+\def\endcurve{\par}
+
+\endinput

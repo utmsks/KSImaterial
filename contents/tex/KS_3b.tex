@@ -1,0 +1,73 @@
+\documentclass{jsarticle}
+\usepackage{amsmath, amssymb}
+
+\title{極限と積分の順序交換}
+\begin{document}
+\author{自分の名前に書き換える}
+\maketitle
+
+一般に，関数の極限と積分を交換することはできない．そのような例を以下に示す．
+
+$n=1,~2,~3.~\ldots$に対して，$f_{n}:\mathbb{R}\to\mathbb{R}$を
+\begin{align*}
+f_{n}(x)=
+  \begin{cases}
+  \frac{1}{n}x~(0\leq x\leq n)\\
+  2-\frac{1}{n}x~(n\leq x\leq 2n)\\
+  0~(\text{otherwise})
+  \end{cases}
+\end{align*}
+と定める．このとき，
+\begin{align}
+ \lim_{n\to\infty}\int_{0}^{\infty}f_{n}(x)dx
+ \neq\int_{0}^{\infty}\lim_{n\to\infty}f_{n}(x)dx\label{infty}
+\end{align}
+であることを確認しよう．まず,左辺の値を計算する．任意の$n$に対して，\\
+$\int_{0}^{\infty}f_{n}(x)dx=1$\\
+であるから，
+\[
+ \lim_{n\to\infty}\int_{0}^{\infty}f_{n}(x)dx=1
+\]
+がわかった．次に，右辺の値を計算する．$f_{n}$の定義より，
+\[
+ \lim{}_{n\to\infty}f_{n}(x)\equiv 0
+\]
+だから，
+\[
+ \int_{0}^{\infty}\lim_{n\to\infty}f_{n}(x)dx=0
+\]
+がしたがう。これで，(\ref{infty})が正しいことが確かめられた．\\
+このような現象は，積分区間が有限でないから起きたのだろうか．
+実は，そうではない．次のような例もある．
+
+$n=1,~2,~3, ...$に対して，$g_{n}:(0,1]\mapsto\mathbb{R}$を
+\begin{align*}
+g_{n}(x)=
+  \begin{cases}
+  2n-2n^{2}x & (0<x≦\frac{1}{n})\\
+  0 & (otherwise)
+  \end{cases}
+\end{align*}
+と定める．このとき，
+\begin{align}
+ \lim_{n\to\infty}\int_{0}^{1}g_{n}(x)\mathrm{dx}
+ \neq\int_{0}^{l}\lim_{n\to\infty}g_{n}(x)dx\label{fin}
+\end{align}
+であることを確認しよう．まず，左辺の値を計算する．任意の$n$に対して、
+\[
+ \int_{0}^{1}g_{n}(x)dx=2
+\]
+であるから，
+\[
+ \lim_n\to\infty\int_{0}^{1}h_{n}(x)dx=1
+\]
+がわかった．次に，右辺の値を計算する．$g_{n}の定義より，$
+\[
+ \lim_{n\to\infty}g_{n}(x)\cong 0
+\]
+だから，
+\[
+ \int_{0}^{\infty}\lim_{n\to\infty}g_{n}(x)dx=0
+\]
+がしたがう．これで，[\ref{fin}]が正しいことが確かめられた.
+\end{document}
