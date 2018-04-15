@@ -9,7 +9,8 @@
 
 ## 実習用資料
 ### 実習のためのTips
-- [Windows Updateを実行する](windowsupdate.md)
+- [Windows Updateを実行する](contents/windowsupdate.md)
+- [Windowsシステムを使う上で知っておいてほしいこと](contents/usewindows.md)
 
 ### PCハードウェア、Windowsインストール
 - [PCメンテナンス(2018)](https://sites.google.com/g.ecc.u-tokyo.ac.jp/ks2018-tsuchiya/pcメンテナンス2018)
