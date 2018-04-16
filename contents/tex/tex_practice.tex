@@ -1472,16 +1472,10 @@ LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 \end{curve}
 
 \medskip
-この症状を治すには，従来は
-\begin{lstlisting}
-  \usepackage{atbegshi}
-  \AtBeginShipoutFirst{\special{pdf:tounicode 90ms-RKSJ-UCS2}}
-\end{lstlisting}
-なとどいう「オマジナイ」を書く必要があった．しかし，
-今では八登崇之氏による\href{http://www.ctan.org/tex-archive/language/japanese/pxjahyper}%
+この症状を治すには，八登崇之氏による\href{http://www.ctan.org/tex-archive/language/japanese/pxjahyper}%
 {\PKG{pxjahyper}パッケージ}\footnote{%
 マニュアルは実習用マシンの\FNAME{C:￥texlive￥2016￥texmf-dist￥doc￥platex￥pxjahyper￥pxjahyper.pdf}にもある．
-}を読み込むだけで良くなった．
+}を，\PKG{hyperref}パッケージの\emph{後に}読み込む．
 
 というわけで，\FNAME{hytest.tex}のプリアンブルを
 \begin{lstlisting}[xleftmargin=3\zw]
