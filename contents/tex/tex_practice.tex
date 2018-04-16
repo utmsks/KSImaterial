@@ -540,11 +540,29 @@ $f(x)=0$となる$0<x<1$が存在する．
 1行目左は$s\cdot i\cdot n\cdot x$の意味に解釈されてしまう．
 1行目右も空白が足りない．
 なお，\cs{sin}のような専用命令が予め準備されていない状況もあるが，その場合は定義すれば良い．
-例えば，\cs{dom}を使いたいならば
+例えば，\cs{dom}を使いたいならばプリアンブルに
 \begin{quote}
   \verb@\newcommand\dom{\mathop{\mathrm{dom}}}@
 \end{quote}
-をプリアンブルに記述すれば良い．
+と記述するか，あるいは\PKG{amsmath}パッケージ\footnote{%
+アメリカ数学会による，数式組版の機能を
+拡張するパッケージ．数学科の諸君なら，\PKG{amssymb}パッケージと共に
+いつでも読み込むようにしておこう．
+基本的なマニュアルは，%
+\href{http://www.ring.gr.jp/pub/text/CTAN/macros/latex/required/amslatex/math/amsldoc.pdf}%
+{User's Guide for the \texttt{amsmath} Package}．
+実習用マシンにも
+\FNAME{C:￥texlive￥2016￥texmf-dist￥doc￥latex￥amslatex￥math￥amsldoc.pdf}にある．
+}を読み込んだ上で
+\begin{quote}
+  \verb@\DeclareMathOperator{\dom}{dom}@
+\end{quote}
+と記述すれば良い\footnote{%
+別行立て数式の中で添字の位置を$\operatorname{Res}_{z=a}$ではなく$\displaystyle\operatorname*{Res}_{z=a}$のように真下にしたい場合は，
+スター\texttt{*}付きの\cs{DeclareMathOperator*}を使う．
+例：\texttt{\cs{DeclareMathOperator*}\{\cs{Residue}\}\{Res\}}
+}．
+いちいち命令を定義したくない場合は，\cs{operatorname}命令を使って数式中に直接\verb@\operatorname{dom}@と書くこともできる．
 
 \medskip
 
@@ -559,15 +577,7 @@ $f(x)=0$となる$0<x<1$が存在する．
 正：$f(a,b,\ldots,z)$
 \end{LTXexample}
 
-\PKG{amsmath}パッケージ\footnote{アメリカ数学会による，数式組版の機能を
-拡張するパッケージ．数学科の諸君なら，\PKG{amssymb}パッケージと共に
-いつでも読み込むようにしておこう．
-基本的なマニュアルは，%
-\href{http://www.ring.gr.jp/pub/text/CTAN/macros/latex/required/amslatex/math/amsldoc.pdf}%
-{User's Guide for the \texttt{amsmath} Package}．
-実習用マシンにも
-\FNAME{C:￥texlive￥2016￥texmf-dist￥doc￥latex￥amslatex￥math￥amsldoc.pdf}にある．
-}を読み込んでいるなら，\cs{dotsb}などの命令も参照．
+\PKG{amsmath}パッケージを読み込んでいるなら，\cs{dotsb}などの命令も参照．
 なお，\LaTeX で標準で用意されている\cs{dots}命令だが，
 \PKG{amsmath}パッケージを読み込んでいるかで動作が変わり，
 \begin{itemize}
