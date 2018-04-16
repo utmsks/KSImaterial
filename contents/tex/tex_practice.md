@@ -25,7 +25,7 @@ PDFファイルなどはダウンロードした後にPDFビューアを用い�
 - [TeX Live のインストール](tex_inst.pdf) に沿って TeX Live 2016 を導入する．
 
 ## 実習
-インストールが済んだら，各自のレベルに合わせて [TeX 実習](tex_practice.pdf) に沿って実習を進めること．
+インストールが済んだら，各自のレベルに合わせて [TeX 実習 (tex_practice.pdf)](tex_practice.pdf) に沿って実習を進めること．
 
 - 昨年度の受講生の中間レポートを添削した際の講評が，
   [tensaku.pdf](tensaku.pdf)としてまとめてある．
