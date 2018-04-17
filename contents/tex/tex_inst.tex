@@ -42,8 +42,8 @@ Windowsでの\TeX システムとしては，昔から角藤亮氏による
 を用いることにする\footnote{%
   \href{http://www.tug.org/texlive/}{\emph{\TeX~Live}}%
   は，世界中の\TeX に関するプログラム・パッケージ類を収めたものであり，
-  毎年一回リリースされている．日本語対応も近年(2010--2013年)強化されており，
-  まともに扱えるものになってきた．
+  毎年一回リリースされている．日本語対応も近年(2010--2013年)強化され，
+  まともに扱えるものになった．
   %%% たぶん実習時点ではこうなってるはず
   % なお，\TeX~Live~2013の更新は4月初旬で終了しており，
   % 現在はTL~2014 pretestが行われている段階である．
@@ -52,9 +52,9 @@ Windowsでの\TeX システムとしては，昔から角藤亮氏による
 \medskip
 \TeX~Liveをインストールした後は，各自の知識に沿って実習を進めてほしい，
 計算数学実習資料集の
-「\href{http://material.utmsks.net/home/platex2017}{\TeX 実習(2017)}」
+「\href{https://github.com/utmsks/KSImaterial/blob/master/contents/tex/tex_practice.md}{\TeX 実習}」
 %%% まだ作ってない
-のページ内にある「\TeX 実習」を参照すること．
+のページ内にある「\TeX 実習(\FNAME{tex_practice.pdf})」を参照すること．
 
 \medskip
 以下，\url{about:blank}のような部分は外部リンクで，
@@ -81,14 +81,15 @@ Windowsでの\TeX システムとしては，昔から角藤亮氏による
 \begin{enumerate}
   \itemsep\medskipamount
   \setcounter{enumi}{-1}
-\item コントロールパネル\footnote{左下の Windows ボタンを右クリックすると一覧に出てくる}
+\item コントロールパネル\footnote{左下の検索ボックスで「コントロールパネル」を検索する．}
   右上の検索ボックスに「拡張子」と入力して検索し，
   「ファイルの拡張子の表示または非表示」を選択．
-  現れた画面下部の「詳細設定」をスクロールし，
+  現れた画面中心の「詳細設定」のボックスをスクロールし，
   下の方にある「登録されている拡張子は表示しない」のチェックを\emph{外す}．
 
   \begin{itemize}
   \item \TeX 実習に限らず，本授業の実習ではこの設定にしておいた方が良い．
+  \item また，受講生所有のPCにもこの設定を行うことを推奨する．
   \item 「拡張子」やこの設定の意味が分からない場合は，
     インターネットで検索するか TA に聞くなどして，今のうちに理解しておくと良いだろう．
   \end{itemize}
@@ -98,24 +99,29 @@ Windowsでの\TeX システムとしては，昔から角藤亮氏による
   デスクトップ以下にコピーする．
   \begin{itemize}
   \item USB 3.0 (青い USB 端子) に挿した方が速く，2分程度で終了する．
-  \item コピーし終わった後は，USBメモリはもう必要ない．
+  \item コピーし終わった後は，USBメモリはもう必要ない(ので，TAに返却する)．
   \end{itemize}
 \item \texttt{tex} ディレクトリの中には，
   \texttt{win}と\texttt{mac}，そして \texttt{texlive2016} の3つのディレクトリがある．
   本実習では，前者2つは使用せず，\texttt{texlive2016} の中身のみを使用する．
   \begin{itemize}
   \item 書籍では \texttt{tex¥win¥美文書TeXセットアップ.exe} の実行を推奨している．
-    この方法であれば数回「次へ」をクリックするだけでインストールができるが，
-    \TeX~Live をフルインストールすることになるため，多くの時間(30分)とディスク容量(5GB)がかかってしまう．
+    この方法であれば，何も考えずに数回「次へ」をクリックするだけでインストールができるが，
+    \TeX~Live をフルインストールすることになるため，多くの時間(30分)とディスク容量(5GB)が必要となる．
   \item 本実習では，ディスク容量は問題ないが時間を節約したいため，設定をカスタマイズしてインストールする．
   \item 受講生が自宅PCなどにインストールする場合は，基本的に書籍通りの方法で問題ないだろう．
+    \item もちろん，ネットワーク経由でインストールすることもできる．
+      例えば\TeX wikiの
+      \href{https://texwiki.texjp.org/?TeX%20Live%2FWindows}{TeX Live/Windows}
+      あたりを参考にすると良い．
+      ただし，この場合は数時間程度かかるので覚悟しておくこと．
   \end{itemize}
 \end{enumerate}
 
-
+\newpage
 \section{\TeX~Liveのインストール}
 時間の都合で設定をカスタマイズしてインストールする．
-時間(とディスク容量)に余裕があれば，このような複雑な設定をする必要はないことを注意しておく．
+上述の通り，時間(とディスク容量)に余裕があれば，このような複雑な設定をする必要はないことを注意しておく．
 \begin{enumerate}
   \itemsep\medskipamount
   % \setcounter{enumi}{-1}
@@ -149,12 +155,12 @@ Windowsでの\TeX システムとしては，昔から角藤亮氏による
   %   ひとまず同じ班の他のUSBメモリに差し替えてもう一度同じ事を試すこと．
   % \end{itemize}
   \smallskip
-  バックグラウンドでコマンドプロンプトのウィンドウが表示されるが，
+  バックグラウンドでコマンドプロンプトの(黒地に白文字の)ウィンドウが表示されるが，
   無視すること．
 
 \item 「導入作業中はウィルス検知器を無効にするのが最善です．」
   というダイアログが出るが，無視して×をクリックして閉じる．
-  「続行」を押しても閉じるようである．．
+  「続行」を押しても閉じるようである．
 
 \item \TeX~Liveは標準ではフルインストールする設定になっている．
   ディスク容量的にはあまり問題はないが，
@@ -231,11 +237,15 @@ Windowsでの\TeX システムとしては，昔から角藤亮氏による
 \section{EmEditor~Freeのインストール}
 \TeX ソースを記述するにはメモ帳でもできないことはないが，
 それよりは高機能なテキストエディタを用いるのが便利である．
-\emph{自分で使い慣れたエディタ（\TeX works, Emacs, Vim等）が
+\emph{自分で使い慣れたエディタ（Emacs, Vim等）が
   既にあればそれを使えばよい}が，
 ここでは例として\emph{EmEditor Free}のインストールを述べる．
+なお，本実習では\TeX worksなどの統合開発環境の使用は推奨\emph{しない}．
+コマンドプロンプトを用いて作業をすることで，
+\FNAME{platex}や\FNAME{dvipdfmx}などのコマンドをある程度理解することも，
+本実習の目的の一つである\footnote{トラブルシューティングの際に，これらの理解が必要となる場合がある．}．
 
-ちなみに，EmEditor Free で(拡張子が\texttt{.tex}となっている)\TeX ソースを開くと，
+ちなみに，EmEditor Free で(拡張子が\texttt{.tex}となっている) \TeX ソースを開くと，
 基本的なキーワードに色が付いて見易く表示される．
 
 \begin{enumerate}
@@ -247,8 +257,7 @@ Windowsでの\TeX システムとしては，昔から角藤亮氏による
   %   \includegraphics[scale=.36]{em01.png}
   %   \caption{}\label{emed1}
   % \end{figure}
-\item ダウンロードしたファイル\footnote{2017/4/10時点では\texttt{emed64\_16.6.0.exe}であ
-    る．}を実行し，インストールを開始する．
+\item ダウンロードしたファイル\footnote{2018/4/17時点では\texttt{emed64\_17.5.0.msi}である．}を実行し，インストールを開始する．
   \begin{itemize}
   \item 「インストールタイプ」は「すべてのユーザ」
   \item セットアップタイプは「標準」でよい．% （図\nobreak\ref{emed2}）．
@@ -303,7 +312,7 @@ Windowsでの\TeX システムとしては，昔から角藤亮氏による
     % \end{figure}
   \end{enumerate}
 
-\item 最後に，\emph{ファイルの関連付け}の設定を行う．
+\item 最後に，\emph{ファイルの関連付け}の設定を行い，\TeX ソースをEmEditorに関連付ける．
   ただし，以下の設定は \emph{\TeX~Live インストールが終了してから}行う\footnote{\TeX ソースとの関連付けは \TeX works と競合するため．}．
   \begin{enumerate}
   \item 「ツール」→「設定の関連付け」を選択する．% （図\nobreak\ref{emed6}）．
@@ -326,8 +335,7 @@ Windowsでの\TeX システムとしては，昔から角藤亮氏による
   \item 「EmEditorと関連付け」% （図\nobreak\ref{emed7p}）
     の「拡張子」の列に\texttt{txt}があることを確認する．
 
-  \item せっかくなので，\TeX ソースもEmEditorに関連付けてしまおう．
-    「EmEditorと関連付け」ウィンドウの「追加」をクリックする．
+  \item 「EmEditorと関連付け」ウィンドウの「追加」をクリックする．
     % \begin{figure}[!h]
     %   \centering
     %   \includegraphics[scale=.45]{em07p.png}
