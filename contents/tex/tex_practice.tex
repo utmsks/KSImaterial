@@ -16,6 +16,10 @@
   \newrefformat{fig}{図\nobreak\ref{#1}}
 \makeatother
 
+%%% fancyvrb
+\usepackage{fancyvrb}
+\VerbatimFootnotes
+
 %%% \paragraph{} で「■課題 xx」という見出しをつける
 %%% このような使い方は行儀が悪いのだが……
 \makeatletter
@@ -489,7 +493,30 @@ C:\Users\...\Documents> #\underline{latexmk\ first.tex}#
 \section{\LaTeX の作法}\label{sec:typeset}
 \LaTeX を用いればいつでも読みやすい文書が作れる……というわけではない．
 \LaTeX には\LaTeX の約束事があり，それを守らないと悲惨な結果が生まれてしまう．
-ここでは，ついやってしまいがちな間違いを並べておく．
+
+まず，\LaTeX で行儀の良いコードを書くための原則を述べておく.
+\begin{enumerate}
+    \renewcommand{\labelenumi}{(\theenumi)}
+    \newcommand{\itemd}[1]{\item\emph{#1}\\}
+  \itemd{文字や記号の「意味」を考えて入力する．}
+    数式と地の文は明確に区別して入力する．
+    また，(手書きでは)似たような見た目の記号でも，
+    その「意味」によって\TeX での取り扱いは異なる．
+    「綺麗な」文章を出力するためには，
+    これらを正しく\TeX に伝える必要がある．
+  \itemd{同じことの繰り返しは手動ではやらない．}
+    同じことの繰り返しは機械にやらせるべきである．
+    大概の場合は適切なコマンドやパッケージを用いることで事足りるし，
+    そうでなくても\verb|\newcommand|や\verb|\renewcommand|などを用いて自ら定義すれば良い．
+  \itemd{文章の構造から決まる数値をソースコード中に直接書かない．}
+    例えば定理番号(例えば「定義1.2.3」)やページ番号などは，
+    後々文章を修正した際に変更されることがある．
+    これらを直接書いていたら，ひとつひとつ番号を修正する必要が生じて，非常に面倒である．
+  \itemd{数式や文章の「構造」を意識し，それをソースコードに反映させる．}
+    元々\LaTeX は，文章の「構造」と「見た目」を分離して記述するように意図して設計されている．
+    そのようにすることで，後から「見た目」を修正するときに，「構造」ごとに一斉に修正することが容易にできる．
+\end{enumerate}
+
 以下のページもあわせて参照すると良い：
 \begin{itemize}
 \item 山本裕，「SICE著者のための\LaTeX べからず集」，
@@ -509,6 +536,8 @@ C:\Users\...\Documents> #\underline{latexmk\ first.tex}#
 \item 丸田一郎，「使ってはいけない\LaTeX のコマンド・パッケージ・作法」\\
   \url{http://ichiro-maruta.blogspot.jp/2013/03/latex.html}
 \end{itemize}
+
+この章では，ついやってしまいがちな間違いとその修正方法を並べておく．
 しかし，この章で書いたのは一般的なことでしかない．
 \emph{論文誌の投稿規定や各出版社の組版ルールがある場合には，
 当然ながらそちらを優先し，勝手な変更や超絶技巧はしないこと．}
@@ -819,9 +848,37 @@ Lars Madsen, \textit{Avoid eqnarray!}, The Prac\TeX\ Journal, 2006, No.~4.\\
 \footnotetext{なお，上の入力中にある（いわゆる半角
  の）\texttt{\char`\~} は，「ここでの改行を禁止する空白」を表す．}
 
-また，しばしば次のように
+\subsection{文章の構造}\label{ssec:structure}
+\LaTeX で文章を書く際には，文章の「構造」をなるべく\TeX ソースに反映させるべきである．
+そのための手法をいくつか紹介しておこう．
+なお，\verb|\label|や\verb|\ref|については\ref{ssec:ref}節を参照せよ．
+
+\subsubsection{章立て}
+章立てを記述するには，\verb|\section|コマンドを用いる．
+\verb|\subsection|や\verb|\subsubsection|を用いることで，より細かく分けることができる．
+\begin{lstlisting}
+\documentclass{jsarticle}
+
+% section番号の書き方をカスタマイズできる
+\renewcommand{\thesection}{\arabic{section}章}
+
+\begin{document}
+\section{sectionコマンドの使い方}
+こんな感じで使える．
+\subsection{subsectionコマンドの使い方}
+こうやって使う．
+\subsection{相互参照} \label{subsec:ref}
+labelとrefを使って，相互参照することもできる．
+
+\section{2つ目の章}
+refコマンドを用いて\ref{subsec:ref}節のlabelを参照してみる．
+\end{document}
+\end{lstlisting}
+
+\subsubsection{箇条書き} \label{sssec:itemize}
+しばしば次のように
 強制改行(\verb+\\+)，中黒「・」，全角空白「　」を使って
-レイアウトしているような例を見る：
+箇条書きをレイアウトしているような例を見る：
 \begin{lstlisting}
 $\mathbb{R}$に右半開区間位相を入れたものを$\mathcal{S}$とおく．
 すなわち，$\mathcal{S}$の位相の基は$\{[a,b[\mid a<b\}$である．
@@ -833,11 +890,105 @@ $\mathbb{R}$に右半開区間位相を入れたものを$\mathcal{S}$とおく�
 \end{lstlisting}
 しかし，このような書き方は見た目がみすぼらしくなるだけでなく，
 文書内の論理的構造がわかりにくくなるため，基本的には使わないこと．
-きちんと\ENV{itemize}, \ENV{enumerate}などの\LaTeX で
+下記の例のように，きちんと\ENV{itemize}, \ENV{enumerate}などの\LaTeX で
 用意されている環境を使うのがよい．
+詳細については例えば「美文書作成入門」の第3.20節%
+\footnote{これは第7版の場合．旧版の場合は異なっているかもしれない．}%
+「箇条書き」を参照．
+
+\begin{LTXexample}[caption={番号なし},width=0.3\textwidth]
+\begin{itemize}
+  \item hoge
+  \item fuga
+\end{itemize}
+\end{LTXexample}
+
+\begin{LTXexample}[caption={番号あり},width=0.3\textwidth]
+\begin{enumerate}
+  \item hoge
+  \item fuga
+\end{enumerate}
+\end{LTXexample}
+
+また，番号の形式を変更したい場合は以下のようにすれば良い．
+\begin{LTXexample}[caption={括弧つき番号},width=0.3\textwidth]
+\begin{enumerate}
+  \renewcommand{\labelenumi}{(\theenumi)}
+  \item hoge
+  \item fuga
+\end{enumerate}
+\end{LTXexample}
+
+\begin{LTXexample}[caption={括弧つきアルファベット},width=0.3\textwidth]
+\begin{enumerate}
+  \renewcommand{\theenumi}{\alph{enumi}}
+  \renewcommand{\labelenumi}{(\theenumi)}
+  \item hoge
+  \item fuga
+\end{enumerate}
+\end{LTXexample}
+
+なお，これらのitemの番号も\verb|\label|と\verb|\ref|で参照することができる．
+後々itemを入れ替える可能性を考慮すると，直接書くのではなくこれらを利用して参照した方が良いだろう．
+
+また，\PKG{enumitem}パッケージを用いると，より高度なカスタマイズが行える．
+使用方法などについては，各自検索すること．
+
+\subsubsection{定理環境}
+数学の授業や文章においては，「定理3.1.4」などの見出しとともに定理の中身を記述することが多い．
+よく使われる形式なので，当然パッケージが用意されている．
+使用例を挙げておくと，以下の通りとなる．
+
+\begin{lstlisting}[numbers=left,numberstyle=\tiny,xleftmargin=3\zw]
+\documentclass{jsarticle}
+\usepackage{amsthm}
+\theoremstyle{definition}
+\newtheorem{thm}{定理}[section]
+\newtheorem{prop}[thm]{命題}
+\newtheorem{defn}[thm]{定義}
+\newtheorem*{rmk}{注意}
+
+\begin{document}
+\section{定理環境の使い方}
+\begin{thm}
+  \label{thm:sample}
+  これは定理環境です．
+\end{thm}
+定理\ref{thm:sample}はすごく偉大な定理である．
+\end{document}
+\end{lstlisting}
+
+4--7 行目のように定理環境を定義した後に，\verb|\begin{thm}|と\verb|\end{thm}|などで囲って%
+\footnote{実は，これらの代わりに\verb|\thm|や\verb|\endthm|などと書いても動作はするが，可読性などの観点から上記の\verb|\begin|，\verb|\end|を用いた書き方をするべきである．
+}利用する．
+定理番号も自動で割り振られる．
+上記のソースコードについて，簡単に解説をしておく．
+
+\begin{itemize}
+  \item 3行目の\verb|\theoremstyle{definition}|は，それ以降の\verb|\newtheorem|で定義される定理環境のstyleを設定している．デフォルトのstyleでは定理環境中では文字が斜体になるが，通常\emph{日本語の}文章では斜体にしないため，この設定を行っている．
+  \item 4行目の\verb|[section]|や5行目の\verb|[thm]|などのオプションは，定理などの番号の付け方を指定している．
+    前者はsection番号を頭につけるように，後者は番号を複数の環境を引き継ぐようにしている．
+    また，7行目の\verb|\newtheorem*|は，番号の割り振りを行わないものである．
+  \item 12行目の\verb|\label|と15行目の\verb|\ref|のペアにより，定理番号の参照を行っている．
+    自動的に割り振られた番号を利用する，順番の入れ替えや新たな定理の挿入などを行った際にも番号が自動的に修正される．
+    なお，このlabelの名前は，\verb|thm3|のように番号でつけるのではなく，定理の中身を反映した名前にしておくと，後々の修正の際に問題が起きにくい．
+\end{itemize}
+
+また，定理環境に関連したコメントをいくつか載せておく．
+\begin{itemize}
+  \item 「例」や「用語」なども，定理などと同様の形で見出しとして使われている場合には\verb|\newtheorem|(または\verb|\newtheorem*|)を用いると良いだろう．
+  \item 証明についても，「証明．」や「Proof.」などと直接書くのではなく，証明のための環境を用いるべきである．
+    例えば\textsf{amsthm}で定義されている\verb|proof|環境を用いる\footnote{\verb|\begin{proof}|と\verb|\end{proof}|で囲う．}と良いだろう．
+  \item 定理環境の右下に終了記号をつける場合は，例えば\textsf{thmtools}パッケージを用いて以下のように定理環境を定義すると良い．
+    \begin{lstlisting}
+      \declaretheoremstyle[qed=\qedsymbol]{mythmstyle}
+      \declaretheorem[style=mythmstyle,title=定理]{thm}
+    \end{lstlisting}
+\end{itemize}
+
 
 \newpage
-\section{\S1と\S2に関連した課題}\label{sec:kadai}
+\section{\S\ref{sec:primer}と\S\ref{sec:typeset}に関連した課題}\label{sec:kadai}
 
 本節には課題をたくさん載せているが，
 当然ながら全部取り組まなければならないというものではない．
@@ -910,7 +1061,7 @@ $T$をHausdorff空間とする．$T$内の点列$(p_n)_{n\in\mathbb N}$が
 \subsection{\TeX ソースの修正練習}
 
 \paragraph{}\label{ex:sorgenfrey}
-\prettyref{sec:typeset}の最後に挙げられていた「悪い例」：
+\ref{sssec:itemize}節で挙げられていた「悪い例」：
 \begin{lstlisting}
 $\mathbb{R}$に右半開区間位相を入れたものを$\mathcal{S}$とおく．
 すなわち，$\mathcal{S}$の位相の基は$\{[a,b[\mid a<b\}$である．
