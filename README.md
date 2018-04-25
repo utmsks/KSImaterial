@@ -18,7 +18,7 @@
 
 ### 文書処理
 - [TeX 実習](contents/tex/tex_practice.md)
-- [キーボード入力練習](contents/tex/keyboard_practice.md)
+- [キーボード入力](contents/tex/keyboard_practice.md)
 
 ### MathLibre
 - 必要ファイルの準備
