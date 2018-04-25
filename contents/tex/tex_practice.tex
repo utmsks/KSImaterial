@@ -236,11 +236,17 @@ C:\Users\...\Documents> #\underline{ptex2pdf\ -l\ first.tex}#
   \verb*+ようこそ，\TeX の世界へ！+}」を
 それぞれ次のようにする．2つはエラーが出るが，それは何故か？\hskip.5\zw
 また，残りの1つはどのようになるか？
+
+ただし，コピー・ペーストはせずに手入力をすること．
+その際には括弧内のコメントに注意．
+
 \begin{itemize}\ltjsetparameter{xkanjiskip=0pt}
-\item \verb*+ようこそ，￥ＴｅＸ の世界へ！+
-\item \verb*+ようこそ，\TeXの世界へ！+
-\item \verb*+ようこそ，\TEX の世界へ！+
+\item {\catcode`￥=12\verb*+ようこそ，￥ＴｅＸ の世界へ！+} ({\catcode`￥=12\verb*+￥ＴｅＸ+}全て全角文字)
+\item \verb*+ようこそ，\TeXの世界へ！+ (半角スペースを省略)
+\item \verb*+ようこそ，\TEX の世界へ！+ (Eも大文字)
 \end{itemize}
+
+
 
 
 \subsection{エラーが起きたら}
@@ -435,15 +441,21 @@ C:\Users\...\Documents> #\underline{tlmgr\ install\ latexmk }#
 \begin{itemize}
   \item 上のコマンドを実行した際に``You don't have permission to \ldots''といったエラーメッセージが出た場合は，
   コマンドプロンプトを「管理者として実行」により再度起動した上で，同じコマンドを実行すれば良い．
+  \item \texttt{tlmgr}自身のアップデートが要求された場合は，
+\begin{lstlisting}
+tlmgr update --self --repository=ftp://beta.ks.prv/mirror/texlive/tlnet
+\end{lstlisting}
+    をコマンドプロンプトに入力する．
   \item \verb|--repository=|以下は実習環境でのみ必要なオプションで，
   受講生の自宅などの環境では単に
-  \verb|tlmgr install latexmk|とすれば良いだろう．
+  \verb|tlmgr install latexmk|などとすれば良いだろう．
 \end{itemize}
 
 \FNAME{latexmk}は標準では欧文用\LaTeX を用いる設定になっているので．
 そのままでは日本語の入った\TeX ソースを処理できない．
 これを解決するには，\FNAME{C:\Users\...\.latexmkrc}\footnote{%
-  \FNAME{...}には自分のユーザ名が入る．つまり，ホームディレクトリ直下に．}%
+  \FNAME{...}には自分のユーザ名が入る．つまり，ホームディレクトリ直下に．}\footnote{%
+Windowsの奇妙な仕様のせいで，保存の際に\FNAME{.latexmkrc.}(最初と最後にドット)という名前を指定する必要がある．}%
 \hskip\ltjgetparameter{xkanjiskip}に以下の内容を保存する：
 \begin{lstlisting}[numbers=left,numberstyle=\tiny,xleftmargin=3\zw]
 $dvipdf="dvipdfmx %O -o %D %S";
@@ -859,9 +871,6 @@ Lars Madsen, \textit{Avoid eqnarray!}, The Prac\TeX\ Journal, 2006, No.~4.\\
 \begin{lstlisting}
 \documentclass{jsarticle}
 
-% section番号の書き方をカスタマイズできる
-\renewcommand{\thesection}{\arabic{section}章}
-
 \begin{document}
 \section{sectionコマンドの使い方}
 こんな感じで使える．
@@ -874,6 +883,14 @@ labelとrefを使って，相互参照することもできる．
 refコマンドを用いて\ref{subsec:ref}節のlabelを参照してみる．
 \end{document}
 \end{lstlisting}
+
+section番号の表示形式のカスタマイズは
+\verb|\renewcommand{\thesection}{\arabic{section}節}|
+などとすれば一応可能だが，
+subsectionや定理番号の表示がおかしくなってしまう．
+このあたりは\url{https://togetter.com/li/1124861}などを参考にして，各自調べること．
+
+
 
 \subsubsection{箇条書き} \label{sssec:itemize}
 しばしば次のように
@@ -936,7 +953,9 @@ $\mathbb{R}$に右半開区間位相を入れたものを$\mathcal{S}$とおく�
 
 \subsubsection{定理環境}
 数学の授業や文章においては，「定理3.1.4」などの見出しとともに定理の中身を記述することが多い．
-よく使われる形式なので，当然パッケージが用意されている．
+よく使われる形式なので，当然便利なツール\footnote{%
+  \LaTeX 本体の機能だが，通常は\PKG{amsthm}パッケージにより機能が強化されたものを用いる．}
+が用意されている．
 使用例を挙げておくと，以下の通りとなる．
 
 \begin{lstlisting}[numbers=left,numberstyle=\tiny,xleftmargin=3\zw]
