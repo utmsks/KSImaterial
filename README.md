@@ -21,14 +21,6 @@
 - [キーボード入力](contents/tex/keyboard_practice.md)
 
 ### MathLibre
-- 必要ファイルの準備
-  - Windows10でのMD5ハッシュ値の確認
-- Hyper-V + MathLibre
-  - VTの有効化
-  - Hyper-Vネットワーク設定
-- MathLibre + USB
-- VirtualBox + MathLibre(注意:現在ブルースクリーンになって落ちる問題があります)
-- MathLibre tips
 
 ### Linux
 - Ubuntu インストール (2017)
