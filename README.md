@@ -21,6 +21,7 @@
 - [キーボード入力](contents/tex/keyboard_practice.md)
 
 ### MathLibre
+- [USBメモリからの起動手順](https://docs.google.com/presentation/d/1Hlz_6NpWCqOpGR78u4KOTNPCoO-N1DJ0vZxbEUCG8zc/edit?usp=sharing)
 
 ### Linux
 - Ubuntu インストール (2017)
