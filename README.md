@@ -30,6 +30,7 @@
 - apt-get を使ってパッケージを入れる
 
 ### Unix/Linux活用
+- [何故CUIを使うのか？](contents/linux/why_CUI.md)
 - [Unixコマンドクイズ](contents/linux/quiz.md)
 - [Unixシェルの活用](contents/linux/shell.md)
   - [コマンド行の展開とクォート](contents/linux/cmdline.md)
