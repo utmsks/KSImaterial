@@ -41,7 +41,7 @@ bashを含む現代的なシェルにはさらに強力なコンプリーショ�
 [ESC]?を入力すると、候補が表示される
 
 （実習）次のコマンドを実行し、結果を解釈せよ。
-```
+```ShellSession
 $ ls /usr/b[TAB]
 $ ls /usr/bin/z[TAB]
 $ ls /usr/bin/z[TAB][TAB]    # tab 2回
