@@ -33,10 +33,9 @@
 - [Unixコマンドクイズ](contents/linux/quiz.md)
 - [Unixシェルの活用](contents/linux/shell.md)
   - [コマンド行の展開とクォート](contents/linux/cmdline.md)
-  - シェルのユーザサポート機能
-  - シェル変数
-  - 初期設定ファイル
-  - リダイレクトとパイプ
+  - [シェルのユーザサポート機能](contents/linux/usersupport.md)
+  - [シェル変数](contents/linux/shellvar.md)
+  - [リダイレクトとパイプ](contents/linux/pipe.md)
 - 代表的なフィルタ
 - One-Liner
 - シェルスクリプト
