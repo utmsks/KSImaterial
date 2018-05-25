@@ -30,7 +30,7 @@
 - apt-get を使ってパッケージを入れる
 
 ### Unix/Linux活用
-- Unixコマンドクイズ
+- [Unixコマンドクイズ](contents/linux/quiz.md)
 - Unixシェルの活用
   - コマンド行の展開とクォート
   - シェルのユーザサポート機能
