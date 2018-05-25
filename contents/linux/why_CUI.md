@@ -26,20 +26,23 @@ Linux実習では，端末を使って CUI を取り扱う練習を行う．
 ここまでは Nautilus と端末で全く同じ操作をしてきたが，
 ここからが端末の腕の見せどころである．
 以下の文字列を一行ずつ入力し，Enterを押して実行してほしい．
-ただし，一行実行するたびに Nautilus を確認して，何が起きたのかを「自分の目で」確かめること．
-Nautilus を眺めるだけではなく，適宜ファイルのアイコンをダブルクリックして，中身を確認すると良い．
+ただし，以下の2点に注意．
+
+- 一行実行するたびに Nautilus を確認して，何が起きたのかを「自分の目で」確かめること．
+  Nautilus を眺めるだけではなく，適宜ファイルのアイコンをダブルクリックして，中身を確認すると良い．
+- 行頭の `$` は入力しない．これは「目印」のようなものである．(実際，端末に元々表示されているはずである)
 
 ```ShellSession
-for i in a b c d e; do echo "hoge $i" > test$i.txt; done
-for i in a b c d e; do mv test$i.txt hoge$i.txt; done
-for i in a b c d e; do rm hoge$i.txt; done
+$ for i in a b c d e; do echo "hoge $i" > test$i.txt; done
+$ for i in a b c d e; do mv test$i.txt hoge$i.txt; done
+$ for i in a b c d e; do rm hoge$i.txt; done
 ```
 
 ## for ループを用いて，たくさんの TeX ソースを一斉にタイプセットする
 たくさんの TeX ソースが手元にあり，それらを一斉にタイプセットするには，以下のコマンドを実行すれば良い．
 
 ```ShellSession
-for f in *.tex; do platex $f; dvipdfmx ${f/tex/dvi}; done
+$ for f in *.tex; do platex $f; dvipdfmx ${f/tex/dvi}; done
 ```
 
 ただし，実習環境の Ubuntu には TeX がインストールされていないので，このコマンドは実行できない．
