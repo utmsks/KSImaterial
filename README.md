@@ -31,8 +31,8 @@
 
 ### Unix/Linux活用
 - [Unixコマンドクイズ](contents/linux/quiz.md)
-- Unixシェルの活用
-  - コマンド行の展開とクォート
+- [Unixシェルの活用](contents/linux/shell.md)
+  - [コマンド行の展開とクォート](contents/linux/cmdline.md)
   - シェルのユーザサポート機能
   - シェル変数
   - 初期設定ファイル
