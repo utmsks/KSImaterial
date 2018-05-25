@@ -5,7 +5,7 @@
 - 実習中に補足・訂正が行われる場合があります。アナウンスに注意してください。
 
 ## Can Do List
-* [2018年度計算数学 I Can Do List](candolist.md)
+* [2018年度計算数学 I Can Do List](contents/candolist.md)
 
 ## 実習用資料
 ### 実習のためのTips
