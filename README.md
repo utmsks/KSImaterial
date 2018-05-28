@@ -37,16 +37,13 @@
   - [シェルのユーザサポート機能](contents/linux/usersupport.md)
   - [シェル変数](contents/linux/shellvar.md)
   - [リダイレクトとパイプ](contents/linux/pipe.md)
-- 代表的なフィルタ
-- One-Liner
-- シェルスクリプト
-  - シェル制御構造の補足
-  - fileコマンドを使ってシェルスクリプトを探す
-- 正規表現とsed
-  - grepとegrepの正規表現
-  - egrepクイズ
-  - sedクイズ
-- おまけ：kで始まる単語の数
+- [代表的なフィルタ](contents/linux/filters.md)
+- [One-Liner](contents/linux/one-liner.md)
+- [シェルスクリプト](contents/linux/shellscript.md)
+  - [シェル制御構造の補足](contents/linux/control.md)
+  - [fileコマンドを使ってシェルスクリプトを探す](contents/linux/count.md)
+- [正規表現とsed](contents/linux/regexp.md)
+- おまけ：[kで始まる単語の数](contents/linux/kwords.md)
 
 ### スクリプト言語プログラミング
 - スクリプト言語プログラミング
