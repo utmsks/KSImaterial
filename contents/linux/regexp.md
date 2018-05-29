@@ -9,7 +9,7 @@
 
 実習用Linuxシステムの各自のホームディレクトリの下に適当な名前の作業用ディレクトリを作り、そこに次のリンク先（204号室実習用ネットワーク内からのみ）にある説明ファイル(`3201.txt`)及びアーカイブファイル(`files.zip`)をダウンロード・展開してください。
 
-ftp://download.ks.prv/mirror/Text/
+[ftp://download.ks.prv/mirror/Text/](ftp://download.ks.prv/mirror/Text/)
 
 展開の仕方がわからない人は `$ man unzip` またはTAに尋ねてください。
 
