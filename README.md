@@ -26,7 +26,7 @@
 ### Linux
 - Ubuntu インストール (2017)
   - Linux Tips (ターミナルの緑の部分を短くしたいとき・ソフトウェア更新方法)
-- [Linux 標準教科書ダウンロード](contents/linux/linuxtext.md)
+- [Linux 標準教科書ダウンロード](contents/linux/linuxtexts.md)
 - apt-get を使ってパッケージを入れる
 
 ### Unix/Linux活用
