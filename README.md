@@ -24,7 +24,7 @@
 - [USBメモリからの起動手順](https://docs.google.com/presentation/d/1Hlz_6NpWCqOpGR78u4KOTNPCoO-N1DJ0vZxbEUCG8zc/edit?usp=sharing)
 
 ### Linux
-- [Ubuntu インストール (2017)](contents/linux/install.md)
+- [Ubuntu インストール (2018)](contents/linux/install.md)
   - Linux Tips (ターミナルの緑の部分を短くしたいとき・ソフトウェア更新方法)
 - [MicrosoftストアアプリとしてUbuntuを導入する](contents/linux/store.md)
 - [Linux 標準教科書ダウンロード](contents/linux/linuxtexts.md)
