@@ -149,4 +149,4 @@ $ sudo apt dist-upgrade
 ```
 以上でアップデートが終わりました。
 
-これですべての設定が終わりました。Linux標準教科書ダウンロードに進んでPDFをダウンロードし、読み進めていってください。
+これですべての設定が終わりました。[LinuxTips](contents/linux/linuxtips.md)を読んだり、[Linux標準教科書ダウンロード](contents/linux/linuxtexts.md)に進んでPDFをダウンロードし、読み進めていってください。
