@@ -19,6 +19,7 @@
 ### 文書処理
 - [TeX 実習](contents/tex/tex_practice.md)
 - [キーボード入力](contents/tex/keyboard_practice.md)
+- [LuaTeX入門](contents/tex/luatex.md)
 
 ### MathLibre
 - [USBメモリからの起動手順](https://docs.google.com/presentation/d/1Hlz_6NpWCqOpGR78u4KOTNPCoO-N1DJ0vZxbEUCG8zc/edit?usp=sharing)
