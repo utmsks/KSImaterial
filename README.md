@@ -29,7 +29,7 @@
   - [Linux Tips (ターミナルの緑の部分を短くしたいとき・ソフトウェアインストール、更新方法)](contents/linux/linuxtips.md)
 - [MicrosoftストアアプリとしてUbuntuを導入する](contents/linux/store.md)
 - [Linux 標準教科書ダウンロード](contents/linux/linuxtexts.md)
-- [VirtualBoxでLinuxを動かす](contents/linux/vd.md)
+- [VirtualBoxでLinuxを動かす](contents/linux/vb.md)
 
 ### Unix/Linux活用
 - [何故CUIを使うのか？](contents/linux/why_CUI.md)
