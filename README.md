@@ -20,6 +20,7 @@
 - [TeX 実習](contents/tex/tex_practice.md)
 - [キーボード入力](contents/tex/keyboard_practice.md)
 - [LuaLaTeX入門](contents/tex/lualatex.md)
+- [中間レポート添削](contents/tex/tensaku_2018.md)
 
 ### MathLibre
 - [USBメモリからの起動手順](https://docs.google.com/presentation/d/1Hlz_6NpWCqOpGR78u4KOTNPCoO-N1DJ0vZxbEUCG8zc/edit?usp=sharing)

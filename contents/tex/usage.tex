@@ -1,0 +1,71 @@
+\documentclass[dvipdfmx]{jsarticle}
+\usepackage{correction}
+\newtcblistingExpand{corlisting}{\tcboptions,minted options={\mintedoptions}}
+% \newtcblistingExpand{corlisting}{\tcboptions,minted options={\mintedoptions,escapeinside=||,breakafter=)}}
+% breakafterに = を指定することはできない？
+\newcommand{\minus}{-}
+\let\m\minus
+
+\begin{document}
+
+\begin{itemize}
+  \item この添削ツールの使用に必要な準備
+    \begin{itemize}
+      \item \verb|pygments|のインストール: \verb|pip install pygments|とかで．(要\verb|python|)
+      \item \verb|correction.sty|を\TeX が見つけられる場所に置く．例えば\verb|~/texmf/tex/|とか？
+    \end{itemize}
+  \item 使い方
+    \begin{itemize}
+      \item \verb|python3 create.py /path/to/report.tex|とすると，
+        \verb|/path/to/correction_report.tex|に添削用のファイルが生成される．
+        (基本的にはコピペするだけだが，\verb|minted|のバグ(？)を回避するために，タブ文字をスペース2つに置換している)
+      \item タイプセットは\verb|platex|だが，\verb|minted|を使うために\verb|-shell-escape|オプションが必要．
+      \item 受講生の書いたコードによっては，
+        minted内のエスケープ文字や改行位置を変更したい場合もあるかもしれない．
+        その場合は，この文章の\TeX ソース冒頭の\verb|\newtcblistingExpand|あたりのコメントを参考にすること．
+
+    \end{itemize}
+  \item 以下に色々とサンプルを載せておいたので，PDFと\TeX コードを見比べつつ参考にしてください．
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vspace{30pt}
+
+\makecomment[yshift=10pt]{test}{コメントを書くテストです．複数行あったりしても平気．バックスラッシュは普通に\textbackslash textbackslash で．}
+\makecomment[yshift=-30pt]{math}{数式中でも大丈夫．コメントが重なる場合はオプションでyshiftを指定すればずらせる}
+\makecomment[yshift=-30pt]{item}{コメントの流用もできる．}
+\makecomment[backgroundcolor=yellow!30,
+             arrowcolor=green!50!blue,
+             xshift=-10pt,
+             yshift=-50pt,
+             width=0.8\textwidth]
+             {option}{オプションマシマシのコメントです．表示位置，幅，背景色，矢印の色を変更できます．}
+\makecomment[arrowopacity=0,yshift=-70pt,backgroundcolor=blue!20]{opacity}{矢印を非表示(実装としては透明)にすることもできる}
+
+\begin{corlisting}
+\documentclass{jsarticle}
+
+\begin{document}
+\section{せくしょん}
+ほげほげほげ $a+b=c$@\usecomment{test}@ 文章の間に矢印を挟んでも大丈夫．
+$\int_0^1xdx@\usecomment{math}@=\frac{1}{2}$
+
+\begin{itemize}
+  \item@\usecomment{item}@ ほげ
+  \item@\usecomment[\m20pt]{item}@ ふが
+  \item@\usecomment[\m40pt]{item}@ ぴよ
+\end{itemize}
+\usecomment のオプション引数でy方向のshiftを指定できるが，
+何故かエスケープ中に - を直接書けない(mintedのバグ？仕様？)．
+とりあえずの対策として，予め \newcommand してある．@\usecomment{opacity}@
+
+@\ulstart@文章に下線@\ulend@を引いたり，@\boxstart@四角で囲ったり@\boxend@もできる．
+
+@\boxstart[key=out,xshift=\m10pt,yshift=1pt]@全体的に色々とオプションでいじれるようにした．
+いちいち説明するのは@\boxstart[key=in]@面倒@\boxend[key=in]@なので，
+この@\TeX@コードに@\ulstart@オプションマシマシ@\ulend[color=blue]@のサンプルを載せておきます．@\boxend[key=out,color=green,linewidth=3,xshift=20pt,yshift=\m20pt]@
+色々と察してください．@\usecomment{option}@
+
+\end{document}
+\end{corlisting}
+\end{document}
