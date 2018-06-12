@@ -1,0 +1,202 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{correction}
+
+\RequirePackage{xkeyval}
+% \RequirePackage{listings,plistings,xcolor} % for platex
+% \RequirePackage{listings,xcolor} % for lualatex
+\RequirePackage{tikz}
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows.meta}
+
+\tikzset{corblock/.style={
+    rectangle,
+    draw=black,
+    rounded corners}}
+
+% http://d.hatena.ne.jp/zrbabbler/20130302/1362228901
+\RequirePackage{pxpgfmark} % remember picture を可能にする
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \makecomment コマンドの定義
+\makeatletter
+% minted + tcblisting だと，mintedの内側では\textwidthの値が小さくなってるので，
+% 予め代入しておく必要がある．
+\newlength{\cor@commentwidth}
+\setlength{\cor@commentwidth}{0.3\textwidth}
+% xkeyval.sty を使ってキーワード引数を処理
+% 2つ目のオプション引数は，\cor@saveなどとも関係してくるので注意
+\define@cmdkey[correction]{mkcom}[cor@mkcom@]{backgroundcolor}[red!30]{}
+\define@cmdkey[correction]{mkcom}[cor@mkcom@]{arrowcolor}[red!70]{}
+\define@cmdkey[correction]{mkcom}[cor@mkcom@]{shift}[(0,0)]{}
+\define@cmdkey[correction]{mkcom}[cor@mkcom@]{xshift}[0]{}
+\define@cmdkey[correction]{mkcom}[cor@mkcom@]{yshift}[0]{}
+\define@cmdkey[correction]{mkcom}[cor@mkcom@]{width}[\cor@commentwidth]{}
+\define@cmdkey[correction]{mkcom}[cor@mkcom@]{arrowopacity}[1]{}
+\presetkeys[correction]{mkcom}{backgroundcolor,arrowcolor,shift,xshift,yshift,width,arrowopacity}{}
+
+% 基本的には\letと同じ．
+% ただし，control sequenceを直接指定するのではなく，\csnameのように文字列で指定する
+\newcommand{\cor@let}[2]{%
+  \edef\cor@tmp{\unexpanded\expandafter{\csname #1\endcsname}}%
+  \expandafter\expandafter\expandafter\let\expandafter\cor@tmp\csname #2\endcsname%
+}
+
+% キーワード引数を保存・呼び出しする
+\newcommand{\cor@save}[3]{\cor@let{cor@#1@#2@#3}{cor@#1@#2}}
+\newcommand{\cor@load}[3]{\csname cor@#1@#2@#3\endcsname}
+
+\newcommand{\makecomment}[3][]{
+  % キーワード引数の処理
+  \setkeys[correction]{mkcom}{#1}%
+  % キーワード引数を\usecommentから呼び出すために保存
+  \cor@save{mkcom}{backgroundcolor}{#2}%
+  \cor@save{mkcom}{arrowcolor}{#2}%
+  \cor@save{mkcom}{shift}{#2}%
+  \cor@save{mkcom}{xshift}{#2}%
+  \cor@save{mkcom}{yshift}{#2}%
+  \cor@save{mkcom}{width}{#2}%
+  \cor@save{mkcom}{arrowopacity}{#2}%
+  % \usecommentで呼び出す処理
+  \expandafter\newcommand\csname commentname@#2\endcsname[1][0pt]{%
+    \begin{tikzpicture}[remember picture, overlay]
+      \coordinate (X) at (0,3pt);
+      % 予めletしないとうまくいかなかった．座標の足し算のところに直接書くと何故かエラー
+      \path let \p0=\cor@commentshift,
+                \p1=\cor@load{mkcom}{shift}{#2},
+                \p2=(\cor@load{mkcom}{xshift}{#2},\cor@load{mkcom}{yshift}{#2}) in
+      node[corblock,
+           fill=\cor@load{mkcom}{backgroundcolor}{#2},
+           anchor=east,
+           text=black,
+           text width=\cor@load{mkcom}{width}{#2}]
+        (comment) at ($(current page.east |- X) + (0,##1) + (\p0) + (\p1) + (\p2)$)  {#3};
+      \draw[color=\cor@load{mkcom}{arrowcolor}{#2},
+            opacity=\cor@load{mkcom}{arrowopacity}{#2},
+            -{Latex[length=3mm,width=2mm]}]
+        (comment) -- (X);
+    \end{tikzpicture}}%
+}
+% 一つ目の引数でy方向のshiftを指定できる．
+% ただし，escape中に負の値を指定する場合は，(直に書くのではなく)予めnewcommandなどをしておかないとダメ
+\newcommand{\usecomment}[2][0pt]{\csname commentname@#2\endcsname[#1]}
+
+% \newcommand{\cor@commentshift}{(-10pt, 0)} % listings のとき
+\newcommand{\cor@commentshift}{(-30pt, 15pt)} % minted のとき
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 下線
+\define@cmdkey[correction]{uls}[cor@uls@]{key}[ulkey]{}
+\define@cmdkey[correction]{uls}[cor@uls@]{xshift}[0pt]{}
+\define@cmdkey[correction]{uls}[cor@uls@]{yshift}[0pt]{}
+\presetkeys[correction]{uls}{key,xshift,yshift}{}
+\newcommand{\ulstart}[1][]{%
+  \setkeys[correction]{uls}{#1}%
+  \begin{tikzpicture}[remember picture, overlay]
+    \coordinate (\cor@uls@key) at ($(\cor@uls@xshift,\cor@uls@yshift)+(0,\cor@ulyshift)$);
+  \end{tikzpicture}%
+}
+\define@cmdkey[correction]{ule}[cor@ule@]{key}[ulkey]{}
+\define@cmdkey[correction]{ule}[cor@ule@]{xshift}[0pt]{}
+\define@cmdkey[correction]{ule}[cor@ule@]{yshift}[0pt]{}
+\define@cmdkey[correction]{ule}[cor@ule@]{color}[red]{}
+\define@cmdkey[correction]{ule}[cor@ule@]{linewidth}[1.3]{}
+\presetkeys[correction]{ule}{key,xshift,yshift,color,linewidth}{}
+\newcommand{\ulend}[1][]{%
+  \setkeys[correction]{ule}{#1}%
+  \begin{tikzpicture}[remember picture, overlay]
+    \draw[color=\cor@ule@color, line width=\cor@ule@linewidth] (\cor@ule@key) -- ($(\cor@ule@xshift,\cor@ule@yshift)+(0,\cor@ulyshift)$);
+  \end{tikzpicture}%
+}
+\newcommand{\cor@ulyshift}{-2pt}
+% 四角形
+\define@cmdkey[correction]{boxs}[cor@boxs@]{key}[boxkey]{}
+\define@cmdkey[correction]{boxs}[cor@boxs@]{xshift}[0pt]{}
+\define@cmdkey[correction]{boxs}[cor@boxs@]{yshift}[0pt]{}
+\presetkeys[correction]{boxs}{key,xshift,yshift}{}
+\newcommand{\boxstart}[1][]{%
+  \setkeys[correction]{boxs}{#1}%
+  \begin{tikzpicture}[remember picture, overlay]
+    \coordinate (\cor@boxs@key) at ($(0,\cor@boxstartyshift)+(\cor@boxs@xshift,\cor@boxs@yshift)$);
+  \end{tikzpicture}%
+}
+\define@cmdkey[correction]{boxe}[cor@boxe@]{key}[boxkey]{}
+\define@cmdkey[correction]{boxe}[cor@boxe@]{xshift}[0pt]{}
+\define@cmdkey[correction]{boxe}[cor@boxe@]{yshift}[0pt]{}
+\define@cmdkey[correction]{boxe}[cor@boxe@]{color}[red]{}
+\define@cmdkey[correction]{boxe}[cor@boxe@]{linewidth}[1.3]{}
+\presetkeys[correction]{boxe}{key,xshift,yshift,color,linewidth}{}
+\newcommand{\boxend}[1][]{%
+  \setkeys[correction]{boxe}{#1}%
+  \begin{tikzpicture}[remember picture, overlay]
+    \draw[color=\cor@boxe@color, line width=\cor@boxe@linewidth] (\cor@boxe@key) rectangle ($(0,\cor@boxendyshift)+(\cor@boxe@xshift,\cor@boxe@yshift)$);
+  \end{tikzpicture}%
+}
+\newcommand{\cor@boxstartyshift}{10pt}
+\newcommand{\cor@boxendyshift}{-2pt}
+
+\makeatother
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% listingsの設定
+% \definecolor{OliveGreen}{cmyk}{0.64,0,0.95,0.40}
+% \definecolor{colFunc}{rgb}{1,0.07,0.54}
+% \definecolor{CadetBlue}{cmyk}{0.62,0.57,0.23,0}
+% \definecolor{Brown}{cmyk}{0,0.81,1,0.60}
+% \definecolor{colID}{rgb}{0.63,0.44,0}
+
+% \lstset{
+%   language=[LaTeX]TeX,
+%   basicstyle={\ttfamily\small},
+%   keywordstyle={\color{OliveGreen}},
+%   keywordstyle={[2]\color{colFunc}},
+%   keywordstyle={[3]\color{CadetBlue}},
+%   commentstyle={\color{Brown}},
+%   % identifierstyle={\color{colID}},
+%   stringstyle=\color{blue},
+%   tabsize=2,
+%   frame=single,
+%   numbers=left,
+%   numberstyle={\ttfamily\small},
+%   breaklines=true,
+%   % backgroundcolor={\color[gray]{.95}}, % backgroundcolorがあると，yshiftを負にしたときに矢印が隠れてしまう
+%   captionpos=b,
+%   linewidth=0.8\textwidth
+% }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% tcblisting, minted
+\usepackage[utf8]{inputenc}
+\usepackage[british,UKenglish,USenglish]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[cache=false]{minted}
+\usepackage[skins,minted,breakable]{tcolorbox}
+\usemintedstyle{murphy}
+\newcommand{\tcboptions}{%
+  enhanced,
+  listing only,
+  minted language=LaTeX,
+  colback=gray!10!white,
+  boxrule=0pt,
+  boxsep=0pt,
+  frame hidden,
+  borderline={0.4pt}{0pt}{black},
+  breakable=unlimited,
+  width=0.77\textwidth,
+}
+\newcommand{\mintedoptions}{%
+  % frame=lines,
+  % framesep=2mm,
+  baselinestretch=0.7,
+  % bgcolor=lightgray,
+  % fontsize=\footnotesize,
+  linenos,
+  breaklines,
+  breakafter=.,
+  breaksymbolleft=,
+  escapeinside=@@,
+  breakaftersymbolpre=,
+}
+\newcommand{\newtcblistingExpand}[2]{%
+  \edef\args@newtcblisting{{#1}{#2}}%
+  \expandafter\newtcblisting\args@newtcblisting%
+}

@@ -20,6 +20,7 @@
 - [TeX 実習](contents/tex/tex_practice.md)
 - [キーボード入力](contents/tex/keyboard_practice.md)
 - [LuaLaTeX入門](contents/tex/lualatex.md)
+- [中間レポート添削](contents/tex/tensaku_2018.md)
 
 ### MathLibre
 - [USBメモリからの起動手順](https://docs.google.com/presentation/d/1Hlz_6NpWCqOpGR78u4KOTNPCoO-N1DJ0vZxbEUCG8zc/edit?usp=sharing)
@@ -29,7 +30,7 @@
   - [Linux Tips (ターミナルの緑の部分を短くしたいとき・ソフトウェアインストール、更新方法)](contents/linux/linuxtips.md)
 - [MicrosoftストアアプリとしてUbuntuを導入する](contents/linux/store.md)
 - [Linux 標準教科書ダウンロード](contents/linux/linuxtexts.md)
-- [VirtualBoxでLinuxを動かす](contents/linux/vd.md)
+- [VirtualBoxでLinuxを動かす](contents/linux/vb.md)
 
 ### Unix/Linux活用
 - [何故CUIを使うのか？](contents/linux/why_CUI.md)
