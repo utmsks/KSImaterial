@@ -46,18 +46,17 @@ $ sudo apt-get install lua5.2
 
 ## おまけ：Luaを組み込んだソフトウエア・ハードウエア
 
-* LuaTeX
-  * http://www.luatex.org/ （LuaTeX: Lua を組み込んだ TeX エンジン）
+* [LuaTeX](http://www.luatex.org/) （Lua を組み込んだ TeX エンジン）
   * LuaTeX の登場のおかげで，TeX の開発に関わる際には Lua を知っておくと役に立つ……かもしれません．（実際、TeX Liveに付随するいくつかのスクリプトはLuaで書かれています）
-* Vim
+* [Vim](http://www.vim.org/)
   * 最近のVimはLuaでマクロが書けるらしいです．
-* Pandoc（文書フォーマット変換プログラム）
-  * PandocはMarkdownで書かれた文書を他の形式（HTML, LaTeX等）に変換するプログラムです。Pandoc filterを書くことによってカスタマイズできますが、最近Pandoc本体がLuaで書かれたfilterを直接実行できるようになりました。
-* SciTE（テキストエディタ）
+* [Pandoc](http://pandoc.org/)（文書フォーマット変換プログラム）
+  * PandocはMarkdown等で書かれた文書を他の形式（HTML, LaTeX等）に変換するプログラムです。Pandoc filterを書くことによって変換処理をカスタマイズできますが、最近Pandoc本体がLuaで書かれたfilterを直接実行できるようになりました。
+* [SciTE](http://www.scintilla.org/SciTE.html)（テキストエディタ）
   * Luaでエディタの挙動を拡張できます．
-* ヤマハのルーター
+* [ヤマハのルーター](http://www.rtpro.yamaha.co.jp/RT/docs/lua/)
   * Luaが組み込まれているものがあるようです．
-* FlashAir
+* [FlashAir](https://flashair-developers.com/ja/documents/api/lua/)
   * FlashAirは、Wi-Fiを組み込んだSDカードです。Luaでプログラムを書くことにより、SDカードへのファイル書き込み時にWebのAPIを叩いたり、あるいは自作の電子回路に組み込んでSDカードの端子を制御したりできます。
 * 各種ゲーム
   * ゲーム用のスクリプトとして採用されていることがあるらしいです．
