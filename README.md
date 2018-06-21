@@ -50,6 +50,7 @@
 
 ### スクリプト言語プログラミング
 - [スクリプト言語プログラミング](contents/script/top.md)
+- [テキストエディタ](contents/script/editor.md)
 
 ### ネットワーク
 - ネットワーク実習の前に
