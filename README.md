@@ -53,6 +53,7 @@
 - [テキストエディタ](contents/script/editor.md)
 
 ### ネットワーク
+- [実習環境で「ネットワークの設定と管理」を試す際の注意](contents/network/network.md)
 - ネットワーク実習の前に
 - Network Programming with Python
 - shogi-serverによる将棋対戦
