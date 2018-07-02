@@ -55,6 +55,7 @@
 ### ネットワーク
 - [実習環境で「ネットワークの設定と管理」を試す際の注意](contents/network/network.md)
 - [Windowsで「ネットワークの設定と管理」相当のことをする場合](contents/network/windows.md)
+- [Wireshark](contents/network/wireshark.md)
 
 ### クライアント・サーバ
 - ネットワーク実習の前に
