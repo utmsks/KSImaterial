@@ -44,7 +44,7 @@ Unix/LinuxではWiresharkを起動するのにroot特権が必要だが、
 ```
 $ wireshark
 ```
-自分のパスワードを入力するとwiresharkが起動し、ウィンドウが一つ開く。
+wiresharkが起動し、ウィンドウが一つ開く。
 以後、このウィンドウ内で操作する。
 
 ## キャプチャ開始
