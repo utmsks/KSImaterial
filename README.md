@@ -60,6 +60,6 @@
 ### クライアント・サーバ
 - ネットワーク実習の前に
 - Network Programming with Python
-- shogi-serverによる将棋対戦
+- [shogi-serverによる将棋対戦](contents/network/shogi.md)
 - Shell scriptで液晶ディスプレイを操作する
 - Wake On LAN
