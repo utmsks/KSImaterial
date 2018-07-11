@@ -60,5 +60,4 @@
 ### クライアント・サーバ
 - [githubへのアクセス](contents/network/github.md)
 - [shogi-serverによる将棋対戦](contents/network/shogi.md)
-- Shell scriptで液晶ディスプレイを操作する
-- Wake On LAN
+- [Shell scriptで液晶ディスプレイを操作する](https://github.com/utmsks/lcdshell)
