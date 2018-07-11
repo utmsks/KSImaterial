@@ -58,8 +58,7 @@
 - [Wireshark](contents/network/wireshark.md)
 
 ### クライアント・サーバ
-- ネットワーク実習の前に
-- Network Programming with Python
+- [githubへのアクセス](contents/network/github.md)
 - [shogi-serverによる将棋対戦](contents/network/shogi.md)
 - Shell scriptで液晶ディスプレイを操作する
 - Wake On LAN

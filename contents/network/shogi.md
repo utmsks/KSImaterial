@@ -42,13 +42,19 @@ shogi-serverとGPSshogiを同じコンピュータに割り当て、将棋所を
 ## shogi-serverのインストールと実行
 Linuxを起動し、端末ウィンドウを開きます。
 
-### rubyをインストール
+### rubyとgitをインストール
 ```
-$ sudo apt-get install ruby
+$ sudo apt-get install ruby git
 ```
 
 ### shogi-serverのソースコードをダウンロード
-下のリンクからファイルをダウンロードし、tarコマンドで展開する。
+gitでソースコードをダウンロードします。
+あらかじめ[githubへのアクセス](github.md)にある準備を行っておきます。
+```
+$ git clone git://git.sourceforge.jp/gitroot/shogi-server/shogi-server.git
+```
+
+もしgitがうまく動かないなら、下のリンクからファイルをダウンロードし、tarコマンドで展開する。
 http://git.sourceforge.jp/view?p=shogi-server/shogi-server.git;a=snapshot;h=HEAD;sf=tgz
 
 ### shogi-serverを実行
