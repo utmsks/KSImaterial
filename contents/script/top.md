@@ -5,7 +5,7 @@
 2017 年度以前のものは旧資料集のページに飛びます。
 
 * [Ruby 入門](ruby/top.md) (2013 年度作成, 2018 年度改訂)
-* [Perl 入門](https://sites.google.com/a/utmsks.net/material/home/perl2013) (2013 年度作成)
+* [Perl 入門](perl/intro2013.md) (2013 年度作成)
 * [Python 入門](python/intro2013.md) (2013 年度作成, 2015 年度改訂)
 * [Python で遊ぼう](python/asobou.md) (2016 年度作成)
 * [JavaScript 入門 with Node.js](https://minoki.github.io/ks-material/ecmascript/) (2017 年度作成)
