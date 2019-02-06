@@ -7,7 +7,7 @@
 * [Ruby 入門](ruby/top.md) (2013 年度作成, 2018 年度改訂)
 * [Perl 入門](https://sites.google.com/a/utmsks.net/material/home/perl2013) (2013 年度作成)
 * [Python 入門](https://sites.google.com/a/utmsks.net/material/home/python2013) (2013 年度作成, 2015 年度改訂)
-* [Python で遊ぼう](https://sites.google.com/a/utmsks.net/material/home/python_asobou) (2016 年度作成)
+* [Python で遊ぼう](python/asobou.md) (2016 年度作成)
 * [JavaScript 入門 with Node.js](https://minoki.github.io/ks-material/ecmascript/) (2017 年度作成)
 * [Lua 入門](lua/README.md) (2013 年度作成, 2015 年度改訂)
 * [Haskell 入門](https://minoki.github.io/ks-material/haskell/) (2015 年度作成, 2017 年度改訂)
