@@ -1,6 +1,6 @@
 # Julia
 
-JuliaはMITで開発されているまだかなり新しい言語ですが、動的な片付けなどスクリプト言語らしい書きやすさと、科学技術計算に使える高速性の両方を追求するという触れ込みで最近注目を集めています。
+JuliaはMITで開発されているまだかなり新しい言語ですが、動的な型付けなどスクリプト言語らしい書きやすさと、科学技術計算に使える高速性の両方を追求するという触れ込みで最近注目を集めています。
 
 9 cutting-edge programming languages worth learning now
 http://www.itworld.com/article/2842123/9-cutting-edge-programming-languages-worth-learning-now.html
@@ -21,7 +21,7 @@ http://julialang.org/downloads/
 
 他の言語をいろいろ触ったことがあって、Juliaの概要や売りを知りたい人は
 
-Julia: A Fresh Approach to Numerical Computing
+Julia: A Fresh Approach to Numerical Computing,
 Jeff Bezanson, Alan Edelman, Stefan Karpinski, Viral B. Shah
 http://arxiv.org/abs/1411.1607
 
@@ -29,7 +29,7 @@ http://arxiv.org/abs/1411.1607
 
 Juliaのサイトにあるチュートリアル
 
-The Julia Express
+The Julia Express,
 Bogumił Kamiński
 http://bogumilkaminski.pl/files/julia_express.pdf
 
