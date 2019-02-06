@@ -13,6 +13,7 @@
 * [Haskell 入門](https://minoki.github.io/ks-material/haskell/) (2015 年度作成, 2017 年度改訂)
 * [Julia 入門](https://sites.google.com/a/utmsks.net/material/home/language-list/julia) (2015 年度作成)
 * [D 入門](https://sites.google.com/a/utmsks.net/material/home/dlang)
+* [Scheme 入門](scheme/intro.md)
 
 ## その他
 
