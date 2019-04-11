@@ -13,7 +13,7 @@
 - [Windowsシステムを使う上で知っておいてほしいこと](contents/usewindows.md)
 
 ### PCハードウェア、Windowsインストール
-- [PCメンテナンス(2018)](https://sites.google.com/g.ecc.u-tokyo.ac.jp/ks2018-tsuchiya/pcメンテナンス2018)
+- [2019年度PC組立実習の手順](https://github.com/ma-tsuchiya/KS_pcdev)
 - [Windowsインストール(2018)](https://sites.google.com/a/utmsks.net/material/home/window-10-install-manual-2018)
 
 ### 文書処理
