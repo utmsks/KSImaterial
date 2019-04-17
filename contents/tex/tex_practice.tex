@@ -212,14 +212,12 @@ first.dvi -> first.pdf
 \medskip
 2012年後半以降の\TeX システムならば，
 % \href{http://blog.preining.info/software-projects/ptex2pdf/}{\FNAME{ptex2pdf}}
-\FNAME{ptex2pdf}という
-Luaスクリプトを使うことで，
+\FNAME{ptex2pdf}というプログラムを使うことで，
 \pLaTeX によるタイプセットとその後の\dvipdfmx の処理をまとめて
 \begin{lstlisting}
 C:\Users\...\Documents> #\underline{ptex2pdf\ -l\ first.tex}#
 \end{lstlisting}
-で行うことができる\footnote{Luaを別途インストールする必要はない．\TeX\ Liveに含まれている
-\LuaTeX というプログラムがその役割を果たすため．}．
+で行うことができる．
 
 \begin{lstlisting}
 > ptex2pdf -l -ot "-synctex=1 -kanji=utf8" -od "-p jisb5" hoge.tex
