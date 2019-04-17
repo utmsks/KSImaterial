@@ -7,8 +7,22 @@
 \definecolor{green}{HTML}{35A168}
 
 \ifdefined\directlua
+  % 各種記号の直前・直後に \xspace が入るようにする
   \ltjsetparameter{alxspmode={`\\,allow}}
   \ltjsetparameter{alxspmode={`\$,allow}}
+  \ltjsetparameter{alxspmode={`\=,allow}}
+  \ltjsetparameter{alxspmode={`\},postonly}}
+  \ltjsetparameter{alxspmode={`\@,allow}}
+  \ltjsetparameter{alxspmode={`\*,allow}}
+  \ltjsetparameter{alxspmode={`\-,allow}}
+  \ltjsetparameter{alxspmode={`\?,allow}}
+  \ltjsetparameter{alxspmode={`\&,allow}}
+  \ltjsetparameter{alxspmode={`\^,allow}}
+  \ltjsetparameter{alxspmode={`\_,allow}}
+  \ltjsetparameter{alxspmode={`\/,allow}}
+  \ltjsetparameter{alxspmode={`\.,allow}}
+  \ltjsetparameter{alxspmode={`\<,allow}}
+  \ltjsetparameter{alxspmode={`\>,allow}}
   \usepackage{luatexja-adjust}
   \usepackage{luatexja-fontspec}
   \usepackage{luatexja-otf}

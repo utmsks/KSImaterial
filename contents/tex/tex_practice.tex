@@ -340,7 +340,7 @@ $ #\underline{updmap\ --setoption\ kanjiEmbed\ hiragino-pron}#
 \medskip
 なお，\FNAME{kanji-config-updmap}や\FNAME{updmap}は自分のユーザーアカウントに対してのみ
 設定を行う．システム全体で設定したい場合は，\FNAME{kanji-config-updmap-sys}や
-\FNAME{updmap-sys}のように\hskip\ltjgetparameter{xkanjiskip}\FNAME{-sys}をつけたコマンドを使う．
+\FNAME{updmap-sys}のように\FNAME{-sys}をつけたコマンドを使う．
 
 \newpage
 \subsection{この先は}
@@ -397,8 +397,7 @@ $ #\underline{updmap\ --setoption\ kanjiEmbed\ hiragino-pron}#
 \medskip
 Sync\TeX の機能を実習用マシンで使うには，以下の設定を行う．
 \begin{description}
- \item[\TeX 側の指定] \pLaTeX によるタイプセット時に\hskip\ltjgetparameter{xkanjiskip}%
-  \texttt{-synctex=1}オプションを指定する．
+ \item[\TeX 側の指定] \pLaTeX によるタイプセット時に\texttt{-synctex=1}オプションを指定する．
  \item[SumatraPDF側の設定] 「設定」→「オプション」と辿り，「逆順検索コマンドラインの設定」\footnote{%
     先に上記の「\TeX 側の設定」を行わないと表示されない．}
 	    に次のように入力する\footnote{%
@@ -472,13 +471,12 @@ C:\Users\...\Documents> #\underline{latexmk\ first.tex}#
 で必要な回数のタイプセットと，その後のPDF作成まで自動でやってくれる．
 
 \texttt{-pv}オプションをつけると，PDFを作成した後にPDFビューア（ここでは4行目に指定したと
-おりSumatraPDF）が起動する．おもしろいのは\hskip\ltjgetparameter{xkanjiskip}%
-\texttt{-pvc}オプションで，\TeX ソースの更新を自
+おりSumatraPDF）が起動する．おもしろいのは\texttt{-pvc}オプションで，\TeX ソースの更新を自
 動的に感知し，自動でPDFを更新してくれる．
 
 \medskip
-上に述べた\hskip\ltjgetparameter{xkanjiskip}%
-\FNAME{.latexmkrc}の設定はほぼ最小限のものである．よりきちんとした設定については
+上に述べた\FNAME{.latexmkrc}の設定はほぼ最小限のものである．
+よりきちんとした設定については
 \begin{itemize}
  \item \href{http://oku.edu.mie-u.ac.jp/~okumura/texwiki/}{\TeX~Wiki}中の
 「latexmk」
@@ -1236,7 +1234,7 @@ JIS~X~0208を超えた上記種類の文字を使いたい場合は，
 \end{lstlisting}
 を\emph{UTF-8}で記述（「Ⅰ」は全角ローマ数字），\pLaTeX でタイプセット%
 \footnote{Windows上の\TeX Liveでは，\pLaTeX 実行時にオプションとして
-       \hskip\ltjgetparameter{xkanjiskip}\texttt{-guess-input-enc}または\hskip\ltjgetparameter{xkanjiskip}\texttt{-kanji=utf8}を指定しない
+       \texttt{-guess-input-enc}または\texttt{-kanji=utf8}を指定しない
        とうまくいかない．}し，
 PDFファイルを作ると
 \begin{quote}
@@ -1486,28 +1484,23 @@ end program test
 
 相互参照は，
 \begin{enumerate}
- \item 参照したい箇所で，\verb+\label{...}+\hskip\ltjgetparameter{xkanjiskip}%
-によってラベルを割り当てる．
+ \item 参照したい箇所で，\verb+\label{...}+によってラベルを割り当てる．
 ラベルは比較的自由な名前にできるが，管理のためには
 「図は\texttt{fig:}で始める」
 「式は\texttt{eq:}で始める」などの
 自分なりのルールを作っておくとわかりやすい．
  \item ラベルを付けた節，式，図，……の番号を出力するには，
-\verb+\ref{...}+\hskip\ltjgetparameter{xkanjiskip}%
-の引数にラベルを与える．
- \item \verb+\pageref{...}+\hskip\ltjgetparameter{xkanjiskip}を用いると，
+\verb+\ref{...}+の引数にラベルを与える．
+ \item \verb+\pageref{...}+を用いると，
 ラベルの存在箇所のページ番号が出力される．
 \end{enumerate}
 と，基本的には\verb+\label+と\verb+\ref+を対にして用いる．
 
 \medskip
-\verb+\ref{...}+\hskip\ltjgetparameter{xkanjiskip}%
-では\emph{番号のみ}出力されることには注意が必要である．
+\verb+\ref{...}+では\emph{番号のみ}出力されることには注意が必要である．
 数式の参照では番号を()でくくることが多いが，
-その際は\verb+(\ref{...})+\hskip\ltjgetparameter{xkanjiskip}%
-とする必要がある．\PKG{amsmath}パッケージに用意されている
-\verb+\eqref{...}+\hskip\ltjgetparameter{xkanjiskip}%
-を使えば，式番号の周囲の括弧を自動で補ってくれる．
+その際は\verb+(\ref{...})+とする必要がある．\PKG{amsmath}パッケージに用意されている
+\verb+\eqref{...}+を使えば，式番号の周囲の括弧を自動で補ってくれる．
 
 節番号，図番号なども同様で，「節」「図」などの接頭辞・接尾辞は自分で入力しないといけない．
 これを解決するためのパッケージとして
@@ -1562,8 +1555,7 @@ LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 \begin{quote}
 \large 第\hbox{}\textbf{??}\hbox{}節にある2次方程式(\hbox{}\textbf{??}\hbox{})の解は
 \end{quote}
-のように，番号が入るべきところが\hskip\ltjgetparameter{xkanjiskip}%
-\textbf{??}\hskip\ltjgetparameter{xkanjiskip}と伏字になっている．
+のように，番号が入るべきところが\textbf{??}と伏字になっている．
 
 このように，1回のタイプセットでは相互参照は正しく解決されない．これは
 相互参照の情報（どのラベルが，どの番号に対応し，何ページにある）が1回補助ファイルに
@@ -1814,8 +1806,7 @@ Kristoffer~H. Rose. \textit{\Xy-pic User's Guide}, 2013.
 
 図式中に登場する$A$,~$B$などのオブジェクトは，
 \ENV{tabular},~\ENV{array}環境などのように表の形で入力する．
-\texttt{\&}\hskip\ltjgetparameter{xkanjiskip}が列の区切り，
-\verb+\\+が行の区切りである．
+\texttt{\&}が列の区切り，\verb+\\+が行の区切りである．
 図中$C$は第1行第1列……のように見えるが，第2行第2列の$A\times B$の真上にくるように
 タイプセットしたいので，ソース中では\emph{第1行第2列}の位置に指定する．
 
@@ -1825,13 +1816,9 @@ Kristoffer~H. Rose. \textit{\Xy-pic User's Guide}, 2013.
  矢印なのかを指定する．例えば，\verb+\ar[llu]+ならば，
  相対的に2つ左，1つ上のオブジェクトに向かって矢印を書くことになる．
  \item 矢印には上下にラベルを付けられる．進行方向向かって左側に付けたい場合は
- \hskip\ltjgetparameter{xkanjiskip}\verb+^+\hskip\ltjgetparameter{xkanjiskip}で，
- 右側には\hskip\ltjgetparameter{xkanjiskip}\verb+_+%
- \hskip\ltjgetparameter{xkanjiskip}で通常の添字のように記述する．上のソース中の
- \verb+\ar[l]^{\pi_1}+\hskip\ltjgetparameter{xkanjiskip}と
- \verb+\ar[r]_{\pi_2}+\hskip\ltjgetparameter{xkanjiskip}を比較して欲しい．
- \item \verb+@{...}+\hskip\ltjgetparameter{xkanjiskip}
- は線種の指定である．通常の矢の他に可換図式で良く使うものとしては
+ \verb+^+で，右側には\verb+_+で通常の添字のように記述する．
+ 上のソース中の\verb+\ar[l]^{\pi_1}+と\verb+\ar[r]_{\pi_2}+を比較して欲しい．
+ \item \verb+@{...}+は線種の指定である．通常の矢の他に可換図式で良く使うものとしては
 \[
  \xymatrix{ A\ar@{=}[r] & B\ar@{-->}[r] & C \ar@{->>}[r] & D}
 \]
@@ -1861,8 +1848,7 @@ Kristoffer~H. Rose. \textit{\Xy-pic User's Guide}, 2013.
 \end{lstlisting}
 とすればよい．
 
-\item 矢印を少し曲げたい場合には，
-\verb+@/^/+,~\verb+@/_/+\hskip\ltjgetparameter{xkanjiskip}でそれぞれ
+\item 矢印を少し曲げたい場合には，\verb+@/^/+,~\verb+@/_/+でそれぞれ
 進行方向左側・右側に曲がる．
 \end{itemize}
 
