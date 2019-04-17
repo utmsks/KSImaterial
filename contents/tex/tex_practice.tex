@@ -1125,21 +1125,14 @@ $\mathbb{R}$に右半開区間位相を入れたものを$\mathcal{S}$とおく�
 \end{quote}
 という4種類の系統が広く使われる．Unicodeはいくつか符号化方式を定めているが，よく使われるのは
 文字を1--4バイトの可変長で符号化する\emph{UTF-8}である．
+特に理由のない場合は，\TeX ソースはUTF-8で保存することを推奨する．
 
 \medskip
-\TeX~Liveの\pLaTeX の標準設定では，「\TeX ソースの文字コードを自動判別する」
-という気の利いた機能は無効になっている\footnote{%
+Windows上の\TeX~Liveの\pLaTeX の標準設定では，「\TeX ソースの文字コードを自動判別する」ようになっている\footnote{%
 \texttt{-guess-input-enc}オプション．
-Windows用バイナリでは，単純に設定ファイル\FNAME{texmf.cnf}中で無効にされているだけ
-である（ちなみに，W32\TeX では標準で有効になっている）．
-Mac~OS~X用やLinux用のバイナリには，そもそもそのような機能は実装されていない．
-}．デフォルトでは，\TeX ソースの文字コードとして期待されるものは
-\begin{description}
- \item[Windows] Shift\_JIS及びJIS
- \item[その他（Mac~OS~X，Linux等）] UTF-8及びJIS
-\end{description}
-となっている．WindowsでUTF-8の\TeX ソースを扱いたい場合は，
-\texttt{-kanji=utf8}を指定する．
+Mac~OS~X用やLinux用のバイナリには，そのような機能は実装されていない．
+}．
+自動判別が不安な場合は，明示的に\texttt{-kanji=utf8}を指定する（\TeX ソースがUTF-8の場合）．
 \begin{lstlisting}
 > platex -kanji=utf8 hoge.tex
 \end{lstlisting}
@@ -1236,16 +1229,12 @@ JIS~X~0208を超えた上記種類の文字を使いたい場合は，
 「Ⅰ」，「彅」，「ｱｲｳ」
 \end{document}
 \end{lstlisting}
-を\emph{UTF-8}で記述（「Ⅰ」は全角ローマ数字），\pLaTeX でタイプセット%
-\footnote{Windows上の\TeX Liveでは，\pLaTeX 実行時にオプションとして
-       \texttt{-guess-input-enc}または\texttt{-kanji=utf8}を指定しない
-       とうまくいかない．}し，
-PDFファイルを作ると
+を\emph{UTF-8}で記述（「Ⅰ」は全角ローマ数字），\pLaTeX でタイプセットし，PDFファイルを作ると
 \begin{quote}
  \large 「âĚă」，「å¡Ě」，「ï¡śï¡šï¡ş」
 \end{quote}
 のような出力が得られる．
-Windowsの機種依存文字や半角カナが正しく和文文字と認識されていないことわかるだろう．
+Windowsの機種依存文字や半角カナが正しく和文文字と認識されていないことがわかるだろう．
 
 \begin{curve}
 「彅」はUnicodeでは\texttt{U+5F45}で，UTF-8では\texttt{E5 BD 85}という3バイトで符号化される．
