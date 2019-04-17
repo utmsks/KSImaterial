@@ -889,7 +889,10 @@ section番号の表示形式のカスタマイズは
 \verb|\renewcommand{\thesection}{\arabic{section}節}|
 などとすれば一応可能だが，
 subsectionや定理番号の表示がおかしくなってしまう．
-このあたりは\url{https://togetter.com/li/1124861}などを参考にして，各自調べること．
+このあたりは\url{https://togetter.com/li/1124861}などを参考にして，各自調べること\footnote{%
+  結論を言うと，文書クラスがbxjsclassesであればクラスオプション\texttt{label-section=modern}を指定し，\texttt{\textbackslash thesection}の代わりに\texttt{\textbackslash pre}/\texttt{\textbackslash postsectionname}をカスタマイズすれば良い．
+  それ以外の文書クラスの場合は，上手いカスタマイズ方法はない．
+}．
 
 
 
