@@ -413,7 +413,7 @@ EmEditor側が\TeX ソースの対応する箇所へとジャンプする\footno
  可能であるが，筆者はEmEditor Freeでそのような設定を行うことができなかった．
 }．
 
-\subsubsection{\FNAME{latexmk}}
+\subsubsection{\FNAME{latexmk}}\label{ssec:latexmk}
 PDF作成のために毎回タイプセット・\dvipdfmx を実行するのは面倒である\footnote{%
 \TeX を使うのであれば，コマンドプロンプトを使えるようになっておくのが良い．
 }．
@@ -1553,7 +1553,7 @@ LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 \end{quote}
 のように，番号が入るべきところが\textbf{??}と伏字になっている．
 
-このように，1回のタイプセットでは相互参照は正しく解決されない．これは
+このように，\emph{1回のタイプセットでは相互参照は正しく解決されない}．これは
 相互参照の情報（どのラベルが，どの番号に対応し，何ページにある）が1回補助ファイルに
 書き出されるからである．
 もう一回
@@ -1566,6 +1566,8 @@ LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 \large 第1節にある2次方程式(2)の解は
 \end{quote}
 と正しく表示される．
+
+複数回タイプセットするのが面倒な場合は，\FNAME{latexmk}（\prettyref{ssec:latexmk}を参照）や\FNAME{cluttex}\footnote{\url{https://github.com/minoki/cluttex}}等の自動化ツールを使うと良い．
 
 
 \subsubsection{\PKG{showkeys}パッケージ}
