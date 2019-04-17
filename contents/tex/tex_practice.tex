@@ -12,6 +12,9 @@
 \let\SX@Info=\relax
 \makeatother
 
+% tikzcd
+\usepackage{tikz-cd}
+
 %%% prettyref
 \usepackage{prettyref}
 \makeatletter
@@ -1891,6 +1894,128 @@ D\ar[r]\ar[d]_p
 B\ar@{->>}[rrrr]&&&&A'\ar@{->>}[r]&A
 }.
 \]
+
+\subsection{図式 (\PKG{tikzcd})}
+数学では、
+\[
+  \begin{tikzcd}
+    & C \ar[ld,bend right=15,"f"']
+        \ar[rd,bend left=15,"g"]
+        \ar[d,dashed,"{(f,g)}"] & \\
+    A & A\times B \ar[l,"\pi_1"] \ar[r,"\pi_2"'] & B
+  \end{tikzcd}
+\]
+のような図式を使う（上は直積のuniversalityを表したものである）．
+このような図式を記述するには\PKG{tikzcd}というパッケージを使うのが便利である．
+詳しい使い方は，
+\texttt{texdoc tikzcd}
+を参照して欲しい．
+
+この図式の出力は，プリアンブルに
+\begin{lstlisting}
+\documentclass[uplatex,dvipdfmx]{jsarticle}
+\usepackage{tikz-cd}
+\end{lstlisting}
+と入力することで\PKG{tikzcd}を読み込んだ上で，
+\begin{lstlisting}
+\[
+  \begin{tikzcd}
+    & C \ar[ld,bend right=15,"f"']
+        \ar[rd,bend left=15,"g"]
+        \ar[d,dashed,"{(f,g)}"] & \\
+    A & A\times B \ar[l,"\pi_1"] \ar[r,"\pi_2"'] & B
+  \end{tikzcd}
+\]
+\end{lstlisting}
+というソースで行った．
+
+図式中に登場する$A$,~$B$などのオブジェクトは，
+\ENV{tabular},~\ENV{array}環境などのように表の形で入力する．
+\texttt{\&}が列の区切り，\verb+\\+が行の区切りである．
+図中$C$は第1行第1列……のように見えるが，第2行第2列の$A\times B$の真上にくるように
+タイプセットしたいので，ソース中では\emph{第1行第2列}の位置に指定する．
+
+\cs{ar}（または\cs{arrow}）で始まるのが図式中の矢印である．
+矢印の終点やラベルの内容は，\cs{ar}の（角かっっこ）引数として指定する．
+\begin{itemize}
+\item 矢印の終点は，始点からの相対位置で指定する．例えば，\verb+\ar[llu]+ならば，
+  相対的に2つ左（\textbf{l}eft），1つ上（\textbf{u}p）のオブジェクトに向かって矢印を書くことになる．
+\item 矢印には上下にラベルを付けられる．
+  ラベルは二重引用符\verb+" "+で囲む．
+  追加の指定をしない場合は進行方向向かって左側に付くが，右側に付けたい場合はアポストロフィー\verb+'+を二重引用符の直後に付ける．
+  上のソース中の\verb+\ar[l,"\pi_1"]+と\verb+\ar[r,"\pi_2"']+を比較して欲しい．
+  注意点として，ラベルの中身がコンマを含む場合は，ラベルを波括弧で囲う必要がある．
+\item 線種の指定もできる．
+  通常の矢の他に可換図式で良く使うものとしては
+  \[
+    \begin{tikzcd}
+      A \ar[r,equal]
+      & B \ar[r,dashed]
+      & C \ar[r,twoheadrightarrow]
+      & D \ar[r,rightarrowtail] & E
+    \end{tikzcd}
+  \]
+  などがあるが，これらは
+\begin{lstlisting}
+\[
+  \begin{tikzcd}
+    A \ar[r,equal]
+    & B \ar[r,dashed]
+    & C \ar[r,twoheadrightarrow]
+    & D \ar[r,rightarrowtail] & E
+  \end{tikzcd}
+\]
+\end{lstlisting}
+  によって入力できる．
+\item 矢印を少し曲げたい場合には，\texttt{bend left}, \texttt{bend right}でそれぞれ進行方向左側・右側に曲がる．
+  オプションの値として数値を指定することで，曲がり具合を調整できる（小さい方がより真っ直ぐに近い）．
+\end{itemize}
+
+\paragraph{}
+次の図式（five lemmaの図）をタイプセットせよ．
+\[
+  \begin{tikzcd}
+    A \ar[r,"f"] \ar[d,"\alpha"'] & B \ar[r,"g"] \ar[d,"\beta"'] & C \ar[r,"h"] \ar[d,"\gamma"'] & D \ar[r,"i"] \ar[d,"\delta"'] & E \ar[d,"\epsilon"'] \\
+    A' \ar[r,"f'"'] & B' \ar[r,"g'"'] & C' \ar[r,"h'"'] & D' \ar[r,"i'"'] & E'
+    \end{tikzcd}
+\]
+
+\paragraph{}
+次の各図式をタイプセットせよ．
+\begin{align*}
+  \begin{tikzcd}[ampersand replacement=\&]
+    1 \ar[r,"a"] \ar[rd,"z"'] \& A \ar[r,"f"] \ar[d,dashed,"x"] \& A \ar[d,dashed,"x"] \\
+    \& N \ar[r,"s"'] \& N
+  \end{tikzcd}
+  &&
+  \begin{tikzcd}[ampersand replacement=\&]
+    X \ar[r,bend left=20,"f"] \ar[r,bend right=20,"g"']
+    \& Y \ar[r,twoheadrightarrow,"q"] \ar[rd,"e"']
+    \& Q' \ar[d,dashed,"e"] \\
+    \& \& A
+  \end{tikzcd}
+\end{align*}
+
+\paragraph{}
+次の図式をタイプセットせよ．
+\[
+  \begin{tikzcd}
+    &&&& Y' \ar[dd,"e"'] \ar[r] & Y \ar[dd,"p"] \\
+    Z'\times_C D \ar[d,"z"'] \ar[r] \ar[rd,phantom,"\text{p.b.}" description] % p.b. をもう少し小さくしたいが…
+    & Z' \ar[r] \ar[d,"c"']
+    & Y' \ar[r,twoheadrightarrow] \ar[rru,equal,bend left=15]
+    & e(Y') \ar[d,"m"] \ar[rd,hookrightarrow] & & \\
+    D \ar[r] \ar[d,"p"']
+    & C \ar[rr,twoheadrightarrow] &
+    & B' \ar[r,twoheadrightarrow]
+    & X' \ar[r] \ar[d,"f'"']
+    & X \ar[d,"f"] \\
+    B \ar[rrrr,twoheadrightarrow] & & &
+    & A' \ar[r,twoheadrightarrow] & A
+  \end{tikzcd}
+\]
+
+% 複雑な配置を行いたい場合は，\PKG{tikzcd}を使うよりも，大本となる図形描画パッケージTikZを直接使った方がいいかもしれない．
 
 \newpage
 
