@@ -14,10 +14,8 @@
 
 ### PCハードウェア、Windowsインストール
 
-- [Windowsインストール(2019)](contents/windowsinstall.md)
 - [2019年度PC組立実習の手順](https://github.com/ma-tsuchiya/KS_pcdev)
-- [Windowsインストール(2018)](https://sites.google.com/a/utmsks.net/material/home/window-10-install-manual-2018)
->>>>>>> d650cca97cd7d432ecc927ae2d9656a9d0db8ba9
+- [Windowsインストール(2019)](contents/windowsinstall.md)
 
 ### 文書処理
 - [TeX 実習](contents/tex/tex_practice.md)
