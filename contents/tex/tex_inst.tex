@@ -38,19 +38,21 @@
 本実習では，まず\TeX システムを実習用マシンにインストールすることからはじめる．
 Windowsでの\TeX システムとしては，昔から角藤亮氏による
 \href{http://w32tex.org/index-ja.html}{W32\TeX}が主流であったが，
-本実習では\href{http://www.tug.org/texlive/}{\emph{\TeX~Live~2016}}%
-を用いることにする\footnote{%
+現在では\href{http://www.tug.org/texlive/}{\emph{\TeX~Live}}%
+がその地位を引き継いだと言っていいだろう\footnote{%
   \href{http://www.tug.org/texlive/}{\emph{\TeX~Live}}%
   は，世界中の\TeX に関するプログラム・パッケージ類を収めたものであり，
   毎年一回リリースされている．日本語対応も近年(2010--2013年)強化され，
   まともに扱えるものになった．
-  %%% たぶん実習時点ではこうなってるはず
-  % なお，\TeX~Live~2013の更新は4月初旬で終了しており，
-  % 現在はTL~2014 pretestが行われている段階である．
 }．
+この実習では，2019年4月18日現在最新版
+である\emph{\TeX~Live~2018}\footnote{%
+  なお、\TeX~Live~2019は2019年4月30日リリース予定である．
+}%
+を用いる．
 
 \medskip
-\TeX~Liveをインストールした後は，各自の知識に沿って実習を進めてほしい，
+\TeX~Liveをインストールした後は，各自の知識に沿って実習を進めてほしい．
 計算数学実習資料集の
 「\href{https://github.com/utmsks/KSImaterial/blob/master/contents/tex/tex_practice.md}{\TeX 実習}」
 %%% まだ作ってない
@@ -72,9 +74,17 @@ Windowsでの\TeX システムとしては，昔から角藤亮氏による
 \setcounter{section}{-1}
 
 \section{はじめに}
-本実習では，
-奥村晴彦／黒木裕介著「\LaTeXe 美文書作成入門 改訂第7版」
-の付属の DVD (の中身)を用いて \TeX~Live のインストールを行う．
+\TeX~Liveのインストーラは，インターネット経由で入手できる．Windows向け
+インストーラの入手方法は%
+\href{https://texwiki.texjp.org/?TeX%20Live%2FWindows}{\TeX Wiki}%
+のページが詳しい\footnote{%
+  ISOファイルをダウンロードするのをオススメする．
+  ただし，数GBあるので，ある程度高速な回線からダウンロードしないと厳しい．
+  数理ネットワークからのダウンロード時には数分で済んだが，
+  本文書の改定者が改定前の文書を見たときには数時間かかるとの記述を見た．
+}．
+しかし，数理ネットワークへの負担を抑えるため，ここでは事前にダウンロードしたインストーラを
+USBメモリにセットして配布する．
 
 まずはインストール前の準備をしよう．
 
@@ -86,7 +96,6 @@ Windowsでの\TeX システムとしては，昔から角藤亮氏による
   「ファイルの拡張子の表示または非表示」を選択．
   現れた画面中心の「詳細設定」のボックスをスクロールし，
   下の方にある「登録されている拡張子は表示しない」のチェックを\emph{外す}．
-
   \begin{itemize}
   \item \TeX 実習に限らず，本授業の実習ではこの設定にしておいた方が良い．
   \item また，受講生所有のPCにもこの設定を行うことを推奨する．
@@ -94,27 +103,21 @@ Windowsでの\TeX システムとしては，昔から角藤亮氏による
     インターネットで検索するか TA に聞くなどして，今のうちに理解しておくと良いだろう．
   \end{itemize}
 \item Windows~10のインストールに使用したUSBメモリから，
-  \TeX~Liveのインストーラ（USBメモリ内の\texttt{tex¥}%
-  \hskip\ltjgetparameter{xkanjiskip}以下全体）を
+  \TeX~Liveのインストーラ（USBメモリ内の \texttt{TeXLive2018} フォルダ全体）を
   デスクトップ以下にコピーする．
   \begin{itemize}
   \item USB 3.0 (青い USB 端子) に挿した方が速く，2分程度で終了する．
   \item コピーし終わった後は，USBメモリはもう必要ない(ので，TAに返却する)．
   \end{itemize}
-\item \texttt{tex} ディレクトリの中には，
-  \texttt{win}と\texttt{mac}，そして \texttt{texlive2016} の3つのディレクトリがある．
-  本実習では，前者2つは使用せず，\texttt{texlive2016} の中身のみを使用する．
+\item \texttt{TeXLive2018} ディレクトリの中にある\texttt{install-tl-windows.bat}
+  か \texttt{install-tl-advanced.bat} からインストーラを起動できる．
   \begin{itemize}
-  \item 書籍では \texttt{tex¥win¥美文書TeXセットアップ.exe} の実行を推奨している．
+  \item 次のページの通り，本実習では \texttt{install-tl-advanced.bat} の方を用いる．
+  \item 自宅のPC等で，ディスク
+    容量に余裕があるなら \texttt{install-tl-windows.bat} を用いると良い．
     この方法であれば，何も考えずに数回「次へ」をクリックするだけでインストールができるが，
     \TeX~Live をフルインストールすることになるため，多くの時間(30分)とディスク容量(5GB)が必要となる．
   \item 本実習では，ディスク容量は問題ないが時間を節約したいため，設定をカスタマイズしてインストールする．
-  \item 受講生が自宅PCなどにインストールする場合は，基本的に書籍通りの方法で問題ないだろう．
-    \item もちろん，ネットワーク経由でインストールすることもできる．
-      例えば\TeX wikiの
-      \href{https://texwiki.texjp.org/?TeX%20Live%2FWindows}{TeX Live/Windows}
-      あたりを参考にすると良い．
-      ただし，この場合は数時間程度かかるので覚悟しておくこと．
   \end{itemize}
 \end{enumerate}
 
@@ -137,7 +140,7 @@ Windowsでの\TeX システムとしては，昔から角藤亮氏による
   %   \item コピーし終わった後は，USBメモリはもう必要ない．
   %   \end{itemize}
 
-\item 上でコピーしたものの中から \texttt{texlive2016¥} ディレクトリにある
+\item 上でコピーした \texttt{TeXLive2018¥} ディレクトリにある
   \texttt{install-tl\underline{-advanced}.bat}を
   「管理者として実行」する\footnote{%
     batファイルを右クリックすると「管理者として実行」という
@@ -159,7 +162,7 @@ Windowsでの\TeX システムとしては，昔から角藤亮氏による
   無視すること．
 
 \item 「導入作業中はウィルス検知器を無効にするのが最善です．」
-  というダイアログが出るが，無視して×をクリックして閉じる．
+  というダイアログ（英語かもしれない）が出るが，無視して×をクリックして閉じる．
   「続行」を押しても閉じるようである．
 
 \item \TeX~Liveは標準ではフルインストールする設定になっている．
@@ -169,7 +172,7 @@ Windowsでの\TeX システムとしては，昔から角藤亮氏による
   まず，インストーラの一番上にある
   「{選択したスキーム}」の右の「変更」をクリックし，
   % 図\nobreak\ref{sch}のように
-  「{teTeXスキーム}」を選択
+  「{scheme-tetex}」を選択
   \footnote{%
     ちなみに，\href{http://www.tug.org/tetex/}{te\TeX}というのは，
     Thomas Esser氏がメンテナンスをしていた，UNIX系OSのための\TeX システムである．
@@ -201,11 +204,15 @@ Windowsでの\TeX システムとしては，昔から角藤亮氏による
   図中では，チェックを外すものは青囲み，入れるものは赤囲みしてある．\\
   \emph{「日本語」のところにチェックが入っていることを確認すること．}
 
-\item インストールを開始する前に，
-インストーラ画面上部の「必要ディスク領域」が 2029MB
-\footnote{操作手順によっては2015MB となる場合もあるが，おそらく問題ないだろう．}
-となっていることを確認（図\nobreak\ref{top}）．
-もし違っていた場合は，これまでの設定を見直そう．
+\item インストールを開始する前に，次を確認（図\nobreak\ref{top}）．
+  もし違っていた場合は，これまでの設定を見直そう：
+  \begin{itemize}
+  \item 「選択したスキーム」が，「scheme-tetex」から「scheme-custom」に変わっている．
+  \item 「導入対象コレクション」が，21コレクションになっている．
+  \item 「必要ディスク領域」が，2412MBになっている\footnote{%
+      ただし，増減がある可能性がある．繰り返し実験を行った訳ではないので，
+      数十MBの増減であれば項目を再確認の上そのままインストールしてみて欲しい．}．
+  \end{itemize}
 
 \item 最後に，インストーラ最下部の
   「\TeX\ Liveの導入」をクリックし，インストールを開始する．
@@ -221,20 +228,22 @@ Windowsでの\TeX システムとしては，昔から角藤亮氏による
   \clearpage
   \begin{figure}[t]
     \centering
-    \includegraphics[scale=.7]{tl16col.png}
+    \includegraphics[scale=.7]{tl18col.png}
     \caption{コレクション選択画面}\label{col}
   \end{figure}
 
   \begin{figure}[b]
     \centering
-    \includegraphics[scale=.5]{tl16top.png}
+    \includegraphics[scale=.5]{tl18top.png}
     \caption{インストーラ画面}\label{top}
   \end{figure}
 \end{enumerate}
 
 
 % \newpage
-\section{EmEditor~Freeのインストール}
+\section{EmEditor~Freeのインストール\footnote{%
+  2018年版のまま．不明点があればTAに確認してください．
+}}
 \TeX ソースを記述するにはメモ帳でもできないことはないが，
 それよりは高機能なテキストエディタを用いるのが便利である．
 \emph{自分で使い慣れたエディタ（Emacs, Vim等）が
@@ -259,8 +268,8 @@ Windowsでの\TeX システムとしては，昔から角藤亮氏による
   % \end{figure}
 \item ダウンロードしたファイル\footnote{2018/4/17時点では\texttt{emed64\_17.5.0.msi}である．}を実行し，インストールを開始する．
   \begin{itemize}
-  \item 「インストールタイプ」は「すべてのユーザ」
-  \item セットアップタイプは「標準」でよい．% （図\nobreak\ref{emed2}）．
+    %節題の脚注のせいでページがはみ出したので応急処置
+  \item 「インストールタイプ」は「すべてのユーザ」， セットアップタイプは「標準」でよい．% （図\nobreak\ref{emed2}）．
     % \item 管理者権限を求められたら、TAを呼んでパスワードを入力してもらう．
   \end{itemize}
   % \begin{figure}[!h]
