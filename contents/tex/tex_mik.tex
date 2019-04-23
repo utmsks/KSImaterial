@@ -1,6 +1,14 @@
 %#!xelatex
 \documentclass[b5paper]{bxjsarticle} % 日本語用クラスファイル
 
+% 更新日時の印字に datetime2 パッケージの \DTMnow を使う
+% ただし、 datetime2 パッケージは \today を上書きしようとするので、防止する
+% また、タイムゾーンは印字しない
+\let\origtoday=\today
+\usepackage[datesep={/},timesep={:}]{datetime2}
+\renewcommand\DTMdisplayzone[2]{}
+\let\today=\origtoday
+
 \usepackage{xltxtra,mystyle}
 %%% listings
 \hypersetup{
@@ -9,19 +17,6 @@
 }
 \title{\pTeX 系列以外による日本語文書作成}
 \captionsetup{justification=centering, labelfont={small, rm}}
-
-%%% 時・分 \TIME => hh:mm
-\makeatletter
-\@tempcntb\time \divide\@tempcntb by 60\relax
-\@tempcnta\@tempcntb \multiply\@tempcnta 60\relax
-\@tempcntb\time \advance\@tempcntb-\@tempcnta
-\divide\@tempcnta by 60\relax
-\multiply\@tempcnta by 100\relax
-\advance\@tempcnta\@tempcntb
-\advance\@tempcnta by10000
-\def\@temp#1#2#3#4#5{\def\TIME{#2#3:#4#5}}
-\expandafter\@temp\the\@tempcnta
-\makeatother
 
 \begin{document}
 \catcode`\<=13
@@ -114,7 +109,7 @@ TUGboat~\emph{11}, No.~4,  1990.\\
 \vfill
 
 {\scriptsize\raggedleft
-Last update: \texttt{\the\year/\the\month/\the\day\ \TIME}.
+Last update: \texttt{\DTMnow}.
 \par}
 
 \newpage

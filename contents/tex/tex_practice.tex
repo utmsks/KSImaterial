@@ -41,18 +41,14 @@
 }
 \makeatother
 
-%%% 更新時刻
-\makeatletter
-\def\UPDTIME{%
- \expandafter\@UPD@a\romannumeral-`0\pdfcreationdate!}
-\def\@UPD@a#1#2#3#4#5#6{% Year
-  #3#4#5#6/\@UPD@b}
-\def\@UPD@b#1#2#3#4#5#6#7#8{% Month, Day, Hour, Min
-  #1#2/#3#4~#5#6:#7#8:\@UPD@c
-}
-\def\@UPD@c#1#2#3!{% Sec
-  #1#2}
-\makeatother
+% 更新日時の印字に datetime2 パッケージの \DTMnow を使う
+% ただし， datetime2 パッケージは \today を上書きしようとするので，防止する
+% また，タイムゾーンは印字しない
+\let\origtoday=\today
+\usepackage[datesep={/},timesep={:}]{datetime2}
+\renewcommand\DTMdisplayzone[2]{}
+\let\today=\origtoday
+
 
 \begin{document}
 \baselineskip1.75\zw
@@ -100,7 +96,7 @@
 \vfill
 
 {\scriptsize\raggedleft
-Last update: \texttt{\UPDTIME}.
+Last update: \texttt{\DTMnow}.
 \par}
 
 \newpage
