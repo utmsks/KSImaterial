@@ -1,12 +1,10 @@
 %#!luajitlatex
 \IfFileExists{luatex85.sty}{\RequirePackage{luatex85}}{}
 \documentclass{ltjsarticle}
-\usepackage{mystyle,showexpl}
+
+\usepackage{showexpl}
 \lstset{pos=l, width=.4\textwidth,
   explpreset={numbers=left,numberstyle=\tiny,literate={\\\\}{}0 }}
-\hypersetup{pdftitle={TeX 実習}}
-\title{\TeX 実習}
-
 % showexplの出力が邪魔なので表示しない
 \makeatletter
 \let\SX@Info=\relax
@@ -25,8 +23,8 @@
 \makeatother
 
 %%% fancyvrb
+% \VerbatimFootnotes は \begin{document} の後で実行する
 \usepackage{fancyvrb}
-\VerbatimFootnotes
 
 %%% \paragraph{} で「■課題 xx」という見出しをつける
 %%% このような使い方は行儀が悪いのだが……
@@ -49,8 +47,12 @@
 \renewcommand\DTMdisplayzone[2]{}
 \let\today=\origtoday
 
+\usepackage{mystyle}
+\hypersetup{pdftitle={TeX 実習}}
+\title{\TeX 実習}
 
 \begin{document}
+\VerbatimFootnotes
 \baselineskip1.75\zw
 \maketitle
 
