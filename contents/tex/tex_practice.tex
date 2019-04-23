@@ -151,7 +151,7 @@ Last update: \texttt{\DTMnow}.
 表示されることになるだろう．
 \item 保存先はどこでもいいが，
 以降の説明では「ドキュメント」のところに保存したとする．
-\item 本実習では関係ないが，OSXや最近の多くのLinuxなど，
+\item 本実習では関係ないが，macOSや最近の多くのLinuxなど，
 \emph{Unicode~(UTF-8)を用いて\TeX ソースを作成する環境下では，
 u\pLaTeX の使用を検討すべきである}．\prettyref{ssec:uptex}を参照．
 \end{itemize}
@@ -331,7 +331,7 @@ C:\Users\...> #\underline{updmap\ --setoption\ kanjiEmbed\ ipa}#
 と入力すればよく，以降の\DVIPDFMx の実行で作られるPDFファイルには，日本語フォントとして
 IPA明朝・IPAゴシックが埋め込まれることになる．
 
-Mac~OS~Xに商用・高品質なヒラギノフォントが付属していることは有名である%
+macOSに商用・高品質なヒラギノフォントが付属していることは有名である%
 \footnote{「ヒラギノを買ったらMacがおまけについてきた」という有名なジョークがある．}．
 これを使いたい場合には，シンボリックリンクを貼るという前処理（ここでは解説しない）をした後に，
 \begin{lstlisting}
@@ -1139,7 +1139,7 @@ $\mathbb{R}$に右半開区間位相を入れたものを$\mathcal{S}$とおく�
 \medskip
 Windows上の\TeX~Liveの\pLaTeX の標準設定では，「\TeX ソースの文字コードを自動判別する」ようになっている\footnote{%
 \texttt{-guess-input-enc}オプション．
-Mac~OS~X用やLinux用のバイナリには，そのような機能は実装されていない．
+macOS用やLinux用のバイナリには，そのような機能は実装されていない．
 }．
 自動判別が不安な場合は，明示的に\texttt{-kanji=utf8}を指定する（\TeX ソースがUTF-8の場合）．
 \begin{lstlisting}
@@ -1319,7 +1319,7 @@ u\pLaTeX（u\pTeX 対応した\LaTeX）で文書を書くのは，
 従来の\pLaTeX で文書を書くのとほとんど変わらない．以下の点に注意すればよい：
 \begin{itemize}
 \item \emph{\TeX ソースの文字コードを\emph{UTF-8}とすること．}\\
-  Mac~OS~XやLinuxでは標準でこの設定になっていることが多いが，
+  macOSやLinuxでは標準でこの設定になっていることが多いが，
   WindowsではまだまだShift\_JISが主流であるため，
   「保存するときに明示的にUTF-8を指定」という作業が必要かもしれない．
 \item \emph{クラスファイルはu\pLaTeX 用のものを使用する．}\\
