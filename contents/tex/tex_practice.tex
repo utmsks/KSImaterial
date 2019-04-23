@@ -126,12 +126,14 @@ Last update: \texttt{\DTMnow}.
 ．日本語では横書きの他に縦書きも行われるが，
 \pTeX・\pLaTeX は縦組みの組版もサポートしている．
 
+TODO: pLaTeXとupLaTeXの関係を説明する
+
 \subsection{最初の例}
 \label{ssec:first}
 まず適当なエディタを使い，次の内容を持った\FNAME{first.tex}を作る．
 このような\TeX が理解できるようなテキストファイルを\emph{\TeX ソース}という．
 \begin{lstlisting}[numbers=left,numberstyle=\tiny,xleftmargin=3\zw]
-\documentclass{jsarticle}
+\documentclass[uplatex]{jsarticle}
 \begin{document}
 ようこそ，\TeX の世界へ！
 \[
@@ -150,10 +152,10 @@ Last update: \texttt{\DTMnow}.
 半角円記号~\SYM{\char165}~のように
 表示されることになるだろう．
 \item 保存先はどこでもいいが，
-以降の説明では「ドキュメント」のところに保存したとする．
-\item 本実習では関係ないが，macOSや最近の多くのLinuxなど，
-\emph{Unicode~(UTF-8)を用いて\TeX ソースを作成する環境下では，
-u\pLaTeX の使用を検討すべきである}．\prettyref{ssec:uptex}を参照．
+  以降の説明では「ドキュメント」のところに保存したとする．
+\item ファイルの文字コードはUTF-8で保存する\footnote{%
+    Windows上の\upTeX{}には文字コード自動判別機能があるのでShift\_JISで保存しても動くかもしれないが，今の時代はUnicode (UTF-8)を使うのが自然だろう．%
+  }．
 \end{itemize}
 
 \medskip
@@ -171,17 +173,16 @@ u\pLaTeX の使用を検討すべきである}．\prettyref{ssec:uptex}を参照
 次に「コマンド プロンプト」を起動し，
 \begin{lstlisting}
 C:\Users\...> #\underline{cd\ Documents}#
-C:\Users\...\Documents> #\underline{platex\ first.tex}#
+C:\Users\...\Documents> #\underline{uplatex\ first.tex}#
 \end{lstlisting}
 と入力\footnote{ここでも，半角バックスラッシュは実際の画面では半角円記号で表示されているは
 ずである．}すると，
 \begin{lstlisting}
-This is e-pTeX, Version 3.14159265-p3.5-130605-2.6 (sjis) (TeX Live 2016
-/W32TeX) (preloaded format=platex)
+This is e-upTeX, Version 3.14159265-p3.8.1-u1.23-180226-2.6 (utf8.uptex) (TeX Live 2018/W32TeX) (preloaded format=uplatex)
  restricted \write18 enabled.
 entering extended mode
 ……（中略）……
-Output written on first.dvi (1 page, 828 bytes).
+Output written on first.dvi (1 page, 840 bytes).
 Transcript written on first.log.
 \end{lstlisting}
 のようなメッセージが出て%
@@ -212,7 +213,7 @@ C:\Users\...\Documents> #\underline{dvipdfmx\ first.dvi}#
 \begin{lstlisting}
 first.dvi -> first.pdf
 [1]
-7531 bytes written
+13562 bytes written
 \end{lstlisting}
 というメッセージが出て，PDFファイル\FNAME{first.pdf}が
 無事に生成される．
@@ -223,16 +224,16 @@ first.dvi -> first.pdf
 \FNAME{ptex2pdf}というプログラムを使うことで，
 \pLaTeX によるタイプセットとその後の\DVIPDFMx の処理をまとめて
 \begin{lstlisting}
-C:\Users\...\Documents> #\underline{ptex2pdf\ -l\ first.tex}#
+C:\Users\...\Documents> #\underline{ptex2pdf\ -l\ -u\ first.tex}#
 \end{lstlisting}
 で行うことができる．
 
 \begin{lstlisting}
-> ptex2pdf -l -ot "-synctex=1 -kanji=utf8" -od "-p jisb5" hoge.tex
+> ptex2pdf -l -u -ot "-synctex=1 -kanji=utf8" -od "-p jisb5" hoge.tex
 \end{lstlisting}
 のようにオプションを指定すると，次の2行の代わりとなる．
 \begin{lstlisting}
-> platex -synctex=1 -kanji=utf8 hoge.tex
+> uplatex -synctex=1 -kanji=utf8 hoge.tex
 > dvipdfmx -p jisb5 hoge.dvi
 \end{lstlisting}
 
@@ -308,6 +309,9 @@ and I'll forget about whatever was undefined.
 \pTeX のバグの可能性があるので，発生した元のソースをとっておくと共に，TAに連絡すること．
 
 \subsection{日本語フォントの埋め込み}
+
+TODO: \TeX~Live 2018には当てはまる？
+
 さて，\prettyref{ssec:typeset}で作ったPDFファイル\FNAME{first.pdf}には，
 欧文文字用のフォントは埋め込まれているが，和文文字を表示する際に使う日本語フォントは
 埋め込まれていない．この\FNAME{first.pdf}をAdobe ReaderやSumatraPDF等で
@@ -470,7 +474,7 @@ Windowsの奇妙な仕様のせいで，保存の際に\FNAME{.latexmkrc.}(最�
 \hskip\ltjgetparameter{xkanjiskip}に以下の内容を保存する：
 \begin{lstlisting}[numbers=left,numberstyle=\tiny,xleftmargin=3\zw]
 $dvipdf="dvipdfmx %O -o %D %S";
-$latex="platex %O %S";
+$latex="uplatex %O %S";
 $pdf_mode=3;
 $pdf_previewer = '"C:\Program Files (x86)\SumatraPDF\SumatraPDF.exe" %O %S';
 \end{lstlisting}
@@ -499,7 +503,7 @@ C:\Users\...\Documents> #\underline{latexmk\ first.tex}#
 \TeX のタイプセットのために毎回コマンドプロンプトを開くのは面倒であるし，
 コマンドプロンプトの扱いに慣れていない人も少なからずいるだろう．
 それを避けるためには，\TeX works などの統合開発環境
-(又は Emacs や Vim などの高機能テキストエディタ)
+(又は Emacs や Vim, Visual Studio Code などの高機能テキストエディタ)
 を用いると良い．
 例えば \TeX works\footnote{スタートメニューから「TeXworks editor」を選択すると起動できる}
 では，画面左上のボタンをクリックすることでタイプセットを実行できる．
@@ -879,7 +883,7 @@ Lars Madsen, \textit{Avoid eqnarray!}, The Prac\TeX\ Journal, 2006, No.~4.\\
 章立てを記述するには，\verb|\section|コマンドを用いる．
 \verb|\subsection|や\verb|\subsubsection|を用いることで，より細かく分けることができる．
 \begin{lstlisting}
-\documentclass{jsarticle}
+\documentclass[uplatex]{jsarticle}
 
 \begin{document}
 \section{sectionコマンドの使い方}
@@ -972,7 +976,7 @@ $\mathbb{R}$に右半開区間位相を入れたものを$\mathcal{S}$とおく�
 使用例を挙げておくと，以下の通りとなる．
 
 \begin{lstlisting}[numbers=left,numberstyle=\tiny,xleftmargin=3\zw]
-\documentclass{jsarticle}
+\documentclass[uplatex]{jsarticle}
 \usepackage{amsthm}
 \theoremstyle{definition}
 \newtheorem{thm}{定理}[section]
@@ -1125,6 +1129,9 @@ $\mathbb{R}$に右半開区間位相を入れたものを$\mathcal{S}$とおく�
 \newpage
 \section{文字コードとu\pTeX}
 \label{sec:chrcode}
+
+TODO: このセクションを再編する
+
 \subsection{文字コード}
 文字をコンピュータで扱うためには，「使用出来る文字」の集合と，それに属する各文字から
 バイト列への対応を決めておかないといけない．これを\emph{文字コード}という．
@@ -1432,6 +1439,11 @@ u\pLaTeX では「\texttt{!~Undefined control sequence.}」というエラーが
 \end{curve}
 
 \newpage
+\section{p\TeX 系列以外による日本語文書作成}
+
+TODO: \texttt{tex\_mik.tex} の内容を移植したい
+
+\newpage
 \section{雑多な話題}\label{sec:ref}
 
 \subsection{ソースコードの組版}
@@ -1523,7 +1535,7 @@ end program test
 \FNAME{reftest.tex}を作る：
 
 \begin{lstlisting}[numbers=left,numberstyle=\tiny,xleftmargin=3\zw]
-\documentclass{jsarticle}
+\documentclass[uplatex]{jsarticle}
 \usepackage{amsmath}
 \begin{document}
 
@@ -1544,7 +1556,7 @@ end program test
 
 いつものように
 \begin{lstlisting}
-> platex reftest.tex
+> uplatex reftest.tex
 \end{lstlisting}
 とタイプセットすると，
 \begin{lstlisting}
@@ -1567,7 +1579,7 @@ LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 書き出されるからである．
 もう一回
 \begin{lstlisting}
-> platex reftest.tex
+> uplatex reftest.tex
 > dvipdfmx reftest
 \end{lstlisting}
 とタイプセット（と\DVIPDFMx）を行えば，補助ファイルの情報が読み込まれて，
@@ -1625,7 +1637,7 @@ LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 以下の内容の\FNAME{hytest.tex}を作り，
 普通にタイプセットを2回，その後PDF生成をしてほしい：
 \begin{lstlisting}[numbers=left,numberstyle=\tiny,xleftmargin=3\zw]
-\documentclass{jsarticle}
+\documentclass[uplatex]{jsarticle}
 \usepackage[dvipdfmx]{hyperref}% dvipdfmx を使うので
 \begin{document}
 \section{最初の節}\label{sec:jpn}
@@ -1660,7 +1672,7 @@ LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
 というわけで，\FNAME{hytest.tex}のプリアンブルを
 \begin{lstlisting}[xleftmargin=3\zw]
-\documentclass{jsarticle}
+\documentclass[uplatex]{jsarticle}
 \usepackage[dvipdfmx]{hyperref}
 \usepackage{pxjahyper}
 \begin{document}
@@ -1698,7 +1710,7 @@ DVIファイルを扱う各ソフトウェアが，
 
 次に，以下の内容を持った\FNAME{grapheg.tex}を「ドキュメント」に作る．
 \begin{lstlisting}[numbers=left,numberstyle=\tiny,xleftmargin=3\zw]
-\documentclass{jsarticle}
+\documentclass[uplatex]{jsarticle}
 \usepackage[dvipdfmx]{graphicx}
 \begin{document}
 \begin{figure}
@@ -1733,8 +1745,8 @@ DVIファイルを扱う各ソフトウェアが，
   現在の\TeX Live では\verb|extractbb|は自動実行される．
 }．
 \begin{lstlisting}
-> platex grapheg.tex
-> platex grapheg.tex
+> uplatex grapheg.tex
+> uplatex grapheg.tex
 > dvipdfmx grapheg.dvi
 \end{lstlisting}
 
