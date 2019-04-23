@@ -202,7 +202,7 @@ PDFファイルを中身の確認にも用いることが多くなってきた\f
 DVIからPostScriptファイルに変換し，
 それを成果物とする，というのもよく行われている．}．
 
-本実習においても，\dvipdfmx というプログラムによって
+本実習においても，\DVIPDFMx というプログラムによって
 \FNAME{first.dvi}からPDFファイル\FNAME{first.pdf}を生成させ，
 それを表示するという方針をとることにする．コマンドプロンプト上で
 \begin{lstlisting}
@@ -221,7 +221,7 @@ first.dvi -> first.pdf
 2012年後半以降の\TeX システムならば，
 % \href{http://blog.preining.info/software-projects/ptex2pdf/}{\FNAME{ptex2pdf}}
 \FNAME{ptex2pdf}というプログラムを使うことで，
-\pLaTeX によるタイプセットとその後の\dvipdfmx の処理をまとめて
+\pLaTeX によるタイプセットとその後の\DVIPDFMx の処理をまとめて
 \begin{lstlisting}
 C:\Users\...\Documents> #\underline{ptex2pdf\ -l\ first.tex}#
 \end{lstlisting}
@@ -328,7 +328,7 @@ C:\Users\...> #\underline{kanji-config-updmap\ ipa}#
 \begin{lstlisting}
 C:\Users\...> #\underline{updmap\ --setoption\ kanjiEmbed\ ipa}#
 \end{lstlisting}
-と入力すればよく，以降の\dvipdfmx の実行で作られるPDFファイルには，日本語フォントとして
+と入力すればよく，以降の\DVIPDFMx の実行で作られるPDFファイルには，日本語フォントとして
 IPA明朝・IPAゴシックが埋め込まれることになる．
 
 Mac~OS~Xに商用・高品質なヒラギノフォントが付属していることは有名である%
@@ -425,13 +425,13 @@ EmEditor側が\TeX ソースの対応する箇所へとジャンプする\footno
 }．
 
 \subsubsection{\FNAME{latexmk}}\label{ssec:latexmk}
-PDF作成のために毎回タイプセット・\dvipdfmx を実行するのは面倒である\footnote{%
+PDF作成のために毎回タイプセット・\DVIPDFMx を実行するのは面倒である\footnote{%
 \TeX を使うのであれば，コマンドプロンプトを使えるようになっておくのが良い．
 }．
 相互参照(\prettyref{ssec:ref})を使うと
 複数回のタイプセットが必要になったり，さらに文献参照や索引などでは
 外部プログラムを途中で起動しないといけない．
-先に説明した\FNAME{ptex2pdf}を使うと\pLaTeX・\dvipdfmx の
+先に説明した\FNAME{ptex2pdf}を使うと\pLaTeX・\DVIPDFMx の
 1回の実行でまとめられるとはいっても，それでも面倒なことには変わりはない．
 
 \medskip
@@ -1265,7 +1265,7 @@ T1エンコーディングでこのバイト列を解釈すると「ï¡ś」と
 
 これにより，dvioutでdviファイルを表示すると問題なく機種依存文字が表示できる
 \footnote{dvioutを悪く言うつもりはないが，
-「最終成果物は\dvipdfmx で変換したPDFであるが，途中ではdvioutを確認に用いる」という
+「最終成果物は\DVIPDFMx で変換したPDFであるが，途中ではdvioutを確認に用いる」という
 使い方は，あまりおすすめしない．}．
  \item[半角カナ] タイプセットで，つまりdviファイルの段階で例えば「ｱｲｳ」が「śšş」と化ける．
 \begin{curve}
@@ -1274,8 +1274,8 @@ T1エンコーディングでこのバイト列を解釈すると「ï¡ś」と
 \end{curve}
 \end{description}
 
-しかし，\dvipdfmx によりPDFに変換させると，この段階で機種依存文字は抜け落ちる．
-例えば，すぐ上で作ったdviファイルを\dvipdfmx で処理し，PDFファイルを作成すると
+しかし，\DVIPDFMx によりPDFに変換させると，この段階で機種依存文字は抜け落ちる．
+例えば，すぐ上で作ったdviファイルを\DVIPDFMx で処理し，PDFファイルを作成すると
 \begin{lstlisting}
 [1
 ** WARNING ** No character mapping available.
@@ -1571,7 +1571,7 @@ LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 > platex reftest.tex
 > dvipdfmx reftest
 \end{lstlisting}
-とタイプセット（と\dvipdfmx）を行えば，補助ファイルの情報が読み込まれて，
+とタイプセット（と\DVIPDFMx）を行えば，補助ファイルの情報が読み込まれて，
 \begin{quote}
 \large 第1節にある2次方程式(2)の解は
 \end{quote}
@@ -1678,7 +1678,7 @@ DVIファイルを扱う各ソフトウェアが，
 ということを常に意識しなければならない．
 
 本節では，\prettyref{sec:primer}のような
-「DVIファイルを\dvipdfmx で常にPDFファイルに変換し，
+「DVIファイルを\DVIPDFMx で常にPDFファイルに変換し，
 それを表示や印刷などに使う」という方針の下で画像を挿入する方法を
 概略だけ説明する．詳しくは
 \begin{itemize}

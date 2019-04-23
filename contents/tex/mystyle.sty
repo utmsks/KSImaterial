@@ -57,15 +57,9 @@
 \DeclareCaptionLabelSeparator{wquad}{\hskip1\zw}
 \captionsetup{labelsep=wquad}
 
-\DeclareRobustCommand\pTeX{p\kern-.15em\TeX}
-\DeclareRobustCommand\pLaTeX{p\LaTeX}
-\DeclareRobustCommand\pLaTeXe{p\LaTeXe}
-\ifdefined\eTeX\else
-  \DeclareRobustCommand\eTeX{$\varepsilon$-\TeX}
-\fi
-\newcommand\pdfLaTeX{pdf\LaTeX}
-\def\pdfTeX{pdf\TeX}
-\def\dvipdfmx{DVIPDFM$x$}
+\usepackage{bxtexlogo}
+\bxtexlogoimport{pTeX,pLaTeX,pLaTeXe,eTeX,pdfLaTeX,pdfTeX,DVIPDFMx}
+
 \def\cs#1{\texttt{\textbackslash#1}}
 
 \def\floatpagefraction{0.0}
