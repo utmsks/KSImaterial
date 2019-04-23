@@ -373,9 +373,14 @@ $ #\underline{updmap\ --setoption\ kanjiEmbed\ hiragino-pron}#
       は多数のパッケージの使用例がある．
 \item Scott Pakin, \textit{The Comprehensive \LaTeX\ Symbol List}.\\
 \url{https://ctan.org/pkg/comprehensive}\\
-\hfill または\FNAME{C:\texlive\2016\texmf-dist\doc\latex\comprehensive\symbols-a4.pdf}
+\hfill またはコマンドプロンプトで\texttt{texdoc comprehensive}を実行して\texttt{symbols-a4.pdf}を開く
 \end{itemize}
 があり，\TeX~Wiki中の「国内リンク」からも多くのページが辿れる．
+
+\TeX{} Liveがインストールされた手元のPCにもマニュアル類（多くの場合は英語）が入っている．
+それらは，コマンドプロンプトで\texttt{texdoc $\langle \textit{パッケージ名}\rangle$}を実行することによって参照できる．
+例えば，\texttt{texdoc}コマンドのマニュアルを参照したければ，\texttt{texdoc texdoc}を実行すれば良い．
+
 \medskip
 
 本格的に学習する際には，\emph{まとまった参考書を入手することを強くお勧め}する．
@@ -598,8 +603,7 @@ $f(x)=0$となる$0<x<1$が存在する．
 基本的なマニュアルは，%
 \href{http://mirrors.ctan.org/macros/latex/required/amsmath/amsldoc.pdf}%
 {User's Guide for the \texttt{amsmath} Package}．
-実習用マシンにも
-\FNAME{C:￥texlive￥2016￥texmf-dist￥doc￥latex￥amslatex￥math￥amsldoc.pdf}にある．
+実習用マシンでは\texttt{texdoc amsmath}で参照できる．
 }を読み込んだ上で
 \begin{quote}
   \verb@\DeclareMathOperator{\dom}{dom}@
@@ -1385,7 +1389,7 @@ u\pTeX 自身はこれらのBMP外の文字をきちんと和文文字として�
  田中琢爾，「u\pTeX, u\pLaTeX  --- 内部unicode版\ \pTeX, \pLaTeX\ の実装」．\\
 % \url{http://homepage3.nifty.com/ttk/comp/tex/01uptex_doc_utf8.txt}\\
 % \hfill または，
- \FNAME{C:\texlive\2016\texmf-dist\doc\uptex\base\01uptex_doc_utf8.txt}
+ \texttt{texdoc 01uptex}で参照できる\FNAME{01uptex_doc_utf8.txt}
 \end{quote}
 の「主な仕様」の$\langle 15\rangle$を参照されたい．BMP外の文字もそのまま扱いたいのならば，
 \begin{lstlisting}[numbers=left,numberstyle=\tiny,xleftmargin=3\zw]
@@ -1580,7 +1584,7 @@ LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 相互参照のためにたくさん\verb+\label+を使っていると，式や節に
 どのラベルを振ったかわからなくなることがよくある．
 \href{https://ctan.org/pkg/showkeys}{\PKG{showkeys}パッケージ}\footnote{%
-マニュアルは実習用マシンの\FNAME{C:￥texlive￥2016￥texmf-dist￥doc￥latex￥tools￥showkeys.pdf}にもある．
+マニュアルは実習用マシンで\texttt{texdoc showkeys}を実行することでも参照できる．
 }を利用すると，
 以下のようにラベルが文章中に
 出力されるので管理しやすくなる：
@@ -1610,7 +1614,7 @@ LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 外部のWebページに1クリックで飛べる（ハイパーリンク）と非常に便利である．
 これらの機能を\LaTeX で提供するのが
 \href{https://ctan.org/pkg/hyperref}{\PKG{hyperref}パッケージ}\footnote{%
-マニュアルは実習用マシンの\FNAME{C:￥texlive￥2016￥texmf-dist￥doc￥latex￥hyperref￥manual.pdf}にもある．
+マニュアルは実習用マシンで\texttt{texdoc hyperref}を実行することでも参照できる．
 }である．
 
 \PKG{hyperref}パッケージ自体は多くの機能を持つ\footnote{いろいろなパッケージと
@@ -1652,7 +1656,7 @@ LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 \medskip
 この症状を治すには，八登崇之氏による\href{https://ctan.org/tex-archive/language/japanese/pxjahyper}%
 {\PKG{pxjahyper}パッケージ}\footnote{%
-マニュアルは実習用マシンの\FNAME{C:￥texlive￥2016￥texmf-dist￥doc￥platex￥pxjahyper￥pxjahyper.pdf}にもある．
+マニュアルは実習用マシンで\texttt{texdoc pxjahyper}を実行することでも参照できる．
 }を，\PKG{hyperref}パッケージの\emph{後に}読み込む．
 
 というわけで，\FNAME{hytest.tex}のプリアンブルを
@@ -1776,6 +1780,7 @@ DVIファイルを扱う各ソフトウェアが，
 Kristoffer~H. Rose. \textit{\Xy-pic User's Guide}, 2013.
 \url{http://mirrors.ctan.org/macros/generic/diagrams/xypic/doc/xyguide.pdf}.\\
 または，\FNAME{C:\texlive\2016\texmf-dist\doc\generic\xypic\xyguide.pdf}
+% texdoc xyguide
 \end{quote}
 や，公式ページに言及されているいくつかのスライド，
 さらに阿部紀行氏のページ%
