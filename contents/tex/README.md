@@ -20,6 +20,7 @@
 
 * `lualatex tex_inst.tex`
 * `lualatex tex_practice.tex`
+    * PDFブックマーク中に相互参照が含まれる関係で，正しいPDF出力を得るには最低3回実行する必要があります．
 * `xelatex tex_mik.tex`
 * `platex tensaku.tex && dvipdfmx tensaku.dvi` (これは「普通の」やつ)
 

@@ -10,8 +10,9 @@
 \let\SX@Info=\relax
 \makeatother
 
-% tikzcd
-\usepackage{tikz-cd}
+% TikZ, TikZ-cd
+\usepackage{tikz}
+\usetikzlibrary{patterns,cd}
 
 %%% prettyref
 \usepackage{prettyref}
@@ -71,11 +72,11 @@
 \item 「\TeX・\LaTeX の典型的な間違い」については\prettyref{sec:typeset}へ．
 \item \prettyref{sec:primer}や\prettyref{sec:typeset}を読んだら，
  それについての演習が\prettyref{sec:kadai}にあるので取り組んで欲しい．
-\item 日本語で\TeX 環境を書く際の文字コードに関する注意や，u\pTeX の話題は\prettyref{sec:chrcode}へ．
+% \item 日本語で\TeX 環境を書く際の文字コードに関する注意や，u\pTeX の話題は\prettyref{sec:chrcode}へ．
 \item 各種パッケージを有効活用して相互参照，画像挿入，可換図式を組む方法については\prettyref{sec:ref}へ．
 \item 伝統的な\pLaTeX は知っているが，\pLaTeX が利用できない場合への対処法や，
-最近の\TeX の発展について知りたい人は実習資料集にある「\pTeX 系列以外による日本語文書作成」を
-参照すること．
+ 最近の\TeX の発展について知りたい人は\prettyref{sec:other-engines}（執筆中）か，
+ 実習資料集にある「\pTeX 系列以外による日本語文書作成」（やや古い）を参照すること．
 \item バリバリ使いこなしていて，以上の範囲などとっくに知っているという人はTAを呼ぶこと．
 \end{itemize}
 
@@ -108,8 +109,8 @@ Last update: \texttt{\DTMnow}.
 
 \newpage
 \section{\pLaTeX はじめの一歩}\label{sec:primer}
-日本人が普通「\TeX を用いて文書を書く」という場合，実際に使っているのは
-\emph{\pLaTeX}である．これらは，
+日本人が「\TeX を用いて文書を書く」という場合，実際に使っているのは
+\emph{\pLaTeX}であることが多い．これらは，
 \begin{itemize}
 \item Knuth氏による，もともとの（プログラムとしての）\TeX
 \item Leslie Lamport氏による，\href{http://www.latex-project.org/}%
@@ -126,7 +127,8 @@ Last update: \texttt{\DTMnow}.
 ．日本語では横書きの他に縦書きも行われるが，
 \pTeX・\pLaTeX は縦組みの組版もサポートしている．
 
-TODO: pLaTeXとupLaTeXの関係を説明する
+この実習では，\pTeX/\pLaTeX{}をUnicode対応させた\upTeX/\upLaTeX{}を使用する．
+\pTeX{}系以外の\TeX{}エンジンについては，後の方(\prettyref{sec:other-engines})で軽く触れる．
 
 \subsection{最初の例}
 \label{ssec:first}
@@ -178,7 +180,8 @@ C:\Users\...\Documents> #\underline{uplatex\ first.tex}#
 と入力\footnote{ここでも，半角バックスラッシュは実際の画面では半角円記号で表示されているは
 ずである．}すると，
 \begin{lstlisting}
-This is e-upTeX, Version 3.14159265-p3.8.1-u1.23-180226-2.6 (utf8.uptex) (TeX Live 2018/W32TeX) (preloaded format=uplatex)
+This is e-upTeX, Version 3.14159265-p3.8.1-u1.23-180226-2.6 (utf8.uptex)
+ (TeX Live 2018/W32TeX) (preloaded format=uplatex)
  restricted \write18 enabled.
 entering extended mode
 ……（中略）……
@@ -310,47 +313,44 @@ and I'll forget about whatever was undefined.
 
 \subsection{日本語フォントの埋め込み}
 
-TODO: \TeX~Live 2018には当てはまる？
+\TeX~Liveのデフォルトでは，(u)\pLaTeX+\DVIPDFMx{}で作ったPDFファイルには，IPAexフォントが埋め込まれている\footnote{%
+  \TeX~Live~2015までは，(u)\pLaTeX+\DVIPDFMx{}で作ったPDFファイルにはデフォルトではフォントが埋め込まれていなかった．
+}．
 
-さて，\prettyref{ssec:typeset}で作ったPDFファイル\FNAME{first.pdf}には，
-欧文文字用のフォントは埋め込まれているが，和文文字を表示する際に使う日本語フォントは
-埋め込まれていない．この\FNAME{first.pdf}をAdobe ReaderやSumatraPDF等で
-表示させる際には，ソフト側が適当な日本語フォントを代わりに用いて日本語部分を表示することになる．
-だが，この「日本語フォントは埋め込まず，表示の際には
-適当にシステム内の別のフォントで代替して表示する」というアプローチが不都合な場合があり，
-そのような場合には日本語フォントもPDF内に埋め込むことになる\footnote{%
+デフォルトで埋め込まれるフォントを変更する方法も用意されている．
+例えば，\TeX~Liveに同梱されているIPAフォント（\href{http://ipafont.ipa.go.jp/}{公式サイト}）
+をPDF内に埋め込みたければ，コマンドプロンプトにおいて，
+\begin{lstlisting}
+C:\Users\...> #\underline{kanji-config-updmap\ --user\ ipa}#
+\end{lstlisting}
+または
+\begin{lstlisting}
+C:\Users\...> #\underline{updmap\ --user\ --setoption\ jaEmbed\ ipa}#
+\end{lstlisting}
+を実行すればよい\footnote{%
 当然ながら，「PDF内にフォントを埋め込む」場合には，フォントのライセンスによって
 許されていることを確認しないといけない．}．
-
-\medskip
-ここでは，\TeX~Liveに同梱されているIPAフォント（\href{http://ipafont.ipa.go.jp/}{公式サイト}）
-をPDF内に埋め込むことにする．それには，コマンドプロンプトにおいて，
-\begin{lstlisting}
-C:\Users\...> #\underline{kanji-config-updmap\ ipa}#
-\end{lstlisting}
-または
-\begin{lstlisting}
-C:\Users\...> #\underline{updmap\ --setoption\ kanjiEmbed\ ipa}#
-\end{lstlisting}
-と入力すればよく，以降の\DVIPDFMx の実行で作られるPDFファイルには，日本語フォントとして
+以降の\DVIPDFMx の実行で作られるPDFファイルには，日本語フォントとして
 IPA明朝・IPAゴシックが埋め込まれることになる．
 
-macOSに商用・高品質なヒラギノフォントが付属していることは有名である%
-\footnote{「ヒラギノを買ったらMacがおまけについてきた」という有名なジョークがある．}．
-これを使いたい場合には，シンボリックリンクを貼るという前処理（ここでは解説しない）をした後に，
-\begin{lstlisting}
-$ #\underline{kanji-config-updmap\ hiragino-pron}#
-\end{lstlisting}
-または
-\begin{lstlisting}
-$ #\underline{updmap\ --setoption\ kanjiEmbed\ hiragino-pron}#
-\end{lstlisting}
-を端末で実行すれば良い．
+% TODO: --userじゃなくて--sysを使うべき？
 
 \medskip
-なお，\FNAME{kanji-config-updmap}や\FNAME{updmap}は自分のユーザーアカウントに対してのみ
-設定を行う．システム全体で設定したい場合は，\FNAME{kanji-config-updmap-sys}や
-\FNAME{updmap-sys}のように\FNAME{-sys}をつけたコマンドを使う．
+macOSに商用・高品質なヒラギノフォントが付属していることは有名である%
+\footnote{「ヒラギノを買ったらMacがおまけについてきた」という有名なジョークがある．}．
+このヒラギノフォントを\TeX{}で利用することもできるが，追加の手順が必要となる．
+詳しくは\TeX~Wikiの\href{https://texwiki.texjp.org/?%E3%83%92%E3%83%A9%E3%82%AE%E3%83%8E%E3%83%95%E3%82%A9%E3%83%B3%E3%83%88}{「ヒラギノフォント」}を参照して欲しい\footnote{%
+  macOSのバージョンによってフォントファイルの仕様が変わる場合があること，
+  \TeX~Wikiの更新はボランティアによって行われていることから，
+  \TeX~Wikiの記述が最新のmacOSに当てはまらなかったとしても怒らないで頂きたい．
+}．
+
+\medskip
+なお，\FNAME{kanji-config-updmap}や\FNAME{updmap}に\texttt{--user}を指定した場合は
+自分のユーザーアカウントに対してのみ設定を行う．システム全体で設定したい場合は，
+\texttt{--user}の代わりに\texttt{--sys}を指定する．
+フォント埋め込み等の設定は，ユーザーごとの設定の方がシステム全体の設定よりも優先度が高いため，
+一旦ユーザーの設定が作成されたあとはシステム全体の設定は使用されなくなる．
 
 \newpage
 \subsection{この先は}
@@ -617,6 +617,12 @@ $f(x)=0$となる$0<x<1$が存在する．
 例：\texttt{\cs{DeclareMathOperator*}\{\cs{Residue}\}\{Res\}}
 }．
 いちいち命令を定義したくない場合は，\cs{operatorname}命令を使って数式中に直接\verb@\operatorname{dom}@と書くこともできる．
+
+\begin{curve}
+  TODO: $\operatorname{id}\otimes f$みたいな失敗例（$\otimes$と$f$の間の空白の量が少ない．正：${\operatorname{id}}\otimes f$）
+  % \eval\circ\id
+  % 数式クラスの話題としては X/\sim もある
+\end{curve}
 
 \medskip
 
@@ -1127,10 +1133,122 @@ $\mathbb{R}$に右半開区間位相を入れたものを$\mathcal{S}$とおく�
 \prettyref{sec:typeset}の記述を参考にしてソースを修正せよ．
 
 \newpage
-\section{文字コードとu\pTeX}
-\label{sec:chrcode}
+\section{p\TeX 系列以外による日本語文書作成}
+\label{sec:other-engines}
 
-TODO: このセクションを再編する
+（このセクションは執筆中です）
+% （TODO: \texttt{tex\_mik.tex} の内容を移植する？）
+
+\subsection{\TeX{}エンジン}
+
+「\TeX{}」と言った時に指すものは文脈によって色々ありうるが，実際に組版処理を行うプログラムとしての\TeX{}を\emph{\TeX{}エンジン}と呼ぶ．
+Knuth氏が1970年代に開発した\TeX{}はその後様々な人によって拡張が加えられ，いくつもの改良版が誕生している．
+
+この実習では\TeX{}エンジンとしては\upTeX{}を使っているが，受講生諸君が今後\TeX{}で文書を書いていく際，\pTeX{}系以外の\TeX{}エンジンを使うこともあるだろう．
+というわけで，主な\TeX{}エンジンを簡単に紹介しておく．
+エンジン間の派生関係を大雑把に表すと\prettyref{fig:tex-engines}である\footnote{%
+  最近のLua\TeX{}は\pdfTeX{}との命令名レベルの互換性を切り捨てているので
+  派生関係にあるからといって必ず互換性があるというわけではないし，
+  逆に\pdfTeX{}派生ではない\epTeX{}や\XeTeX{}に\pdfTeX{}由来の命令が取り込まれていたりするので，
+  派生関係にないからといって全く互換性がないというわけでもない．
+}．
+
+% （TODO: ちゃんとした紹介は？）
+
+\begin{description}
+\item[\TeX82] Knuth氏が作った，現在に連なる各種\TeX{}エンジンの直接の祖先．
+\item[\eTeX] \TeX82に拡張を施したもの．
+  \eTeX{}拡張のうち一般人に馴染みの深いものとしては，\cs{middle}コマンドがある．
+\item[\pdfTeX] DVIではなくPDFを直接出力できるようにしたもの．
+  欧米でのスタンダード．
+\item[\XeTeX] OSのフォントを直接使えるようにしたもの．
+  \pdfTeX{}と同じく，PDFを直接出力する．また，Unicodeに直接対応する．
+\item[Lua\TeX] スクリプト言語Luaを組み込んだもの．% つまり最強
+  Unicodeに直接対応する．
+\item[\pTeX] アスキーが日本語対応させたもの．
+\item[\upTeX] \pTeX{}をUnicode対応させたもの．
+\item[\epTeX, \eupTeX] \pTeX{}, \upTeX{}に\eTeX{}拡張を施したもの．
+\end{description}
+
+% Lua\TeX, \XeTeX{}はフォントの扱いに長ける（\PKG{fontspec}），任意のUnicode文字をアクティブ化できる（\PKG{unicode-math}）等の特徴がある．
+
+\begin{figure}
+  \centering
+  \begin{tikzpicture}
+    % \draw[help lines] (-8,5) grid (5,-1);
+    \path[pattern=north east lines,pattern color=red!20!white,draw=red,dashed]
+      (-6.5,2.5) rectangle (4,-0.5);
+    %\path[pattern=north east lines,pattern color=yellow!30!white,draw=yellow,dashed]
+    %  (-1.3,1.5) rectangle (3.8,-0.4); % LuaTeX, XeTeX
+    %\path[pattern=north east lines,pattern color=yellow!30!white,draw=yellow,dashed]
+    %  (-6.2,3.5) rectangle (-3.8,-0.2); % upTeX, e-upTeX
+    \begin{scope}[every node/.style={draw,fill=white}]
+      \node (tex82) at (0,5) {\TeX82};
+      \node (etex) at (0,3.5) {\eTeX};
+      \node (pdftex) at (0,2) {pdf\TeX};
+      \node (luatex) at (0,0.5) {Lua\TeX};
+      \node (xetex) at (2.5,0.7) {\XeTeX};
+      \node (ptex)at (-3,3.2) {\pTeX};
+      \node (eptex) at (-3,1.2) {\epTeX};
+      \node (uptex) at (-5,3) {\upTeX};
+      \node (euptex) at (-5,1) {\eupTeX};
+    \end{scope}
+    \node[fill=white,inner sep=0.2pt] at (-3,-0.2) {現役で広く使われている};
+    \draw[->] (tex82) -- (etex);
+    \draw[->] (etex) -- (pdftex);
+    \draw[->] (pdftex) -- (luatex);
+    \draw[->] (etex) -- (xetex);
+    \draw[->] (tex82) -- (ptex);
+    \draw[->] (ptex) -- (uptex);
+    \draw[->] (ptex) -- (eptex);
+    \draw[->] (etex) -- (eptex);
+    \draw[->] (uptex) -- (euptex);
+    \draw[->] (eptex) -- (euptex);
+    % \draw[->,dashed] (pdftex) -- (eptex);
+    % \draw[->,dashed] (pdftex) -- (xetex);
+  \end{tikzpicture}
+  \caption{現在に連なる主な\TeX{}エンジン}
+  \label{fig:tex-engines}
+\end{figure}
+
+なお，現在の\TeX~Liveで\texttt{uplatex}コマンドを実行した時に使用されるエンジンは\eupTeX{}である．
+
+\subsection{マクロパッケージ}
+
+\TeX{}エンジンに組版の機能が備わっていると言っても，一般のユーザーがそれを直接使って文書を書くのは大変である．
+そこで，\TeX{}のマクロによって命令や文法を追加し，文書を書きやすくしたものが\LaTeX{}等のマクロパッケージである．
+例えば，文書クラス\cs{documentclass}や環境（\cs{begin}, \cs{end}コマンド）は，\LaTeX{}が提供する概念である．
+\LaTeX{}以外のそういう枠組みとしては，plain~\TeX{}や\ConTeXt{}がある．
+
+\begin{center}
+  \begin{tikzpicture}
+    \node[left] at (0,.5) {\TeX{}エンジン};
+    \draw (0,0) rectangle node {\TeX82, ($\varepsilon$-)(u)\pTeX, \pdfTeX, \XeTeX, Lua\TeX{}等} (9,1);
+    \draw (0,1.05) rectangle node {plain \TeX} (2.95,1.95);
+    \draw (3.05,1.05) rectangle node {\LaTeX} (5.95,1.95);
+    \draw (6.05,1.05) rectangle node {\ConTeXt} (9,1.95);
+    \draw (1,2.1) rectangle node {各種パッケージ，文書クラス等} (8,2.95);
+  \end{tikzpicture}
+\end{center}
+
+さて，Lua\TeX{}や\XeTeX{}は多言語に対応していると言っても，エンジン自体は日本語組版の事情を知らない．
+そこで，Lua\TeX{}や\XeTeX{}でも日本語組版を行うためのマクロパッケージが開発されている．
+Lua\TeX{}の場合はLua\TeX-ja, \XeTeX{}の場合は\PKG{xeCJK}や\PKG{ZXjatype}がそれである．
+
+ちなみに，この資料（\texttt{tex\_practice.pdf}）はLua\TeX{} (\& Lua\TeX-ja) を用いて組版されている．
+
+% (e-)(u)pTeX, pdfTeX, LuaTeX, XeTeXの説明を追加
+% 文書クラス：jsclasses, ltjsclasses, bxjscls, jlreq
+
+%日本語文書を書く時によく使われる文書クラス
+%\begin{description}
+%\item[jclasses] (u)\pLaTeX{}用
+%\item[jsclasses] (u)\pLaTeX{}用．
+%\item[ltjsclasses] Lua\TeX-ja用
+%\item[bxjscls] (u)\pLaTeX, \pdfTeX, \XeTeX, \LuaTeX{}対応
+%\item[jlreq] Lua\TeX-ja, \pLaTeX, \upLaTeX{}対応
+%\end{description}
+% beamer, standalone
 
 \subsection{文字コード}
 文字をコンピュータで扱うためには，「使用出来る文字」の集合と，それに属する各文字から
@@ -1139,9 +1257,12 @@ TODO: このセクションを再編する
 \begin{quote}
  JIS~(ISO-2022-JP), EUC-JP, Shift\_JIS, Unicode
 \end{quote}
-という4種類の系統が広く使われる．Unicodeはいくつか符号化方式を定めているが，よく使われるのは
+という4種類の系統が広く使われる\footnote{%
+と言っても最近はUnicodeに統一されつつある．
+Shift\_JISはWindows界隈で，ISO-2022-JPは電子メールで目にすることがあるかもしれない．
+}．Unicodeはいくつか符号化方式を定めているが，よく使われるのは
 文字を1--4バイトの可変長で符号化する\emph{UTF-8}である．
-特に理由のない場合は，\TeX ソースはUTF-8で保存することを推奨する．
+%特に理由のない場合は，\TeX ソースはUTF-8で保存することを推奨する．
 
 \medskip
 Windows上の\TeX~Liveの\pLaTeX の標準設定では，「\TeX ソースの文字コードを自動判別する」ようになっている\footnote{%
@@ -1150,298 +1271,18 @@ macOS用やLinux用のバイナリには，そのような機能は実装され�
 }．
 自動判別が不安な場合は，明示的に\texttt{-kanji=utf8}を指定する（\TeX ソースがUTF-8の場合）．
 \begin{lstlisting}
-> platex -kanji=utf8 hoge.tex
+> uplatex -kanji=utf8 hoge.tex
 \end{lstlisting}
-\FNAME{ptex2pdf}を使う場合は，（\texttt{-kanji=utf8}を\FNAME{platex}に渡すため）
+\FNAME{ptex2pdf}を使う場合は，（\texttt{-kanji=utf8}を\FNAME{uplatex}に渡すため）
 \texttt{-ot}を前置し，次のようにする：
 \begin{lstlisting}
-> ptex2pdf -l -ot -kanji=utf8 hoge.tex
+> ptex2pdf -l -u -ot -kanji=utf8 hoge.tex
 \end{lstlisting}
-
-
-\subsection{\pTeX で扱える文字の範囲}
-\label{ssec:izon}
-\pLaTeX の背後で動いている\pTeX は，
-1990年以前からある古いプログラムであり，扱える文字集合としては
-JIS~X~0208規格内に限定されている．漢字で言えば第1・第2水準の範囲に相当しており，
-そこからはみ出している以下のような文字はそのままでは使えない．
-\begin{description}
- \item[「Windowsの機種依存文字」] Windowsで広く使われてきた文字コードは，
-Shift\_JISを拡張した
-	    \href{http://unicode.org/Public/MAPPINGS/VENDORS/MICSFT/WINDOWS/CP932.TXT}{\emph{CP932}}と呼ばれるものである．
-以下のような文字はCP932には規定されているが，文字集合JIS~X~0208内にはない．
-多くの文字が2箇所の符号位置に重複されていることもあり，いろいろな問題を引き起こしてきた．
-\begin{itemize}
- \item 全角丸付き数字①--⑳，全角ローマ数字Ⅰ--Ⅹ・ⅰ--ⅹ
- \item 全角単位記号，例えば「㌘」「㌔」「㎏」「㎡」
- \item {\Large №℡㍾㍽㍼㊤㈱}などの一部の記号
- \item {\Large 彅﨑鄧閒}などの一部の漢字
-\end{itemize}
-% 上綱氏による「\href{http://www.asahi-net.or.jp/~ax2s-kmtn/index.html}{CyberLibrarian}」中
-% の「\href{http://www.asahi-net.or.jp/~ax2s-kmtn/ref/mdc_img.html}{Windowsの機種依存文字
-% 	    （画像）}」に一覧が載っている．
-
-\newpage
- \item[「Macintoshの機種依存文字」] 同様に，Macでも
-\href{http://unicode.org/Public/MAPPINGS/VENDORS/APPLE/JAPANESE.TXT}{MacJapanese}%
-というShift\_JISの拡張が用いられてきた．
-MacJapanese側にしかない文字は以下のようなものである．
-\newcommand\textpared[1]{\leavevmode
-  \resizebox{1\zw}{1pt}{\smash{(\kern-.05em#1\kern-.05em)}\vrule width 0pt height 1pt}}
-\begin{itemize}
- \item 全角丸付き数字①--⑳❶--❾，全角ローマ数字Ⅰ--Ⅹ・ⅰ--ⅹ
- \item 括弧でくくられた全角の\textpared{1}--\textpared{20}，\textpared{a}--\textpared{z}など
- \item 全角単位記号，例えば「㌘」「㌔」「㎏」「㎡」
- \item {\Large №℡㊤∮ゔ♣}などの一部の記号
-\end{itemize}
-% これも，CyberLibrarian中の%
-% 「\href{http://www.asahi-net.or.jp/~ax2s-kmtn/ref/mdcmc_img.html}{Macintoshの機種依存文字
-% 	    （画像）}」に一覧が載っている．
-
- \item[半角カナ]
-「ｱｲｳ」のようないわゆる半角カナは，しばしば「電子メールでは使うべきではない」と言われている．
-これは，Shift\_JISやその独自拡張では表現可能である一方で，電子メールで伝統的に使われてきたJISコードでは
-表現不可能であるからである．
-
- \item[JIS~X~0213で追加された文字]
-2000年に制定されたJIS~X~0213という規格では，扱える文字の数がJIS~X~0208の6879字から11000字以上へと
-大幅に増やされた．その中にはいくつかの非漢字と共に，
-{\Large 廹既海溫㑨愙𦥑𡈽}などのJIS第3・第4水準漢字が追加されている．
-
- \item[JIS~X~0213にもないが，Unicode中に収録されている文字]
-最近では，「世界中の文字を1つの文字コードで表そう」という理念のもとに作られた
-Unicodeが普及している．Unicode中には非常に多くの文字が含まれており，
-その中の大部分はJIS~X~0213にすら規定されていない．
-\end{description}
-
-なお，Unicodeでは以上に述べた文字は大体\footnote{JIS~X~0213中の一部の半濁点付き仮名や，声
-調記号は合成文字として表すことになる．}表現可能である．
-\pTeX ではUnicode~(UTF-8)で記述された\TeX ソースもタイプセット可能であるが，
-\emph{\pTeX の内部処理は従来通りのEUC-JP・Shift\_JIS}なので，
-本節に述べた上記種類の文字は依然としてそのままでは扱えない．
-
-JIS~X~0208を超えた上記種類の文字を使いたい場合は，
-\begin{itemize}
-\item 齋藤修三郎氏による\href{http://psitau.kitunebi.com/otf.html}{\PKG{otf}パッケージ}%
-を使い，Unicodeの文字を（コード番号で）入力する
-\item 使うプログラムを\pTeX から\emph{u\pTeX}~(\prettyref{ssec:uptex})に変えたり，
-または\XeTeX, \LuaTeX を使う（「\pTeX 系列以外による日本語文書作成」を参照）．
-\end{itemize}
-から選ぶのが良いだろう．Unicodeにすら存在しなかったり，区別されていない微妙な字形の差%
-を気にしたい場合は，\PKG{otf}パッケージを使うことになるが，それについては省略する．
-
-\newpage
-
-\subsection{Windowsの機種依存文字を\pTeX でそのまま入力すると……}
-\label{ssec:izoneg}
-ここでは失敗例として，Windowsの機種依存文字を直接含む\TeX ソースを
-\pLaTeX で処理させたらどのようになるかを述べることにしよう．
-
-まず，Windowsの機種依存文字を直接含む次のソース：
-\begin{lstlisting}[numbers=left,numberstyle=\tiny,xleftmargin=3\zw]
-\documentclass{jsarticle}
-\usepackage[T1]{fontenc}
-\begin{document}
-「Ⅰ」，「彅」，「ｱｲｳ」
-\end{document}
-\end{lstlisting}
-を\emph{UTF-8}で記述（「Ⅰ」は全角ローマ数字），\pLaTeX でタイプセットし，PDFファイルを作ると
-\begin{quote}
- \large 「âĚă」，「å¡Ě」，「ï¡śï¡šï¡ş」
-\end{quote}
-のような出力が得られる．
-Windowsの機種依存文字や半角カナが正しく和文文字と認識されていないことがわかるだろう．
-
-\begin{curve}
-「彅」はUnicodeでは\texttt{U+5F45}で，UTF-8では\texttt{E5 BD 85}という3バイトで符号化される．
-欧文部分は2行目によりT1エンコーディングを使うが，それによってこのバイト列を
-解釈すると「å¡Ě」となる．
-
-また，半角カナ「ｱ」は\texttt{EF BD B1}と符号化されるが，
-T1エンコーディングでこのバイト列を解釈すると「ï¡ś」となる．
-\end{curve}
 
 \medskip
-一方，普段Windows上で書いているように，\emph{Shift\_JIS（上記のように正確にはCP932だが）
-でソースを記述}し，タイプセットすると
-\begin{description}
-\item[Windowsの機種依存文字]
-\pTeX では和文文字として認識されるので，タイプセットしたあとの
-    dviファイル中には文字情報が残る．
-
-これにより，dvioutでdviファイルを表示すると問題なく機種依存文字が表示できる
-\footnote{dvioutを悪く言うつもりはないが，
-「最終成果物は\DVIPDFMx で変換したPDFであるが，途中ではdvioutを確認に用いる」という
-使い方は，あまりおすすめしない．}．
- \item[半角カナ] タイプセットで，つまりdviファイルの段階で例えば「ｱｲｳ」が「śšş」と化ける．
-\begin{curve}
- これも，Shift\_JISでは半角カナ「ｱｲｳ」は\texttt{B1 B2 B3}と符号化されるが，
-\pTeX ではこのバイト列は欧文文字の列とみなされ，T1エンコーディングで組まれるからである．
-\end{curve}
-\end{description}
-
-しかし，\DVIPDFMx によりPDFに変換させると，この段階で機種依存文字は抜け落ちる．
-例えば，すぐ上で作ったdviファイルを\DVIPDFMx で処理し，PDFファイルを作成すると
-\begin{lstlisting}
-[1
-** WARNING ** No character mapping available.
- CMap name: H
- input str: <2d>
-]
-char=0x9348(37704)
-Tried to set a nonexistent character in a virtual font]
-\end{lstlisting}
-のようなメッセージが画面に出力される．
-そして，PDFファイルを見ると，
-\begin{quote}
- \large 「　」，「　」，「 śšş 」
-\end{quote}
-のように機種依存文字部分は空白になってしまう．\FNAME{a.dvi}からきちんと
-機種依存文字も含んだPDFを作成することは不可能ではないが，
-ここでは言及しない．
-
-
-\subsection{u\pTeX}
-\label{ssec:uptex}
-
-\prettyref{ssec:izon}で書いたように，\pTeX はJIS X 0208の和文文字しか
-そのままでは取り扱えない．
-この不便な状態を解決するため，\pTeX の和文処理をUnicode化したのが田中琢爾氏による
-% \href{http://homepage3.nifty.com/ttk/comp/tex/uptex.html}{\emph{u\pTeX}}
-\emph{u\pTeX}である．
-\begin{itemize}
- \item Unicodeに収録されている漢字をそのまま\TeX ソース中に書けるようになった．
-但し，後に説明するように基本多言語面(BMP)外の文字を扱うには注意が必要．
- \item Unicode ブロックごとに「和文扱い」「欧文扱い」を切り替えることができ，
-これによって欧文用\LaTeX における多言語組版がそのままu\pTeX で使えるようになった\footnote{%
-\pTeX では「和文」「欧文」の分別は固定なので，例えばギリシャ文字を「そのまま」入力して
-ギリシャ語をタイプセットすることはできない．}．
-\end{itemize}
-が主な特徴であり，詳しい解説は公式ページや，
-八登氏による「\href{https://qiita.com/zr_tex8r/items/5c14042078b20edbfb07}{[改訂新版]u\pLaTeX を使おう}」
-を参照．
-
-\medskip
-u\pLaTeX（u\pTeX 対応した\LaTeX）で文書を書くのは，
-従来の\pLaTeX で文書を書くのとほとんど変わらない．以下の点に注意すればよい：
-\begin{itemize}
-\item \emph{\TeX ソースの文字コードを\emph{UTF-8}とすること．}\\
-  macOSやLinuxでは標準でこの設定になっていることが多いが，
-  WindowsではまだまだShift\_JISが主流であるため，
-  「保存するときに明示的にUTF-8を指定」という作業が必要かもしれない．
-\item \emph{クラスファイルはu\pLaTeX 用のものを使用する．}\\
-\pLaTeX で標準で用意されている\PKG{jarticle},~\PKG{jbook},~\PKG{tarticle}などを
-用いていた場合は，それぞれ先頭に\PKG{u}をつけた
-\PKG{ujarticle},~\PKG{ujbook},~\PKG{utarticle}クラスを用いる．
-\href{http://oku.edu.mie-u.ac.jp/~okumura/jsclasses/}{\pLaTeXe 新ドキュメントクラス}を
-用いていた場合には\texttt{uplatex}オプションを追加するだけで良い．
-\item \emph{\PKG{otf}パッケージを利用する際は，
-\texttt{uplatex}オプションを指定する．}
-%%% なお，\texttt{jis2004}オプションは\texttt{uplatex}オプションとは共存できない．
-%%% ↑現行では解決
-\end{itemize}
-
-例えば，\prettyref{ssec:first}「最初の例」で出したソースをu\pLaTeX 対応にした
-\FNAME{firstu.tex}は，
-\begin{lstlisting}[numbers=left,numberstyle=\tiny,xleftmargin=3\zw]
-\documentclass[uplatex]{jsarticle}
-\begin{document}
-ようこそ，\TeX の世界へ！
-\[
-  \int_0^\infty e^{-x^2}\,dx = \frac{\sqrt{\pi}}{2}.
-\]
-ちょっとチェックしちゃった。
-\end{document}
-\end{lstlisting}
-となり，1行目のクラスファイルだけを変えればよい．
-
-タイプセットは
-\begin{lstlisting}
-> uplatex firstu.tex
-\end{lstlisting}
-でよく，以下のようなメッセージが出て\FNAME{firstu.dvi}が作成されるはずである．
-\begin{lstlisting}
-This is e-upTeX, Version 3.14159265-p3.5-u1.11-130605-2.6 (utf8.uptex) (TeX Live
- 2016/W32TeX) (preloaded format=uplatex)
- restricted \write18 enabled.
-entering extended mode
-……（中略）……
-Output written on firstu.dvi (1 page, 840 bytes).
-Transcript written on firstu.log.
-\end{lstlisting}
-そこからPDFファイルを作成する方法は以前と同じであり，
-\begin{lstlisting}
-> dvipdfmx firstu.dvi
-\end{lstlisting}
-とすればよい．\S2.2で紹介した\FNAME{ptex2pdf}を使う場合は，\texttt{-u}を追加する．
-\begin{lstlisting}
-> ptex2pdf -l -u  firstu.tex
-\end{lstlisting}
-
-\paragraph{}
-\leavevmode
-Windowsの機種依存文字などを含んだu\pLaTeX 用\TeX ソースを
-作り，そこからこれらの文字が正常に含まれているPDFファイルを作成せよ．
-
-\medskip
-
-Unicodeには基本多言語面に収録されていない文字もたくさん存在する．
-JIS~X~0213で規定されている漢字の内，{\Large 𦥑𡈽}などの300字程度が該当するし，また
-それ以外にも例えば某牛丼チェーンの「吉」の字（正しくは，上半分が土になっている）がある．
-u\pTeX 自身はこれらのBMP外の文字をきちんと和文文字として認識するが，
-\emph{u\pTeX 標準の日本語フォントでは}事情によりBMP外の文字の出力はサポートされて
-いない．事情については
-\begin{quote}
- 田中琢爾，「u\pTeX, u\pLaTeX  --- 内部unicode版\ \pTeX, \pLaTeX\ の実装」．\\
-% \url{http://homepage3.nifty.com/ttk/comp/tex/01uptex_doc_utf8.txt}\\
-% \hfill または，
- \texttt{texdoc 01uptex}で参照できる\FNAME{01uptex_doc_utf8.txt}
-\end{quote}
-の「主な仕様」の$\langle 15\rangle$を参照されたい．BMP外の文字もそのまま扱いたいのならば，
-\begin{lstlisting}[numbers=left,numberstyle=\tiny,xleftmargin=3\zw]
-\documentclass[uplatex]{jsarticle}
-\usepackage[english]{babel}
-\usepackage[main=japanese]{pxbabel}
-\begin{document}
-臼と𦥑，碕と𥔎，土と𡈽
-\end{document}
-\end{lstlisting}
-のようにBabelの機能を利用する\footnote{とはいいながら，
-実際は八登崇之氏による\href{http://zrbabbler.sp.land.to/pxbase.html}{\PKG{pxbabel}パッ
-ケージ}の機能である．
-}のが簡単である．
-
-\newpage
-\begin{curve}
-\pTeX とu\pTeX では，命令名に使える文字が若干異なる．
-例えば，次のソースを\pLaTeX でタイプセットすると「さーばー」という結果を得るが，
-u\pLaTeX では「\texttt{!~Undefined control sequence.}」というエラーが発生する．
-
-\begin{lstlisting}[numbers=left,numberstyle=\tiny,xleftmargin=3\zw]
-\ifdefined\ucs
-  \documentclass[uplatex]{jsarticle}% upLaTeX の場合
-\else
-  \documentclass{jsarticle}%          pLaTeX の場合
-\fi
-\begin{document}
-\newcommand\サーバ{さーば}
-\サーバー
-\end{document}
-\end{lstlisting}
-\pLaTeX では音引き「ー」は命令名に使えないので，「\verb+\+\hbox{}\verb+サーバー+」は
-命令「\verb+\+\hbox{}\verb+サーバ+」の直後に音引き，と扱われる．
-一方，u\pLaTeX では音引きは命令名に使えるので，「\verb+\+\hbox{}\verb+サーバー+」は
-それ自身が1つの命令だと認識されるが，こんな名前の命令は定義されていないのでエラーが発生す
- る，というわけだ．
-
-同様の非互換性は，中黒「・」，単独の濁点「゛」，単独の半濁点「゜」，繰り返し記号「ゝ」「ゞ」
- 「ヽ」「ヾ」，同上記号「仝」にも見られる．
-\end{curve}
-
-\newpage
-\section{p\TeX 系列以外による日本語文書作成}
-
-TODO: \texttt{tex\_mik.tex} の内容を移植したい
+一方，Lua\TeX{}や\XeTeX{}を使う場合や，macOSやLinuxで\pLaTeX{}を使う場合は，UTF-8しか使えない\footnote{一応\XeTeX{}はBOM付きUTF-16を解釈するようである．}．
+また，\pdfTeX{}を使って欧文を書く場合でも，\TeX~Live 2018以降はUTF-8がデフォルトになっている．
+よって，新規に書く文書ではUTF-8を使うべきである．
 
 \newpage
 \section{雑多な話題}\label{sec:ref}
@@ -1488,6 +1329,8 @@ end program test
 \pLaTeX・u\pLaTeX においては，My\TeX pertプロジェクト（渡辺徹氏）の
 \href{http://mytexpert.osdn.jp/index.php?FrontPage}{Wiki}内から
 ダウンロードできる\PKG{jlisting.sty}と併用することになる．
+
+TODO: plistingsパッケージ
 
 \PKG{listings}以外のソースコード組版パッケージとしては\href{https://ctan.org/pkg/minted}{\PKG{minted}パッケージ}がある．
 \PKG{minted}はPythonで書かれたPygmentsというライブラリを使うため，Pygmentsを別途インストールする必要があるほか，\LaTeX{}処理の際に\texttt{-shell-escape}オプションを指定する必要がある．
@@ -1894,6 +1737,12 @@ DVIファイルを扱う各ソフトウェアが，
 \]
 
 % 複雑な配置を行いたい場合は，\PKG{tikzcd}を使うよりも，大本となる図形描画パッケージTikZを直接使った方がいいかもしれない．
+
+\subsection{数式クラス}
+
+TODO: 書きたい
+
+「数式組版」を紹介する？
 
 \newpage
 
