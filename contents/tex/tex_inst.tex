@@ -22,6 +22,10 @@
 \baselineskip1.75\zw
 \maketitle
 
+この文書では，計算数学I授業内で\TeX システムをインストールする方法について
+説明する．
+\medskip
+
 \TeX はDonald~E. Knuth氏による「（特にたくさんの数式を含んだ）文書を
 製作するためのシステム」である．
 投稿を\TeX 形式のファイル（\TeX ソース）で受け付ける論文誌も多く，
@@ -32,13 +36,12 @@
 \TeX は，「テフ」「テック」などと，\LaTeX は「ラテフ」「ラテック」「レイテック」などと読ば
 れる．テキストでは，\TeX,~\LaTeX はそれぞれ\texttt{TeX},~\texttt{LaTeX}と表記されることに
 なっている．
-
-
 \medskip
+
 本実習では，まず\TeX システムを実習用マシンにインストールすることからはじめる．
 Windowsでの\TeX システムとしては，昔から角藤亮氏による
 \href{http://w32tex.org/index-ja.html}{W32\TeX}が主流であったが，
-現在では\href{http://www.tug.org/texlive/}{\emph{\TeX~Live}}%
+現在では\href{http://www.tug.org/texlive/}{\emph{\TeX\ Live}}%
 がその地位を引き継いだと言っていいだろう\footnote{%
   \href{http://www.tug.org/texlive/}{\emph{\TeX~Live}}%
   は，世界中の\TeX に関するプログラム・パッケージ類を収めたものであり，
@@ -46,12 +49,21 @@ Windowsでの\TeX システムとしては，昔から角藤亮氏による
   まともに扱えるものになった．
 }．
 この実習では，2019年4月18日現在最新版
-である\emph{\TeX~Live~2018}\footnote{%
-  なお、\TeX~Live~2019は2019年4月30日リリース予定である．
+である\emph{\TeX\ Live 2018}\footnote{%
+  なお、\TeX\ Live 2019は2019年4月30日リリース予定である．
 }%
 を用いる．
-
 \medskip
+
+この文書では，次の通りの順序で\TeX Liveのインストールと環境整備の手順を
+説明する．
+まず\ref{before_inst}節でWindowsの設定と\TeX\ Liveインストーラの
+配置を行う．次に，\ref{install_tex}節で\TeX\ Liveを実際にインストールする．
+\ref{about_editor}節では，テキストエディタについての注意をいくつか述べた．
+\ref{install_emeditor}節で，テキストエディタ(EmEditor Free)の
+インストールと初期設定の方法について述べている．
+\medskip
+
 \TeX~Liveをインストールした後は，各自の知識に沿って実習を進めてほしい．
 計算数学実習資料集の
 「\href{https://github.com/utmsks/KSImaterial/blob/master/contents/tex/tex_practice.md}{\TeX 実習}」
@@ -71,17 +83,17 @@ Windowsでの\TeX システムとしては，昔から角藤亮氏による
 
 \newpage
 
-\setcounter{section}{-1}
 
-\section{はじめに}
+\section{インストールの前に}\label{before_inst}
 \TeX~Liveのインストーラは，インターネット経由で入手できる．Windows向け
 インストーラの入手方法は%
-\href{https://texwiki.texjp.org/?TeX%20Live%2FWindows}{\TeX Wiki}%
+\href{https://texwiki.texjp.org/?TeX%20Live%2FWindows}{\TeX~Wiki}%
 のページが詳しい\footnote{%
   ISOファイルをダウンロードするのをオススメする．
-  ただし，数GBあるので，ある程度高速な回線からダウンロードしないと厳しい．
+  ただし，数GBあるので，ある程度高速な回線から，
+  うまいミラーを選んでダウンロードしないと厳しい．
   数理ネットワークからのダウンロード時には数分で済んだが，
-  本文書の改定者が改定前の文書を見たときには数時間かかるとの記述を見た．
+  本文書の改定者が改定前の文書を見たときには数時間かかるとの記述があった．
 }．
 しかし，数理ネットワークへの負担を抑えるため，ここでは事前にダウンロードしたインストーラを
 USBメモリにセットして配布する．
@@ -106,25 +118,28 @@ USBメモリにセットして配布する．
   \TeX~Liveのインストーラ（USBメモリ内の \texttt{TeXLive2018} フォルダ全体）を
   デスクトップ以下にコピーする．
   \begin{itemize}
-  \item USB 3.0 (青い USB 端子) に挿した方が速く，2分程度で終了する．
-  \item コピーし終わった後は，USBメモリはもう必要ない(ので，TAに返却する)．
+  \item USB 3.0 （青い USB 端子）に挿した方が速く，2分程度で終了する．
+  \item コピーし終わった後は，USBメモリはもう必要ない（ので，TAに返却する）．
   \end{itemize}
-\item \texttt{TeXLive2018} ディレクトリの中にある\texttt{install-tl-windows.bat}
+\item \texttt{TeXLive2018}
+  ディレクトリの中にはそれなりの数のファイルがあるが，\texttt{install-tl-windows.bat}
   か \texttt{install-tl-advanced.bat} からインストーラを起動できる．
   \begin{itemize}
   \item 次のページの通り，本実習では \texttt{install-tl-advanced.bat} の方を用いる．
   \item 自宅のPC等で，ディスク
     容量に余裕があるなら \texttt{install-tl-windows.bat} を用いると良い．
     この方法であれば，何も考えずに数回「次へ」をクリックするだけでインストールができるが，
-    \TeX~Live をフルインストールすることになるため，多くの時間(30分)とディスク容量(5GB)が必要となる．
-  \item 本実習では，ディスク容量は問題ないが時間を節約したいため，設定をカスタマイズしてインストールする．
+    \TeX~Live をフルインストールすることになるため，
+    多くの時間(30分)とディスク容量(5GB)が必要となる．
+  \item 本実習では，ディスク容量は問題ないが時間を節約したいため，
+    設定をカスタマイズしてインストールする．
   \end{itemize}
 \end{enumerate}
 
 \newpage
-\section{\TeX~Liveのインストール}
+\section{\TeX~Liveのインストール}\label{install_tex}
 時間の都合で設定をカスタマイズしてインストールする．
-上述の通り，時間(とディスク容量)に余裕があれば，このような複雑な設定をする必要はないことを注意しておく．
+上述の通り，時間（とディスク容量）に余裕があれば，このような複雑な設定をする必要はないことを注意しておく．
 \begin{enumerate}
   \itemsep\medskipamount
   % \setcounter{enumi}{-1}
@@ -239,23 +254,63 @@ USBメモリにセットして配布する．
   \end{figure}
 \end{enumerate}
 
-
 % \newpage
-\section{EmEditor~Freeのインストール\footnote{%
-  2018年版のまま．不明点があればTAに確認してください．
-}}
+\section{エディタについて} \label{about_editor}
+\TeX では，ワープロソフトのように書面を自分の目で見て配置するのではなく，
+書式情報を持たない文字列だけのファイル（テキストファイル）に，
+文章と一緒に書式や配置の情報も\TeX への命令として書く，
+という形式を取っている\footnote{%
+これを聞くとなぜそんな面倒なことをするのか，と思う向きもあるだろう．
+しかし，\LaTeX では，\TeX の仕組みを使って，
+文章の「意味的構造」をただ書き記すだけで，最適な配置を見つけて配置してくれる，
+という状態を部分的にではあるが達成している．}．
+このテキストファイルのことを\TeX ソースと呼んでいる．
+
+
 \TeX ソースを記述するにはメモ帳でもできないことはないが，
 それよりは高機能なテキストエディタを用いるのが便利である．
-\emph{自分で使い慣れたエディタ（Emacs, Vim等）が
-  既にあればそれを使えばよい}が，
-ここでは例として\emph{EmEditor Free}のインストールを述べる．
-なお，本実習では\TeX worksなどの統合開発環境の使用は推奨\emph{しない}．
-コマンドプロンプトを用いて作業をすることで，
-\FNAME{platex}や\FNAME{dvipdfmx}などのコマンドをある程度理解することも，
-本実習の目的の一つである\footnote{トラブルシューティングの際に，これらの理解が必要となる場合がある．}．
+テキストエディタはテキストファイルを編集するソフトであり，
+\begin{itemize}
+\item Emacs
+\item Vim
+\item VS Code
+\item Atom
+\item EmEditor
+\item （非常に低機能で使いにくいが）メモ帳
+\end{itemize}
+など色々ある．\TeX 実習では，
+\emph{自分で使い慣れたもの，好きなものを使って良い}が，\TeX ソースの文字コードを
+\emph{Unicode}として出力できるよう設定しておいてほしい\footnote{%
+  \TeX 実習でup\LaTeX を使っているのでそうなっていると都合が良い．}．
 
-ちなみに，EmEditor Free で(拡張子が\texttt{.tex}となっている) \TeX ソースを開くと，
+どれにも馴染みがないという人のために，
+本文章では例として\emph{EmEditor Free}のインストールを述べる．
+ちなみに，EmEditor Free で（拡張子が\texttt{.tex}となっている） \TeX ソースを開くと，
 基本的なキーワードに色が付いて見易く表示される．
+
+なお，\TeX に特化した，テキストエディタに止まらない機能を持つ統合開発環境として，
+\TeX Worksや\TeX Shopなどがあるが，\emph{これらの使用は推奨しない}．
+これらのソフトは，本来コマンドプロンプトから実行する\FNAME{tex}関係のコマンドを
+ボタン一つで実行してくれる．これは便利である反面，コマンドに対する理解を損ないやすいという
+欠点がある\footnote{トラブルシューティングの際に，これらの理解が必要となる場合がある．}．
+本実習の目的の一つには，コマンドプロンプト上の作業を通して，
+\FNAME{uplatex}や\FNAME{dvipdfmx}などのコマンドをある程度
+理解することが含まれる．\TeX Worksなどにすでに慣れている諸賢には，
+歯を食いしばって操作を体得していただきたい
+\footnote{逆に言えば，\TeX の実行を\TeX Worksのボタンではなくコマンドプロンプト
+からやるなら，\TeX Worksを使うことには問題がない，ということでもある．}．
+
+\newpage
+\section{EmEditor~Freeのインストール} \label{install_emeditor}
+
+ここでは，EmEditorの公式ホームページからインストールする方法を説明する\footnote{
+なお，Windows Storeなどからインストールしても良い．Windows Storeを開き，
+右上の検索バーに「EmEditor」と入れて検索してEmEditor (64-bit)を開き，
+そのまま「インストール」．Windowsアカウントを聞かれるが，聞いてきたダイアログを
+閉じればインストールが開始する．これでEmEditor Freeを起動すれば，だいたい
+手順\ref{enum_check_update_query}を完了したことに相当する．
+}
+ページを跨いでいるので，最後まで読んでほしい．
 
 \begin{enumerate}
 \item \emph{EmEditor}を
@@ -266,7 +321,8 @@ USBメモリにセットして配布する．
   %   \includegraphics[scale=.36]{em01.png}
   %   \caption{}\label{emed1}
   % \end{figure}
-\item ダウンロードしたファイル\footnote{2018/4/17時点では\texttt{emed64\_17.5.0.msi}である．}を実行し，インストールを開始する．
+\item ダウンロードしたファイル\footnote{2019/4/25時点では\texttt{emed64\_18.8.0.msi}である
+}を実行し，インストールを開始する．
   \begin{itemize}
     %節題の脚注のせいでページがはみ出したので応急処置
   \item 「インストールタイプ」は「すべてのユーザ」， セットアップタイプは「標準」でよい．% （図\nobreak\ref{emed2}）．
@@ -293,7 +349,7 @@ USBメモリにセットして配布する．
   % というダイアログが表示される．この図のように，「更新を自動的にチェックしない」を選択し，「OK」．
   EmEditorを起動したら，% まず図\nobreak\ref{emed4}のようなダイアログが表示されるが，
   まず「自動更新チェックを有効にしますか？」と尋ねるダイアログが表示されるが，
-  「更新をチェックしない」を選択する．
+  「更新をチェックしない」を選択する．\label{enum_check_update_query}
   % \begin{figure}[!h]
   %   \centering
   %   \includegraphics[scale=.45]{em04.png}
@@ -321,6 +377,26 @@ USBメモリにセットして配布する．
     % \end{figure}
   \end{enumerate}
 
+\item TeX実習ではTeXソースをUnicodeでエンコードすることを勧めている．
+  このままではEmEditorはファイルをShift-JISでエンコードしようとするので，
+  \emph{EmEditorで編集する全てのテキストファイルをUnicodeでエンコード}するよう設定する．
+  \begin{enumerate}
+  \item メニューバーの「ツール」から
+    「全ての設定のプロパティ」を%Maybe 「設定の選択」- 「TeX」 and「Text」?
+    選択する．
+  \item 「全ての設定のプロパティ」設定用ウインドウが開くので，
+    上部の「ファイル」タブをクリックして選択．
+  \item 下部に「新規作成時(F)…」というボタンがあるので押す．
+  \item 「新規作成時の詳細」ダイアログが開くので，
+    上部の「エンコード(E)」プルダウンリストの値を「UTF-8」に変更．
+  \item そのすぐ下，「Unicodeサイン(BOM)を付ける(S)」というチェックボックスを
+    クリックしてチェックマークを付ける．
+  \item すぐ右，「OK」ボタンをクリックして「新規作成時の詳細」ウィンドウを閉じる．
+  \item 「全ての設定のプロパティ」ウィンドウの一番下，「OK」でこのウィンドウも閉じる．
+  \end{enumerate}
+  （次のページへ続く）
+  \newpage
+  
 \item 最後に，\emph{ファイルの関連付け}の設定を行い，\TeX ソースをEmEditorに関連付ける．
   ただし，以下の設定は \emph{\TeX~Live インストールが終了してから}行う\footnote{\TeX ソースとの関連付けは \TeX works と競合するため．}．
   \begin{enumerate}
@@ -361,7 +437,7 @@ USBメモリにセットして配布する．
     %   \caption{}\label{emed8}
     % \end{figure}
     \begin{itemize}
-    \item このとき「既に'TL.TeXworks.edit.2016'に関連付けられています」などのメッセージが出るが，
+    \item このとき「既に`TL.TeXworks.edit.2016'に関連付けられています」などのメッセージが出るが，
       気にせず「はい」を選択．
     \end{itemize}
   \end{enumerate}
