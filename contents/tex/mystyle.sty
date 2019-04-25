@@ -1,14 +1,27 @@
 %%%
 \RequirePackage{float,mflogo,metalogo,graphicx,
   xcolor,booktabs,listings,amsmath,amssymb,mleftright, mathtools}
-\usepackage[all]{xy}
 \definecolor{red}{HTML}{FF2800}
 \definecolor{blue}{HTML}{0041FF}
 \definecolor{green}{HTML}{35A168}
 
 \ifdefined\directlua
+  % 各種記号の直前・直後に \xspace が入るようにする
   \ltjsetparameter{alxspmode={`\\,allow}}
   \ltjsetparameter{alxspmode={`\$,allow}}
+  \ltjsetparameter{alxspmode={`\=,allow}}
+  \ltjsetparameter{alxspmode={`\},postonly}}
+  \ltjsetparameter{alxspmode={`\@,allow}}
+  \ltjsetparameter{alxspmode={`\*,allow}}
+  \ltjsetparameter{alxspmode={`\-,allow}}
+  \ltjsetparameter{alxspmode={`\?,allow}}
+  \ltjsetparameter{alxspmode={`\&,allow}}
+  \ltjsetparameter{alxspmode={`\^,allow}}
+  \ltjsetparameter{alxspmode={`\_,allow}}
+  \ltjsetparameter{alxspmode={`\/,allow}}
+  \ltjsetparameter{alxspmode={`\.,allow}}
+  \ltjsetparameter{alxspmode={`\<,allow}}
+  \ltjsetparameter{alxspmode={`\>,allow}}
   \usepackage{luatexja-adjust}
   \usepackage{luatexja-fontspec}
   \usepackage{luatexja-otf}
@@ -20,6 +33,10 @@
   \usepackage[textwidth=45\zw,lines=40,papersize={182mm,257mm}]{geometry}
   \def\headfont{\normalfont\gtfamily\bfseries\mathversion{bold}}
   \def\emph#1{\textbf{\textgt{\mathversion{bold}#1}}}
+
+  % 以下2行は、 https://osdn.net/projects/luatex-ja/ticket/39138 が解決した版が手元のTeX環境に降ってくるまでの一時しのぎ
+  \usepackage{expl3}
+  \ExplSyntaxOn\def\__fontspecsverb{\fontspec_print_visible_spaces:\@sverb}\ExplSyntaxOff
 \else
   \usepackage{zxjatype}
   \setjamainfont[BoldFont=ipaexg.ttf]{ipaexm.ttf}
@@ -32,7 +49,7 @@
   \def\emph#1{\textbf{\mathversion{bold}#1}}
 \fi
 \normalsize
-\lstset{basicstyle=\small\tt,basewidth=0.55em,escapechar=\#,xleftmargin=2\zw}
+\lstset{basicstyle=\small\ttfamily,basewidth=0.55em,escapechar=\#,xleftmargin=2\zw}
 \def\lstlistingname{\emph{例}}
 \baselineskip1.75\zw
 
@@ -43,15 +60,9 @@
 \DeclareCaptionLabelSeparator{wquad}{\hskip1\zw}
 \captionsetup{labelsep=wquad}
 
-\DeclareRobustCommand\pTeX{p\kern-.15em\TeX}
-\DeclareRobustCommand\pLaTeX{p\LaTeX}
-\DeclareRobustCommand\pLaTeXe{p\LaTeXe}
-\ifdefined\eTeX\else
-  \DeclareRobustCommand\eTeX{$\varepsilon$-\TeX}
-\fi
-\newcommand\pdfLaTeX{pdf\LaTeX}
-\def\pdfTeX{pdf\TeX}
-\def\dvipdfmx{DVIPDFM$x$}
+\usepackage{bxtexlogo}
+\bxtexlogoimport{pTeX,pLaTeX,pLaTeXe,eTeX,pdfLaTeX,pdfTeX,DVIPDFMx,epTeX,eupTeX,ConTeXt,TikZ}
+
 \def\cs#1{\texttt{\textbackslash#1}}
 
 \def\floatpagefraction{0.0}
@@ -66,7 +77,6 @@
   urlbordercolor=blue,
   linkcolor=green!75!black,
   linkbordercolor=green!75!black,
-  pdftitle={TeX 実習},
   colorlinks=true,
 ]{hyperref}
 
@@ -76,8 +86,6 @@
                                 % Hyperlink border style will be underline of width 1pt
 }
 
-\date{\today}
-\author{}
 \def\@maketitle{%
     \newpage\null
     \vskip 2em
