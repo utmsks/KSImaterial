@@ -34,6 +34,10 @@
   \usepackage[textwidth=45\zw,lines=40,papersize={182mm,257mm}]{geometry}
   \def\headfont{\normalfont\gtfamily\bfseries\mathversion{bold}}
   \def\emph#1{\textbf{\textgt{\mathversion{bold}#1}}}
+
+  % 以下2行は、 https://osdn.net/projects/luatex-ja/ticket/39138 が解決した版が手元のTeX環境に降ってくるまでの一時しのぎ
+  \usepackage{expl3}
+  \ExplSyntaxOn\def\__fontspecsverb{\fontspec_print_visible_spaces:\@sverb}\ExplSyntaxOff
 \else
   \usepackage{zxjatype}
   \setjamainfont[BoldFont=ipaexg.ttf]{ipaexm.ttf}
