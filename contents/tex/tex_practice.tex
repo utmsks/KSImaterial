@@ -1321,11 +1321,7 @@ end program test
 \emph{\PKG{listings}パッケージは日本語との相性が良くないことが知られている}\footnote{%
 \LuaTeX-jaの下で\PKG{listings}パッケージを使用する場合は，自動的に日本語対応強化用の
 パッチを適用するので特に何もしなくても良い．}．
-\pLaTeX・u\pLaTeX においては，My\TeX pertプロジェクト（渡辺徹氏）の
-\href{http://mytexpert.osdn.jp/index.php?FrontPage}{Wiki}内から
-ダウンロードできる\PKG{jlisting.sty}と併用することになる．
-
-TODO: plistingsパッケージ
+\pLaTeX・u\pLaTeX においては，\href{https://github.com/h-kitagawa/plistings}{\PKG{plistings}}パッケージと併用することになる．
 
 \PKG{listings}以外のソースコード組版パッケージとしては\href{https://ctan.org/pkg/minted}{\PKG{minted}パッケージ}がある．
 \PKG{minted}はPythonで書かれたPygmentsというライブラリを使うため，Pygmentsを別途インストールする必要があるほか，\LaTeX{}処理の際に\texttt{-shell-escape}オプションを指定する必要がある．
