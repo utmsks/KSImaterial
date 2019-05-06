@@ -1142,7 +1142,7 @@ Knuth氏が1970年代に開発した\TeX{}はその後様々な人によって�
 この実習では\TeX{}エンジンとしては\upTeX{}を使っているが，受講生諸君が今後\TeX{}で文書を書いていく際，\pTeX{}系以外の\TeX{}エンジンを使うこともあるだろう．
 というわけで，主な\TeX{}エンジンを簡単に紹介しておく．
 エンジン間の派生関係を大雑把に表すと\prettyref{fig:tex-engines}である\footnote{%
-  最近のLua\TeX{}は\pdfTeX{}との命令名レベルの互換性を切り捨てているので
+  最近の\LuaTeX{}は\pdfTeX{}との命令名レベルの互換性を切り捨てているので
   派生関係にあるからといって必ず互換性があるというわけではないし，
   逆に\pdfTeX{}派生ではない\epTeX{}や\XeTeX{}に\pdfTeX{}由来の命令が取り込まれていたりするので，
   派生関係にないからといって全く互換性がないというわけでもない．
@@ -1158,14 +1158,14 @@ Knuth氏が1970年代に開発した\TeX{}はその後様々な人によって�
   欧米でのスタンダード．
 \item[\XeTeX] OSのフォントを直接使えるようにしたもの．
   \pdfTeX{}と同じく，PDFを直接出力する．また，Unicodeに直接対応する．
-\item[Lua\TeX] スクリプト言語Luaを組み込んだもの．% つまり最強
+\item[\LuaTeX] スクリプト言語Luaを組み込んだもの．% つまり最強
   Unicodeに直接対応する．
 \item[\pTeX] アスキーが日本語対応させたもの．
 \item[\upTeX] \pTeX{}をUnicode対応させたもの．
 \item[\epTeX, \eupTeX] \pTeX{}, \upTeX{}に\eTeX{}拡張を施したもの．
 \end{description}
 
-% Lua\TeX, \XeTeX{}はフォントの扱いに長ける（\PKG{fontspec}），任意のUnicode文字をアクティブ化できる（\PKG{unicode-math}）等の特徴がある．
+% \LuaTeX, \XeTeX{}はフォントの扱いに長ける（\PKG{fontspec}），任意のUnicode文字をアクティブ化できる（\PKG{unicode-math}）等の特徴がある．
 
 \begin{figure}
   \centering
@@ -1181,7 +1181,7 @@ Knuth氏が1970年代に開発した\TeX{}はその後様々な人によって�
       \node (tex82) at (0,5) {\TeX82};
       \node (etex) at (0,3.5) {\eTeX};
       \node (pdftex) at (0,2) {pdf\TeX};
-      \node (luatex) at (0,0.5) {Lua\TeX};
+      \node (luatex) at (0,0.5) {\LuaTeX};
       \node (xetex) at (2.5,0.7) {\XeTeX};
       \node (ptex)at (-3,3.2) {\pTeX};
       \node (eptex) at (-3,1.2) {\epTeX};
@@ -1218,7 +1218,7 @@ Knuth氏が1970年代に開発した\TeX{}はその後様々な人によって�
 \begin{center}
   \begin{tikzpicture}
     \node[left] at (0,.5) {\TeX{}エンジン};
-    \draw (0,0) rectangle node {\TeX82, ($\varepsilon$-)(u)\pTeX, \pdfTeX, \XeTeX, Lua\TeX{}等} (9,1);
+    \draw (0,0) rectangle node {\TeX82, ($\varepsilon$-)(u)\pTeX, \pdfTeX, \XeTeX, \LuaTeX{}等} (9,1);
     \draw (0,1.05) rectangle node {plain \TeX} (2.95,1.95);
     \draw (3.05,1.05) rectangle node {\LaTeX} (5.95,1.95);
     \draw (6.05,1.05) rectangle node {\ConTeXt} (9,1.95);
@@ -1226,11 +1226,11 @@ Knuth氏が1970年代に開発した\TeX{}はその後様々な人によって�
   \end{tikzpicture}
 \end{center}
 
-さて，Lua\TeX{}や\XeTeX{}は多言語に対応していると言っても，エンジン自体は日本語組版の事情を知らない．
-そこで，Lua\TeX{}や\XeTeX{}でも日本語組版を行うためのマクロパッケージが開発されている．
-Lua\TeX{}の場合はLua\TeX-ja, \XeTeX{}の場合は\PKG{xeCJK}や\PKG{ZXjatype}がそれである．
+さて，\LuaTeX{}や\XeTeX{}は多言語に対応していると言っても，エンジン自体は日本語組版の事情を知らない．
+したがって，\LuaTeX{}や\XeTeX{}で日本語組版を行うには，そのためのマクロパッケージが必要である．
+\LuaTeX{}の場合は\LuaTeX-ja, \XeTeX{}の場合は\PKG{xeCJK}や\PKG{ZXjatype}がそれである．
 
-ちなみに，この資料（\texttt{tex\_practice.pdf}）はLua\TeX{} (\& Lua\TeX-ja) を用いて組版されている．
+ちなみに，この資料（\FNAME{tex_practice.pdf}）は\LuaTeX{} (\& \LuaTeX-ja) を用いて組版されている．
 
 % (e-)(u)pTeX, pdfTeX, LuaTeX, XeTeXの説明を追加
 % 文書クラス：jsclasses, ltjsclasses, bxjscls, jlreq
@@ -1275,7 +1275,7 @@ macOS用やLinux用のバイナリには，そのような機能は実装され�
 \end{lstlisting}
 
 \medskip
-一方，Lua\TeX{}や\XeTeX{}を使う場合や，macOSやLinuxで\pLaTeX{}を使う場合は，UTF-8しか使えない\footnote{一応\XeTeX{}はBOM付きUTF-16を解釈するようである．}．
+一方，\LuaTeX{}や\XeTeX{}を使う場合や，macOSやLinuxで\pLaTeX{}を使う場合は，UTF-8しか使えない\footnote{一応\XeTeX{}はBOM付きUTF-16を解釈するようである．}．
 また，\pdfTeX{}を使って欧文を書く場合でも，\TeX~Live 2018以降はUTF-8がデフォルトになっている．
 よって，新規に書く文書ではUTF-8を使うべきである．
 
