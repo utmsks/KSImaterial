@@ -27,18 +27,13 @@
 % \VerbatimFootnotes は \begin{document} の後で実行する
 \usepackage{fancyvrb}
 
-%%% \paragraph{} で「■課題 xx」という見出しをつける
-%%% このような使い方は行儀が悪いのだが……
-\makeatletter
-\newcount\assignment@count
-\assignment@count=1
-\let\orig@paragraph=\paragraph
-\def\paragraph#1{%
-  \orig@paragraph{課題\the\assignment@count}\leavevmode%
-  \global\advance\assignment@count1
-  \protected\edef\@currentlabel{\the\assignment@count}\relax
+%%% \assignment で「■課題 xx」という見出しをつける
+\newcounter{assignment}
+\setcounter{assignment}{1}
+\newcommand\assignment{%
+  \paragraph{課題\theassignment}\leavevmode%
+  \refstepcounter{assignment}%
 }
-\makeatother
 
 % 更新日時の印字に datetime2 パッケージの \DTMnow を使う
 % ただし， datetime2 パッケージは \today を上書きしようとするので，防止する
@@ -240,7 +235,7 @@ C:\Users\...\Documents> #\underline{ptex2pdf\ -l\ -u\ first.tex}#
 > dvipdfmx -p jisb5 hoge.dvi
 \end{lstlisting}
 
-\paragraph{}
+\assignment
 \FNAME{first.tex}の3行目
 「\hbox{\ltjsetparameter{xkanjiskip=0pt}%
   \verb*+ようこそ，\TeX の世界へ！+}」を
@@ -1037,7 +1032,7 @@ $\mathbb{R}$に右半開区間位相を入れたものを$\mathcal{S}$とおく�
 あと，「課題」と名乗ってはいるが，提出不要である．
 
 \subsection{\TeX ソースの例}
-\paragraph{}
+\assignment
 以下のソースファイルを自分で入力し，そこからPDFファイルを作成せよ．
 全角文字と半角文字を間違えないようにすること%
 \footnote{特に，7行目の「I」は半角英大文字であって，
@@ -1053,7 +1048,7 @@ $\mathbb{R}$に右半開区間位相を入れたものを$\mathcal{S}$とおく�
 以下の数学の問題を解き，\TeX によって解答を作れ．
 その際，\emph{\prettyref{sec:typeset}のような間違いを起こさないように}注意せよ．
 
-\paragraph{}
+\assignment
 関数$f\colon \mathbb R^2\rightarrow\mathbb R$を
 \[
  f(x,y):=
@@ -1064,14 +1059,14 @@ $\mathbb{R}$に右半開区間位相を入れたものを$\mathcal{S}$とおく�
 \]
 で定める．この$f$が連続関数であることを示せ．
 
-\paragraph{}
+\assignment
 $n\in\mathbb N$に対し，
 \[
  I_n:=\int_0^{\pi/2} \cos^n \theta\,d\theta
 \]
 の値を求めよ．なお，$\mathbb{N}$に0を含めるか否かについては，どちらでもよい．
 
-\paragraph{}\
+\assignment\
 \[
  A:=\begin{pmatrix}
      2/5&11/5\\-1&2
@@ -1085,14 +1080,14 @@ $n\in\mathbb N$に対し，
  \item 前問を用いて，$A$を正定値対称行列と直交行列の積として表せ．
 \end{enumerate}
 
-\paragraph{}
+\assignment
 $T$をHausdorff空間とする．$T$内の点列$(p_n)_{n\in\mathbb N}$が
 点$p$と点$q$に収束するならば，$p=q$であることを示せ．
 
-\paragraph{}
+\assignment
 2次元トーラス$T^2$の整係数ホモロジー群を求めよ．
 
-\paragraph{}
+\assignment
 直後の\prettyref{ex:sorgenfrey}の問題文にある$\mathcal{S}$（Sorgenfrey直線）に関する1.--3.の性質を
 証明し，\TeX ソースの形で解答を書け．その際，本章に今まで記述したような
 間違いを起こさないように注意せよ．
@@ -1102,7 +1097,7 @@ $T$をHausdorff空間とする．$T$内の点列$(p_n)_{n\in\mathbb N}$が
 
 \subsection{\TeX ソースの修正練習}
 
-\paragraph{}\label{ex:sorgenfrey}
+\assignment\label{ex:sorgenfrey}
 \ref{sssec:itemize}節で挙げられていた「悪い例」：
 \begin{lstlisting}
 $\mathbb{R}$に右半開区間位相を入れたものを$\mathcal{S}$とおく．
@@ -1122,12 +1117,12 @@ $\mathbb{R}$に右半開区間位相を入れたものを$\mathcal{S}$とおく�
 
 \medskip
 
-\paragraph{}
+\assignment
 \href{https://github.com/utmsks/KSImaterial/blob/master/contents/tex/KS_3a.tex}{\FNAME{KS\_3a.tex}}%
 はタイプセットが正常にできない（エラーが発生する）ソースである．
 タイプセットが可能になるように修正せよ．
 
-\paragraph{}\label{ex:fix}
+\assignment\label{ex:fix}
 \href{https://github.com/utmsks/KSImaterial/blob/master/contents/tex/KS_3b.tex}{\FNAME{KS\_3b.tex}}%
 はタイプセット自体は可能だが，誤植や見た目の良くない点を含んでいる．
 \prettyref{sec:typeset}の記述を参考にしてソースを修正せよ．
@@ -1692,7 +1687,7 @@ DVIファイルを扱う各ソフトウェアが，
   オプションの値として数値を指定することで，曲がり具合を調整できる（小さい方がより真っ直ぐに近い）．
 \end{itemize}
 
-\paragraph{}
+\assignment
 次の図式（five lemmaの図）をタイプセットせよ．
 \[
   \begin{tikzcd}
@@ -1701,7 +1696,7 @@ DVIファイルを扱う各ソフトウェアが，
     \end{tikzcd}
 \]
 
-\paragraph{}
+\assignment
 次の各図式をタイプセットせよ．
 \begin{align*}
   \begin{tikzcd}[ampersand replacement=\&]
@@ -1717,7 +1712,7 @@ DVIファイルを扱う各ソフトウェアが，
   \end{tikzcd}
 \end{align*}
 
-\paragraph{}
+\assignment
 次の図式をタイプセットせよ．
 \[
   \begin{tikzcd}
@@ -1748,7 +1743,7 @@ TODO: 書きたい
 
 \subsection{難しい小ネタ}
 
-\paragraph{}
+\assignment
 以下の内容のソースファイルを\FNAME{twice.tex}として保存し，タイプセットせよ．
 そして，なぜそのような出力結果が得られるのかを説明せよ．
 \begin{lstlisting}[xleftmargin=3\zw, numbers=left, numberstyle=\tiny]
@@ -1807,7 +1802,7 @@ TODO: 書きたい
 %%%    >
 %%%    > \end{document}
 
-\paragraph{}
+\assignment
 \<\emph{（幻の``\texttt{This can't happen}''を拝もう）}
 
 
