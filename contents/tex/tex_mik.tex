@@ -175,16 +175,17 @@ u\pTeX で「和文の部分」がUnicode化されたりしているが，これ
 \begin{itemize}
 \item \verb!\numexpr 4-(3*2)+\count0!のように内部整数・長さなどを
   式の形で表現できる．
-\item 使用可能なレジスタが各種類ごとに256個から32768個まで激増した．
+\item 使用可能なレジスタが各種類ごとに256個から32768個まで激増した\footnote{%
+  \LuaTeX{}ではさらに65536個まで増えている．}．
 
 これにより，たくさんパッケージ読み込んだときに発生しうる
 \begin{lstlisting}
 ! No room for a new \count .
 \end{lstlisting}
-がほとんど起こらなくなった\footnote{%
-  実際には，このエラーはレジスタ確保用の\emph{マクロ}が出しているため，\LaTeX では
-  \PKG{etex}パッケージなどを読み込むなどしてマクロ側で対応させる必要がある．
-}．
+がほとんど起こらなくなった．
+% 実際には，このエラーはレジスタ確保用の\emph{マクロ}が出している．
+% 以前は\LaTeX では\PKG{etex}パッケージを読み込むなどしてマクロ側で対応させる必要があったが，
+% 最近（2015年以降？）は\LaTeX カーネル自身がe-TeX拡張を検出して対応するようになった．
 
 \item 数式中の「サイズが自動的に変わる括弧」に使われる\verb+\left+・
   \verb+\right+に加えて，\verb+\middle+が利用できるようになった．
@@ -198,10 +199,10 @@ u\pTeX で「和文の部分」がUnicode化されたりしているが，これ
   \middle| \psi \right\rangle
 \end{lstlisting}
   と簡単に組めるようになった%
-  \footnote{なお，集合の内包的記法の時に\texttt{\char92middle}を使うときには
+  \footnote{なお，集合の内包的記法の時に\cs{middle}を使うときには
   周囲の空白に注意が必要である．\\
   八登氏のブログ記事「\href{https://zrbabbler.hatenablog.com/entry/20120411/1334151482}%
-  {\texttt{\char92middle}であり\texttt{\char92mid}であるもの}」
+  {\cs{middle}であり\cs{mid}であるもの}」
   を参照すること．}．
 \end{itemize}
 \eTeX 拡張は現在開発されている様々な\TeX の拡張において標準的な地位を占めており，
