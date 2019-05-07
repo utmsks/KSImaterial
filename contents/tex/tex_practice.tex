@@ -1505,13 +1505,13 @@ LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 さて，PDFのしおりを見ると，\verb+\section+,~\verb+\subsection+で作った見出しが
 （階層構造込みで）含まれ，それぞれをクリックすると各節の最初に飛べる……のだが，
 1つめのしおりが「%
-\hbox{}{\makeatletter\rmfamily\ltj@allalchar “Å‘›‡Ì’ß}\hbox{}%
+\hbox{}{\makeatletter\rmfamily\ltj@allalchar æœ•å‹šã†®ç¯•}\hbox{}%
 」といったわけのわからない文字列に化けている．
 \begin{curve}
- 「最初の例」をShift\_JISで符号化すると
-\texttt{8DC5 8F89 82CC 90DF}となる．これをバイトごとに区切り，
+ 「最初の節」をUTF-8で符号化すると
+\texttt{E6\,9C\,80 E5\,88\,9D E3\,81\,AE E7\,AF\,80}となる．これをバイトごとに区切り，
 各バイトをPDFDocEncodingというエンコーディングで読んだものがこの「%
-\hbox{}{\makeatletter\rmfamily\ltj@allalchar “Å‘›‡Ì’ß}\hbox{}%
+\hbox{}{\makeatletter\rmfamily\ltj@allalchar æœ•å‹šã†®ç¯•}\hbox{}%
 」である．
 \end{curve}
 
@@ -1528,7 +1528,7 @@ LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 \usepackage{pxjahyper}
 \begin{document}
 \end{lstlisting}
-のように変更し，タイプセットを2回，PDF生成を行えば，しおりも「最初の例」
+のように変更し，タイプセットを2回，PDF生成を行えば，しおりも「最初の節」
 と化けないPDFが作成できる．
 
 \subsection{画像}
