@@ -448,7 +448,14 @@ Unicodeにおいて同じコードに割り当てられてしまうような細�
 文字の直後に\texttt{U+E0100}--\texttt{U+E01EF}のいずれかを続けたものである．
 
 \XeTeX では利用するフォントがIVSに対応していれば，それ以外には何もしなくてもIVSが利用できる．
-例えば，\texttt{U+E01$xy$}を<\texttt{xy}>と表記した時，
+例えば，\texttt{U+E01$xy$}を<\texttt{xy}>と表記した時\footnote{%
+  \LuaTeX{}と\XeTeX{}ではUnicodeコードポイントの入力に%
+  \texttt{\textasciicircum\textasciicircum\textasciicircum\textasciicircum xxxx}（\texttt{\textasciicircum} 4個に16進小文字4桁）%
+  または%
+  \texttt{\textasciicircum\textasciicircum\textasciicircum\textasciicircum\textasciicircum xxxxxx}（\texttt{\textasciicircum} 6個に16進小文字6桁）%
+  という表記ができるので，%
+  \TeX{}ソース中に「\texttt{東京都葛󠄁\textasciicircum\textasciicircum\textasciicircum\textasciicircum\textasciicircum 0e0101飾区}」と書くこともできる．
+}，
 \begin{lstlisting}
  \Large 東京都葛<01>飾区，奈良県葛<00>城市
 \end{lstlisting}
