@@ -72,7 +72,7 @@
 % \item 日本語で\TeX 環境を書く際の文字コードに関する注意や，u\pTeX の話題は\prettyref{sec:chrcode}へ．
 \item 各種パッケージを有効活用して相互参照，画像挿入，可換図式を組む方法については\prettyref{sec:ref}へ．
 \item 伝統的な\pLaTeX は知っているが，\pLaTeX が利用できない場合への対処法や，
- 最近の\TeX の発展について知りたい人は\prettyref{sec:other-engines}（執筆中）か，
+ 最近の\TeX の発展について知りたい人は\prettyref{sec:other-engines}か，
  実習資料集にある「\pTeX 系列以外による日本語文書作成」（やや古い）を参照すること．
 \item バリバリ使いこなしていて，以上の範囲などとっくに知っているという人はTAを呼ぶこと．
 \end{itemize}
@@ -329,8 +329,6 @@ C:\Users\...> #\underline{updmap\ --user\ --setoption\ jaEmbed\ ipa}#
 許されていることを確認しないといけない．}．
 以降の\DVIPDFMx の実行で作られるPDFファイルには，日本語フォントとして
 IPA明朝・IPAゴシックが埋め込まれることになる．
-
-% TODO: --userじゃなくて--sysを使うべき？
 
 \medskip
 macOSに商用・高品質なヒラギノフォントが付属していることは有名である%
@@ -921,7 +919,7 @@ section番号の表示形式のカスタマイズは
 などとすれば一応可能だが，
 subsectionや定理番号の表示がおかしくなってしまう．
 このあたりは\url{https://togetter.com/li/1124861}などを参考にして，各自調べること\footnote{%
-  結論を言うと，文書クラスがbxjsclassesであればクラスオプション\texttt{label-section=modern}を指定し，\cs{thesection}の代わりに\cs{pre}/\cs{postsectionname}をカスタマイズすれば良い．
+  結論を言うと，文書クラスがBXjsclsであればクラスオプション\texttt{label-section=modern}を指定し，\cs{thesection}の代わりに\cs{pre}/\cs{postsectionname}をカスタマイズすれば良い．
   それ以外の文書クラスの場合は，上手いカスタマイズ方法はない．
 }．
 
@@ -1145,11 +1143,8 @@ $\mathbb{R}$に右半開区間位相を入れたものを$\mathcal{S}$とおく�
 \prettyref{sec:typeset}の記述を参考にしてソースを修正せよ．
 
 \newpage
-\section{p\TeX 系列以外による日本語文書作成}
+\section{\pTeX 系列以外の\TeX エンジンについて}
 \label{sec:other-engines}
-
-（このセクションは執筆中です）
-% （TODO: \texttt{tex\_mik.tex} の内容を移植する？）
 
 \subsection{\TeX{}エンジン}
 
@@ -1164,8 +1159,6 @@ Knuth氏が1970年代に開発した\TeX{}はその後様々な人によって�
   逆に\pdfTeX{}派生ではない\epTeX{}や\XeTeX{}に\pdfTeX{}由来の命令が取り込まれていたりするので，
   派生関係にないからといって全く互換性がないというわけでもない．
 }．
-
-% （TODO: ちゃんとした紹介は？）
 
 \begin{description}
 \item[\TeX82] Knuth氏が作った，現在に連なる各種\TeX{}エンジンの直接の祖先．
@@ -1219,6 +1212,7 @@ Knuth氏が1970年代に開発した\TeX{}はその後様々な人によって�
     % \draw[->,dashed] (pdftex) -- (eptex);
     % \draw[->,dashed] (pdftex) -- (xetex);
   \end{tikzpicture}
+  \captionsetup{justification=centering}
   \caption{現在に連なる主な\TeX{}エンジン}
   \label{fig:tex-engines}
 \end{figure}
@@ -1228,14 +1222,16 @@ Knuth氏が1970年代に開発した\TeX{}はその後様々な人によって�
 \subsection{マクロパッケージ}
 
 \TeX{}エンジンに組版の機能が備わっていると言っても，一般のユーザーがそれを直接使って文書を書くのは大変である．
-そこで，\TeX{}のマクロによって命令や文法を追加し，文書を書きやすくしたものが\LaTeX{}等のマクロパッケージである．
-例えば，文書クラス\cs{documentclass}や環境（\cs{begin}, \cs{end}コマンド）は，\LaTeX{}が提供する概念である．
-\LaTeX{}以外のそういう枠組みとしては，plain~\TeX{}や\ConTeXt{}がある．
+そこで，\TeX{}のマクロによって命令や文法を追加し，文書を書きやすくする\emph{マクロパッケージ}が多数開発されている．
+\LaTeX{}はそうしたマクロパッケージの一種である．
+例えば，文書クラス\cs{documentclass}や環境（\cs{begin}, \cs{end}コマンド）等の概念は，\LaTeX{}によって提供されたものである．
+\LaTeX{}以外の枠組みとしては，plain~\TeX{}や\ConTeXt{}がある．
 
 \begin{center}
   \begin{tikzpicture}
     \node[left] at (0,.5) {\TeX{}エンジン};
     \draw (0,0) rectangle node {\TeX82, ($\varepsilon$-)(u)\pTeX, \pdfTeX, \XeTeX, \LuaTeX{}等} (9,1);
+    \node[left] at (0,2) {マクロパッケージ};
     \draw (0,1.05) rectangle node {plain \TeX} (2.95,1.95);
     \draw (3.05,1.05) rectangle node {\LaTeX} (5.95,1.95);
     \draw (6.05,1.05) rectangle node {\ConTeXt} (9,1.95);
@@ -1245,22 +1241,41 @@ Knuth氏が1970年代に開発した\TeX{}はその後様々な人によって�
 
 さて，\LuaTeX{}や\XeTeX{}は多言語に対応していると言っても，エンジン自体は日本語組版の事情を知らない．
 したがって，\LuaTeX{}や\XeTeX{}で日本語組版を行うには，そのためのマクロパッケージが必要である．
-\LuaTeX{}の場合は\LuaTeX-ja, \XeTeX{}の場合は\PKG{xeCJK}や\PKG{ZXjatype}がそれである．
+\LuaTeX{}の場合は\LuaTeX-jaが，\XeTeX{}の場合は\PKG{xeCJK}や\PKG{ZXjatype}がそれである．
 
 ちなみに，この資料（\FNAME{tex_practice.pdf}）は\LuaTeX{} (\& \LuaTeX-ja) を用いて組版されている．
 
-% (e-)(u)pTeX, pdfTeX, LuaTeX, XeTeXの説明を追加
-% 文書クラス：jsclasses, ltjsclasses, bxjscls, jlreq
+\subsection{文書クラス}
 
-%日本語文書を書く時によく使われる文書クラス
-%\begin{description}
-%\item[jclasses] (u)\pLaTeX{}用
-%\item[jsclasses] (u)\pLaTeX{}用．
-%\item[ltjsclasses] Lua\TeX-ja用
-%\item[bxjscls] (u)\pLaTeX, \pdfTeX, \XeTeX, \LuaTeX{}対応
-%\item[jlreq] Lua\TeX-ja, \pLaTeX, \upLaTeX{}対応
-%\end{description}
-% beamer, standalone
+\PKG{jsarticle}をはじめとする「\pLaTeXe 新ドキュメントクラス」(\PKG{jsclasses}) はその名の通り\pLaTeX{}系専用である．
+よって，\LuaTeX{}や\XeTeX{}等のエンジンを用いて日本語文書を書く際には，\PKG{jsclasses}以外の文書クラスを使うことになる．
+というわけで，日本語文書を書くのに使える文書クラスを（\pLaTeX{}専用のものも含めて）いくつか挙げておく．
+\begin{description}
+\item[jclasses]
+  アスキーによる，\pTeX{}用の文書クラス．(u)\pLaTeX{}用
+\item[jsclasses]
+  奥村晴彦氏による「\pLaTeXe 新ドキュメントクラス」．(u)\pLaTeX{}用．
+\item[ltjsclasses]
+  \PKG{jsclasses}を\LuaTeX-ja用に移植したもの．
+\item[BXjscls]
+  \PKG{jsclasses}を拡張したもの．
+  (u)\pLaTeX, \pdfLaTeX, \XeLaTeX, \LuaLaTeX{}と，幅広いエンジンに対応している．
+\item[jlreq]
+  「日本語組版の要件」\footnote{%
+    \url{https://www.w3.org/TR/jlreq/ja/}
+  }を満たすことを目指す文書クラス．\LuaTeX-ja, \pLaTeX, \upLaTeX{}対応．
+\end{description}
+
+その他，特定の用途に使われる文書クラスもある．
+\begin{description}
+\item[beamer]
+  \LaTeX{}でスライドを作るための文書クラス．
+\item[standalone]
+  文書ではなく単体の図を出力できる文書クラス．
+  数式や（\TikZ{}で描いた）図を他の文書に貼り付けたり，画像化して他のアプリケーションに貼り付けたり，という目的で使える．
+\end{description}
+
+% DVIwareの指定についてもどこかに書く？
 
 \subsection{文字コード}
 文字をコンピュータで扱うためには，「使用出来る文字」の集合と，それに属する各文字から
@@ -1281,7 +1296,10 @@ Windows上の\TeX~Liveの\pLaTeX の標準設定では，「\TeX ソースの文
 \texttt{-guess-input-enc}オプション．
 macOS用やLinux用のバイナリには，そのような機能は実装されていない．
 }．
-自動判別が不安な場合は，明示的に\texttt{-kanji=utf8}を指定する（\TeX ソースがUTF-8の場合）．
+自動判別が不安な場合は，明示的に\texttt{-kanji=utf8}を指定する（\TeX ソースがUTF-8の場合）か，\TeX{}ソースをBOM付き\footnote{%
+  一般論としてUTF-8の「BOM」は8ビットクリーンなソフトウェアにおいて問題を引き起こす可能性があるので要注意だが，\TeX~Live~2018以降の\TeX{}の場合はUTF-8のBOMは正常に解釈される（一方，古い\TeX~Liveでは\pdfTeX{}がUTF-8のBOMを認識しない）．
+  よって，最新の\TeX~Liveで処理させる\TeX{}ファイルに関してはUTF-8のBOMはあってもなくても良い．
+}UTF-8で保存する．
 \begin{lstlisting}
 > uplatex -kanji=utf8 hoge.tex
 \end{lstlisting}
@@ -1295,6 +1313,9 @@ macOS用やLinux用のバイナリには，そのような機能は実装され�
 一方，\LuaTeX{}や\XeTeX{}を使う場合や，macOSやLinuxで\pLaTeX{}を使う場合は，UTF-8しか使えない\footnote{一応\XeTeX{}はBOM付きUTF-16を解釈するようである．}．
 また，\pdfTeX{}を使って欧文を書く場合でも，\TeX~Live 2018以降はUTF-8がデフォルトになっている．
 よって，新規に書く文書ではUTF-8を使うべきである．
+
+\bigskip
+これ以上詳しくは「\pTeX 系列以外による日本語文書作成」(\FNAME{tex_mik.pdf}) を参照されたい．
 
 \newpage
 \section{雑多な話題}\label{sec:ref}
