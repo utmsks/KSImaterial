@@ -74,8 +74,8 @@ TUGboat~\emph{11}, No.~4,  1990.\\
 \item Arno Trautmann, \textit{%
   An overview of \TeX, its children and their friends $\ldots$\,}\\
 \url{http://mirrors.ctan.org/info/tex-overview/tex-overview.pdf}
-\item \href{http://oku.edu.mie-u.ac.jp/~okumura/texwiki/}{\TeX~Wiki}\>
-  中の「Lua\TeX」「\XeTeX」「u\pTeX」「\eTeX」等の各記事
+\item \href{https://texwiki.texjp.org/}{\TeX~Wiki}\>
+  中の「\LuaTeX」「\XeTeX」「\upTeX」「\eTeX」等の各記事
 \end{itemize}
 などを参照．
 
@@ -145,7 +145,7 @@ u\pTeX で「和文の部分」がUnicode化されたりしているが，これ
 \end{itemize}
 
 
-例えば，\href{http://miktex.org/}{\emph{MiK\TeX}}\>という
+例えば，\href{https://miktex.org/}{\emph{MiK\TeX}}\>という
 海外でよく使われているWindows用の\TeX ディストリビューションがある．
 面白いのは，MiK\TeX のパッケージとしては存在するが
 システムにまだインストールされていないファイルがタイプセット時に
@@ -200,7 +200,7 @@ u\pTeX で「和文の部分」がUnicode化されたりしているが，これ
   と簡単に組めるようになった%
   \footnote{なお，集合の内包的記法の時に\texttt{\char92middle}を使うときには
   周囲の空白に注意が必要である．\\
-  八登氏のブログ記事「\href{http://d.hatena.ne.jp/zrbabbler/20120411/1334151482}%
+  八登氏のブログ記事「\href{https://zrbabbler.hatenablog.com/entry/20120411/1334151482}%
   {\texttt{\char92middle}であり\texttt{\char92mid}であるもの}」
   を参照すること．}．
 \end{itemize}
@@ -218,7 +218,7 @@ u\pTeX で「和文の部分」がUnicode化されたりしているが，これ
 \item 日本語が処理できる\pTeX, u\pTeX に関しても例外ではない．「\TeX 実習」のPDFでは
 ごまかしてきたが，\FNAME{platex}, \FNAME{uplatex}と打って
 実際に起動されるプログラムは，\eTeX 拡張が取り込まれた
-\href{http://sourceforge.jp/projects/eptex/wiki/FrontPage}{\emph{$\varepsilon$-\pTeX}},~%
+\href{https://ja.osdn.net/projects/eptex/wiki/FrontPage}{\emph{$\varepsilon$-\pTeX}},~%
 $\varepsilon$-u\pTeX である：
 \begin{lstlisting}
 > platex
@@ -263,7 +263,7 @@ Hàn Thế Thành氏による\TeX の拡張であり，海外で主に利用さ�
   to the \TeX\ typesetting system}, dissertation.
   \url{http://www.pragma-ade.com/pdftex/thesis.pdf}
 \item R.~Schlicht, \textit{The \PKG{microtype} package}.
-（\href{http://ctan.org/pkg/microtype}{\PKG{microtype}パッケージ}のドキュメント）
+（\href{https://ctan.org/pkg/microtype}{\PKG{microtype}パッケージ}のドキュメント）
 \end{itemize}
 に詳しい．
 \item \emph{\mathversion{bold}\eTeX 拡張}\>(\S\ref{sec:etex})も搭載されている．
@@ -289,7 +289,7 @@ This is pdfTeX, Version 3.14159265-2.6-1.40.14 (TeX Live 2014/W32TeX)
 \newpage
 
 \subsection{\PKG{CJK}パッケージと\PKG{BXcjkjatype}パッケージ}
-  \href{http://www.ctan.org/pkg/cjk}{\PKG{CJK}パッケージ}は，
+  \href{https://ctan.org/pkg/cjk}{\PKG{CJK}パッケージ}は，
   欧文用の\LaTeX で中国語・日本語・韓国語の入った
   文書を組版するためのパッケージである．
 \PKG{CJK}パッケージで利用可能な日本語フォントとしては
@@ -316,12 +316,12 @@ This is pdfTeX, Version 3.14159265-2.6-1.40.14 (TeX Live 2014/W32TeX)
 しかし，結果を見ると，和文文字と欧文文字の間に入る（通常$1/4$全角の）空白が挿入されなかったり，
 全角コンマと開き鍵括弧の間が間延びしていたりと正しく組版されていない．
 
- 日本語がメインの文書を作成する場合，\href{http://oku.edu.mie-u.ac.jp/~okumura/texwiki/?LaTeX-CJK}%
+ 日本語がメインの文書を作成する場合，\href{https://texwiki.texjp.org/?LaTeX-CJK}%
 {\TeX~Wiki中のページ}によると，八登崇之氏による
 \begin{itemize}
-\item \href{http://zrbabbler.sp.land.to/bxjscls.html}{\PKG{BXjscls}パッケージ}：
+\item \href{https://texwiki.texjp.org/?BXjscls}{\PKG{BXjscls}パッケージ}：% 旧ページ： http://zrbabbler.sp.land.to/bxjscls.html
 「\pLaTeXe 用新ドキュメントクラス」からの派生
-\item \href{http://www.ctan.org/pkg/bxcjkjatype}{\PKG{BXcjkjatype}パッケージ}：
+\item \href{https://ctan.org/pkg/bxcjkjatype}{\PKG{BXcjkjatype}パッケージ}：
 日本語組版に適した\PKG{CJK}パッケージの設定と，上記の問題点の修正
 \end{itemize}
 を利用して
@@ -359,7 +359,7 @@ DVIを拡張した\FNAME{xdv}形式で出力し，それを\FNAME{xdvipdfmx}に�
  \item OS側で使用出来るフォント，例えば「ＭＳ~明朝」，を直に扱える\footnote{%
 従来，\TeX で使用出来るフォントは，OS側で利用できるフォントとは全く独立であり，
 新たなフォントを\TeX で扱えるようにするためには面倒な作業が必要であった．}．
- \item \href{http://freedesktop.org/wiki/Software/HarfBuzz/}{HarfBuzz}という
+ \item \href{https://freedesktop.org/wiki/Software/HarfBuzz/}{HarfBuzz}という
 OpenTypeレイアウトエンジンを採用しており，これによって
 OpenTypeフォント自身に含まれる合字・アクセント位置などの情報が
 利用できる．
@@ -388,11 +388,11 @@ OpenTypeフォント自身に含まれる合字・アクセント位置などの
 
 \medskip
 \pLaTeX に匹敵する品質の日本語組版を行うには，
-\href{http://www.ctan.org/pkg/xecjk}{\PKG{xeCJK}パッケージ}（Wen­chang Sun氏ら）や，
+\href{https://ctan.org/pkg/xecjk}{\PKG{xeCJK}パッケージ}（Wen­chang Sun氏ら）や，
 それに日本語用の設定を追加する
 \href{http://zrbabbler.sp.land.to/zxjatype.html}{\PKG{ZXjatype}パッケージ}（八登氏）を
 利用するのが良い．
-\href{http://oku.edu.mie-u.ac.jp/~okumura/texwiki/}{\TeX~Wiki}中の
+\href{https://texwiki.texjp.org/}{\TeX~Wiki}中の
 「xeCJK/ZXjatype」ページには，日本語の情報がある．
 
 クラスファイルも先に紹介した八登氏作の\PKG{BXjscls}を用いて，\emph{UTF-8}で
@@ -462,7 +462,7 @@ Unicodeにおいて同じコードに割り当てられてしまうような細�
 \subsection{\LuaTeX とは}
 \label{ssec:luatex}
 現在開発中の，\pdfTeX~2.0とでも言うべきものが
-\href{http://luatex.org/}{\emph{\LuaTeX}}である．
+\href{http://www.luatex.org/}{\emph{\LuaTeX}}である．
 いつものように，\LuaLaTeX は\LuaTeX 上で\LaTeX を動作させたものであり，また，
 \LuaTeX で\PKG{hyperref}パッケージを使用する際には
 \texttt{dvipdfmx}オプションを指定してはならず，
@@ -498,7 +498,7 @@ $x=0.73908513321516$である．
 （プログラムとして\TeX を改造するしかなかった）\emph{内部の挙動を
 カスタマイズできる}という特徴がある．以下のような活用例がある：
 \begin{description}
- \item[\href{http://www.ctan.org/pkg/lua-visual-debug}{\PKG{lua-visual-debug}パッケージ}]
+ \item[\href{https://ctan.org/pkg/lua-visual-debug}{\PKG{lua-visual-debug}パッケージ}]
 見た目ではわからないグルー（伸縮可能な空白）やカーン（幅一定の詰め物）などを
 PDF上で確認できる．
  \item[\PKG{fontspec}パッケージと\PKG{luaotfload}パッケージ]
@@ -508,7 +508,7 @@ PDF上で確認できる．
 それに相当する部分が\PKG{luaotfload}パッケージである．
 \PKG{luaotfload}パッケージは，巨大なLuaスクリプトを用いて，\LuaTeX において
 OpenTypeの各種機能を扱えるようにしている．
-\item[\href{http://sourceforge.jp/projects/luatex-ja/wiki/FrontPage}{\emph{\LuaTeX-ja}パッケージ}]
+\item[\href{https://ja.osdn.net/projects/luatex-ja/wiki/FrontPage}{\emph{\LuaTeX-ja}パッケージ}]
 \pTeX 並み，あるいはそれ以上の品質・自由度の日本語組版を目指したパッケージであり，
 以下で詳しく解説する．
 
@@ -606,7 +606,7 @@ Times New RomanとIPA明朝．
 \href{https://github.com/wspr/fontspec/}{\PKG{fontspec}パッケージ}は，
 \XeTeX と\LuaTeX において簡単にOpenTypeフォントやTrueTypeフォントを扱うためのパッケージである．
 \S\ref{ssec:luatex}で述べたように，\LuaTeX では内部処理に
-\href{http://www.ctan.org/pkg/luaotfload}{\PKG{luaotfload}パッケージ}を使っている．
+\href{https://ctan.org/pkg/luaotfload}{\PKG{luaotfload}パッケージ}を使っている．
 
 \medskip
 \PKG{fontspec} パッケージで標準のフォントを指定するには次の3命令を使う：
