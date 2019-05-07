@@ -9,8 +9,9 @@
 \renewcommand\DTMdisplayzone[2]{}
 \let\today=\origtoday
 
-\usepackage{xltxtra,mystyle}
-%%% listings
+\usepackage{mystyle}
+\usepackage{pxrubrica} % should be loaded after xeCJK package
+
 \hypersetup{
   pdftitle={pTeX系列以外による日本語文書作成},
   pdfkeywords={MiKTeX, pdfTeX, XeTeX, LuaTeX, BXcjkjatype, ZXjatype, LuaTeX-ja}
@@ -350,7 +351,7 @@ This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018/W32TeX)
 \section{\texorpdfstring{\XeTeX}{XeTeX}}
 \label{sec:xetex}
 \subsection{\texorpdfstring{\XeTeX}{XeTeX}とは}
-\href{http://xetex.sourceforge.net/}{\emph{\XeTeX}}~(\texttt{XeTeX})は，\TeX のUnicode拡張であるとともに，
+\href{http://xetex.sourceforge.net/}{\emph{\aruby{\hologo{Xe}}{ズィー}\kern-.15em\relax\TeX}}~(\texttt{XeTeX})は，\TeX のUnicode拡張であるとともに，
 OpenTypeなどの最新のフォント技術に統合させたものであり，次の特徴がある：
 \begin{itemize}
  \item \pdfTeX と同様に，PDFファイルを直接生成\footnote{実際には，
