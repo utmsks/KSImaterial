@@ -329,23 +329,13 @@ This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018/W32TeX)
 日本語組版に適した\PKG{CJK}パッケージの設定と，上記の問題点の修正
 \end{itemize}
 を利用して
-  \begin{lstlisting}
-\documentclass[pdflatex,jadriver=standard]{bxjsarticle}
+\begin{lstlisting}
+\documentclass[pdflatex,ja=standard]{bxjsarticle}
 \begin{document}
 ...
 \end{document}
-  \end{lstlisting}
-  のようにすればよい，とある．
-だが，残念ながらMik\TeX~2.9では
-  \PKG{BXjscls}のバージョンが古いためにこれではうまくいかず，
-  \begin{lstlisting}
-\documentclass{article} % 欧文用クラスファイル!
-\usepackage[whole]{bxcjkjatype}
-\begin{document}
-...
-\end{document}
-  \end{lstlisting}
-  のようにしないといけないようである．
+\end{lstlisting}
+のようにすればよい．
 
 
 
