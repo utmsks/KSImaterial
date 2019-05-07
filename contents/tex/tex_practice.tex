@@ -21,6 +21,8 @@
   \newrefformat{sec}{\S\ref{#1}}
   \newrefformat{ssec}{\S\ref{#1}}
   \newrefformat{fig}{図\nobreak\ref{#1}}
+  \newrefformat{example}{例\nobreak\ref{#1}}
+  \newrefformat{fn}{\textsuperscript{\ref{#1}}} % ハイパーリンクの範囲が\footnote使用時と比べて変わってしまうが，仕方がない
 \makeatother
 
 %%% fancyvrb
@@ -564,7 +566,7 @@ C:\Users\...\Documents> #\underline{latexmk\ first.tex}#
 \emph{論文誌の投稿規定や各出版社の組版ルールがある場合には，
 当然ながらそちらを優先し，勝手な変更や超絶技巧はしないこと．}
 
-\subsection{数式}
+\subsection{数式}\label{ssec:math-formula}
 特に数式を入力する際には，その記号はどのような（組版上の）役割で用いられているか，
 ということを気にするのが大事である．
 
@@ -584,7 +586,7 @@ $f(x)=0$となる$0<x<1$が存在する．
 \end{LTXexample}
 
 \subsubsection{基本}
-\begin{LTXexample}[caption=sinなどの関数名は専用の命令を使って立体で表記すること．]
+\begin{LTXexample}[caption=sinなどの関数名は専用の命令を使って立体で表記すること．,label=example:function-name]
 誤：$sin x$, $\mathrm{sin} x$\\
 正：$\sin x$
 \end{LTXexample}
@@ -615,9 +617,20 @@ $f(x)=0$となる$0<x<1$が存在する．
 いちいち命令を定義したくない場合は，\cs{operatorname}命令を使って数式中に直接\verb@\operatorname{dom}@と書くこともできる．
 
 \begin{curve}
-  TODO: $\operatorname{id}\otimes f$みたいな失敗例（$\otimes$と$f$の間の空白の量が少ない．正：${\operatorname{id}}\otimes f$）
-  % \eval\circ\id
-  % 数式クラスの話題としては X/\sim もある
+  単なる\cs{mathrm}ではなく\cs{mathop}を使う\footnote{%
+    \cs{DeclareMathOperator}や\cs{operatorname}も内部で\cs{mathop}を使っている
+  }ことの効果は「直後に変数が置かれた場合に適宜空白をあける（例：$\sin x$）」「ただし，括弧類が置かれた場合は空白を入れない（例：$\sin(x+y)$）」である．
+  だが，それゆえの注意点もある．
+
+  例えば，スラッシュ$/$の直後にこのような関数名が置かれた場合に，関数名の\emph{前に}空白が入ってしまう（例：\verb|f/\gcd(f,g)|, $f/\gcd(f,g)$）．
+  この空白を入れないためには，関数とその引数を波括弧で囲えば良い（例：\verb|f/{\gcd(f,g)}|, $f/{\gcd(f,g)}$）．
+
+  別の例として，関数に対して合成やテンソル等の演算子を適用するときに，演算子の後の空白が変わってしまう場合がある
+  （例：\verb|\operatorname{id}\circ f|, $\operatorname{id}\circ f$では$\circ$と$f$の間の空白が消えてしまう．比較：$g\circ f$）．
+  これも関数名を波括弧で囲えば良い（\verb|{\operatorname{id}}\circ f}|, ${\operatorname{id}}\circ f$）．
+あるいは，圏の射のように引数を適用することがない（$\operatorname{id}x$のような書き方をしない）場合は\cs{mathop}を使わずに単に\cs{mathrm}で済ませてしまうという手もある（例：\verb|\newcommand{\id}{\mathrm{id}}|）．
+
+  詳しくは\prettyref{ssec:math-class}を参照．
 \end{curve}
 
 \medskip
@@ -687,7 +700,10 @@ $f(x)           , f\bigl(A^B_D\bigr)$
 余計に入っていることが分かる．
 
 しかし，それは\TeX の仕様である．\TeX は数式中の要素をいくつかに分類し，
-その分類に応じて要素と要素の間に入る空白を決定するのだが，次のようになっている：
+その分類に応じて要素と要素の間に入る空白を決定する\footnote{%
+  詳しくは\prettyref{ssec:math-class}を参照．
+}のだが，次のようになっている：
+% TODO: 「数式クラス」のセクション (ssec:math-class) に譲ってこの辺の記述は割愛する？
 \begin{itemize}
  \item ``$f$''は「通常の文字」， ``,''は「句読点」である．
  \item 2行目中の``$($''~(\verb+(+), ``$\bigl($''~(\verb+\bigl(+)は「開き括弧」，
@@ -714,7 +730,7 @@ $f(x)             , f\bigl(A^B_D\bigr)$
 
 
 \begin{LTXexample}[caption={絶対値やノルムに用いる``$|$'',~``$\|$''には左右の区別がなく
- 注意が必要．}]
+ 注意が必要．},label=example:abs-vert-symbol]
 誤：$|-x|$\\
 正：$|{-x}|$\\
 正：$\lvert -x \rvert$（要amsmath）
@@ -725,10 +741,10 @@ $f(x)             , f\bigl(A^B_D\bigr)$
 \medskip
 
 \begin{LTXexample}[width=.3\textwidth,caption=「本来の意味」と異なる使い方で
-記号を使う場合も注意．]
-誤：$x\in ]a,b]$\\
-正：$x\in \mathopen{]}a,b]$,
-    $x\in \left]a,b\right]$
+記号を使う場合も注意．,label=example:reverse-bracket]
+誤：$x\in ]-a,b]$\\
+正：$x\in \mathopen{]}-a,b]$,
+    $x\in \left]-a,b\right]$
 \end{LTXexample}
 普通に\hskip\ltjgetparameter{xkanjiskip}\verb+]+と入力すると
 「閉じ括弧扱い」になるが，ここでは開き括弧の意味で用いているので
@@ -767,7 +783,7 @@ $f\coloneqq a^2-b+c^d$（mathtools等要）
 \end{curve}
 \medskip
 
-\begin{LTXexample}[caption=集合の内包的記法]
+\begin{LTXexample}[caption=集合の内包的記法,label=example:set-comprehension]
 $\{\,x\mid x>5\,\}$\\
 $\{\,x:x>5\,\}$\\
 $\{x:x>5\}$\\
@@ -1730,11 +1746,332 @@ DVIファイルを扱う各ソフトウェアが，
 
 % 複雑な配置を行いたい場合は，\PKG{tikzcd}を使うよりも，大本となる図形描画パッケージTikZを直接使った方がいいかもしれない．
 
-\subsection{数式クラス}
+\clearpage
+\subsection{数式クラス}\label{ssec:math-class}
 
-TODO: 書きたい
+\prettyref{ssec:math-formula}では数式入力の際に気をつけることの例を挙げた．
+\TeX{}での数式組版についてもっと体系的に知るためには，数式クラスの知識が不可欠である．
+そこで，ここで数式クラスについての最低限の解説を行っておく．
 
-「数式組版」を紹介する？
+\subsubsection{数式クラスとは}
+
+\TeX{}における数式中の要素には，その役割に応じて\emph{数式クラス}が割り当てられる．
+数式クラスは大雑把に言うと以下の8つである．
+
+\begin{description}
+\item[Ord] 通常記号 (ordinary).
+  アルファベットや$\infty$, $\emptyset$などの単体でオペランドとなる記号や，$\partial$や$\neg$等の，中置演算子として使用されない前置演算子が該当する．
+\item[Op] 作用素 (large operator).
+  % 「数式組版」では「作用素」
+  \cs{sum}や\cs{int}が代表的．
+  \cs{sin}や\cs{lim}もこれに該当する．
+  \cs{limits}指定により，添字を上下に配置できる．
+\item[Bin] 二項演算子 (binary operation).
+  \texttt{+}や\texttt{-}.
+  単項演算子として使用された場合（後述）はOrdに変化する．
+\item[Rel] 関係演算子 (relation).
+  % 「数式組版」では「関係子」
+  イコール\texttt{=}, 不等号\texttt{<}, \texttt{>}, \cs{subset},
+  コロン\texttt{:}など．
+  二項演算子と比べて，前後の空白の量が多い．
+  関係演算子が並んだ場合には，間に空白は入らない（例：\verb|:=|と書いた場合にコロンとイコールの間に空白は入らない）．
+\item[Open] 開き括弧 (opening symbol).
+\item[Close] 閉じ括弧 (closing symbol).
+  後置演算子にも使用される．
+\item[Punct] 句読点 (punctuation).
+  コンマ\texttt{,}や\cs{colon}など．後ろ側に若干空白が入る．
+\item[Inner] 内部数式 (inner formula).
+  $\cs{left}\langle\text{デリミタ}\rangle\langle\text{中身}\rangle\cs{right}\langle\text{デリミタ}\rangle$や$\langle\text{分子}\rangle\text{\cs{over}}\langle\text{分母}\rangle$など．
+\end{description}
+
+特定の要素の数式クラスを変更したい場合，または特定の数式クラスを持つ空の要素を作り出したい場合は，\cs{math***}系コマンド\footnote{\cs{mathord}, \cs{mathop}, \cs{mathbin}, \cs{mathrel}, \cs{mathopen}, \cs{mathclose}, \cs{mathpunct}, \cs{mathinner}}を使えば良い．
+また，要素を波括弧で囲うことにより，数式クラスがOrdになる．
+
+二項演算子 (Bin) に分類される記号のうち，$-$や$\pm$などは前置の単項演算子としての用法もある．
+\TeX{}は，Bin要素が以下に該当する場合，単項演算子として使用されたと判断し，その要素の数式クラスをBinからOrdへ変更する．
+\begin{itemize}
+\item 数式リストの先頭または末尾に置かれている（例：$-a$）
+\item 直前の要素がOp, Bin, Rel, Open, Punctの場合（例：$a=-b$, $(-a)$, $(a,-b)$）
+\item 直後の要素がRel, Close, Punctの場合
+\end{itemize}
+
+\subsubsection{数式クラスと要素間の空白}
+
+数式中の要素間の空白は，数式クラスに応じて決定される．
+具体的には，次の表によって定まる：
+\begin{center}
+  \setlength{\tabcolsep}{3pt} % default: 6pt
+  \begin{tabular}{cc}
+    & 後 \\
+    前 &
+         \begin{tabular}{r|cccccccc}
+           & Ord & Op & Bin & Rel & Open & Close & Punct & Inner \\ \hline
+           Ord & 0 & thin & (med) & (thick) & 0 & 0 & 0 & (thin) \\
+           Op & thin & thin & * & (thick) & 0 & 0 & 0 & (thin) \\
+           Bin & (med) & (med) & * & * & (med) & * & * & (med) \\
+           Rel & (thick) & (thick) & * & 0 & (thick) & 0 & 0 & (thick) \\
+           Open & 0 & 0 & * & 0 & 0 & 0 & 0 & 0 \\
+           Close & 0 & thin & (med) & (thick) & 0 & 0 & 0 & (thin) \\ % Ordの行と同じ
+           Punct & (thin) & (thin) & * & (thin) & (thin) & (thin) & (thin) & (thin) \\
+           Inner & (thin) & thin & (med) & (thick) & (thin) & 0 & (thin) & (thin)
+         \end{tabular}
+  \end{tabular}
+  % TeX by Topic にある同等の表は Rel に関する記述が間違っているようだ．
+\end{center}
+ただし，
+\begin{itemize}
+\item 0：空白なし
+\item 括弧：スクリプトスタイルでは空白なし
+\item *：この場合はBinが単項演算子として使用されたと判断され，あらかじめクラスがOrdに変更されている（ので考慮しなくて良い）
+\end{itemize}
+を意味する．
+
+数式クラスによって自動的に挿入される空白の量はthin, medium, thickの3種類である．
+これらの空白を手動で挿入するコマンドは，次の通りである：
+{
+  % tabularを使った場合、\footnoteが動作しない．
+  % そのためlongtableを使っているが，longtableの場合はタイプセットに必要な回数が増えるので注意．
+  \setlength{\LTpre}{\medskipamount} % default: \bigskipamount
+  \setlength{\LTpost}{0pt} % default: \bigskipamount
+  \begin{longtable}{lll}
+    & 挿入用コマンド & 量 \\ \hline
+    thin & \cs{,}, \cs{thinspace}\footnote{\PKG{amsmath}使用時．\PKG{amsmath}を読み込まない状態では，\cs{thinspace}は\cs{,}とは異なる定義が使われる．}
+    & ${\Rightarrow}\,{\Leftarrow}$ \\
+    medium & \cs{:}, \cs{>}\footnote{\ENV{tabbing}環境の中では\cs{>}は使えないことに注意．}, \cs{medspace}\footnote{\label{fn:amsmath-spacing-commands}\PKG{amsmath}使用時．}
+    & ${\Rightarrow}\>{\Leftarrow}$ \\
+    thick & \cs{;}, \cs{thickspace}\prettyref{fn:amsmath-spacing-commands}
+    & ${\Rightarrow}\;{\Leftarrow}$
+  \end{longtable}
+}
+
+\subsubsection{各種記号の数式クラス}
+
+代表的な数学記号について，どういう数式クラスが割り当てられるか確認しておこう．
+\begin{description}
+\item[Ord]
+  ラテンアルファベット，ギリシャ文字，
+  ピリオド\texttt{.}, スラッシュ\texttt{/}, 縦棒\texttt{|},
+  \cs{partial}~$\partial$, \cs{infty}~$\infty$, \cs{emptyset}~$\emptyset$, \cs{forall}~$\forall$, \cs{exists}~$\exists$, \cs{neg}~(\cs{lnot})~$\neg$, \cs{backslash}~$\backslash$, \cs{nabla}~$\nabla$
+  % \aleph, \hbar, \imath, \jmath, \ell, \wp, \Re, \Im, \partial, \infty, \prime, \emptyset, \nabla, \surd, \top, \bot, \angle, \triangle, \forall, \exists, \neg=\lnot, \flat, \natural, \sharp, \clubsuit, \diamondsuit, \heartsuit, \spadesuit
+  % (Delimiter) \arrowvert, \Arrowvert, \Vert, \|, \vert: ord
+  % (Delimiter) \backslash: ord
+  % (Delimiter) \mathparagraph, \mathsection, \mathdollar: ord
+  % \frac: ord
+\item[Op]
+  \cs{int}~$\int$, \cs{prod}~$\prod$, \cs{sum}~$\sum$, \cs{log}~$\log$, \cs{sin}~$\sin$, \cs{lim}~$\lim$
+  % \coprod, \bigvee, \bigwedge, \biguplus, \bigcap, \bigcup, \int (with nolimits), \prod, \sum, \bigotimes, \bigoplus, \bigodot, \oint (with nolimits), \bigsqcup, \smallint
+\item[Bin]
+  \texttt{*}, \texttt{+}, \texttt{-},
+  \cs{pm}~$\pm$, \cs{circ}~$\circ$, \cs{times}~$\times$, \cs{cdot}~$\cdot$, \cs{otimes}~$\otimes$, \cs{dagger}~$\dagger$
+  % \triangleleft, \triangleright, \bigtriangleup, \bigtriangledown, \wedge=\land, \vee=\lor, \cap, \cup, \ddagger, \dagger, \sqcap, \sqcup, \uplus, \amalg, \diamond, \bullet, \wr, \div, \odot, \oslash, \otimes, \ominus, \oplus, \mp, \pm, \circ, \bigcirc, \setminus, \cdot, \ast, \times, \star
+\item[Rel]
+  コロン\texttt{:}, \texttt{=}, \texttt{<}, \texttt{>},
+  \cs{mid}~$\mid$, \cs{rightarrow}~(\cs{to})~$\rightarrow$, \cs{sim}~$\sim$
+  % \propto, \sqsubseteq, \sqsupseteq, \parallel, \mid, \dashv, \vdash, \nearrow, \searrow, \nwarrow, \swarrow, \Leftrightarrow, \Leftarrow, \Rightarrow, \neq=\ne, \leq=\le, \geq=\ge, \succ, \prec, \approx, \succeq, \preceq, \supset, \subset, \supseteq, \subseteq, \in, \ni=\owns, \gg, \ll, \not, \leftrightarrow, \leftarrow=\gets, \rightarrow=\to, \mapsto, \sim, \simeq, \perp, \equiv, \asymp, \smile, \frown, \leftharpoonup, \leftharpoondown, \rightharpoonup, \rightharpoondown
+  % \cong, \notin, \rightleftharpoons, \doteq
+  % \lhook, \hookrightarrow, \rhook, \hookleftrarrow, \bowtie, \models, \Longrightarrow, \longrightarrow, \longleftarrow,
+  % \Longleftarrow, \longmapsto, \longleftrightarrow, \Longleftrightarrow
+  % \iff
+  % (Delimiter) \uparrow, \downarrow, \updownarrow, \Uparrow, \Downarrow, \Updownarrow: rel
+  % \stackrel: rel
+\item[Open]
+  \texttt{(}, \texttt{[}, \cs{\{}~$\{$,
+  \cs{langle}~$\langle$
+  % (Delimiter) \lmoustache, \rmoustache: open and close
+  % (Delimiter) \langle, \rangle, \lbrace, \rbrace, \lceil, \rceil, \lfloor, \rfloor: open and close
+  % (Delimiter) \lgroup, \rgroup: open and close
+\item[Close]
+  \texttt{)}, \texttt{]}, \cs{\}}~$\}$,
+  \cs{rangle}~$\rangle$,
+  \texttt{!}, \texttt{?}
+\item[Punct]
+  コンマ\texttt{,}, セミコロン\texttt{;},
+  \cs{colon}~$\colon$, \cs{cdots}~$\cdots$
+  % \ldotp, \cdotp, \colon, \cdots, \vdots, \ddots
+\end{description}
+
+% AMSmath
+% \operatorname
+% \mod, \bmod, \pmod, \pod
+% \text
+% \substack, subarray
+% \sideset
+% \iint, \iiint, \iiiint, \idotsint
+
+見た目が同じ記号でも，役割によってコマンドが分かれていることがある．
+\begin{center}
+  \begin{tabular}{r|ccccc}
+    & Ord & Rel & Open & Close & Punct \\ \hline
+    縦棒 & \texttt{|}, \cs{vert} & \cs{mid} & \cs{lvert} & \cs{rvert} & \\
+    コロン & & \texttt{:} & & & \cs{colon} \\
+    \cs{big}系 & \cs{big} & \cs{bigm} & \cs{bigl} & \cs{bigr} &
+  \end{tabular}
+\end{center}
+
+\subsubsection{数式クラスで読み解く\LaTeX{}の作法}
+
+数式クラスについて学んだので，\prettyref{ssec:math-formula}の例を数式クラスを踏まえて再考してみよう．
+
+\newcommand{\classDesc}[2]{%
+  #1{\mathop{%
+      \setlength{\fboxsep}{1pt}% default: 3pt
+      \boxed{\mathstrut{#2}}%
+    }\limits_{\text{%
+        \ifx#1\mathord Ord\else
+        \ifx#1\mathop Op\else
+        \ifx#1\mathbin Bin\else
+        \ifx#1\mathrel Rel\else
+        \ifx#1\mathopen Open\else
+        \ifx#1\mathclose Close\else
+        \ifx#1\mathpunct Punct\else
+        \ifx#1\mathinner Inner\else
+        ???
+        \fi\fi\fi\fi\fi\fi\fi\fi
+      }}}}
+
+\paragraph{複数文字からなる関数}
+\prettyref{example:function-name}について．
+\verb|y\mathrm{sin} x|と書いた場合はOrd--Ord--Ordとして扱われる．
+\verb|y\sin x|と書いた場合はOrd--Op--Ordとして扱われ，$\sin$の前後にthin spaceが挿入される．
+\begin{center}
+  \begin{tabular}{rlcc}
+    誤： & \verb|$y\mathrm{sin} x$| & $y\mathrm{sin} x$ & $\classDesc\mathord{y}\classDesc\mathord{\mathrm{sin}}\classDesc\mathord{x}$ \\
+    正： & \verb|$y\sin x$| & $y\sin x$ & $\classDesc\mathord{y}\classDesc\mathop{\sin}\classDesc\mathord{x}$
+  \end{tabular}
+\end{center}
+
+% \verb|1+\sin x+\cos(x+y)|の場合，
+
+\verb|f/\gcd(f,g)|と書いた場合のスラッシュと\cs{gcd}．
+スラッシュはOrdなので，Ord--Opという並びになり，thin spaceが挿入される．
+\verb|\gcd(f,g)|を\texttt{\{\}}で囲えば，囲った部分がOrd扱いになり，空白は挿入されなくなる．
+\begin{center}
+  \begin{tabular}{rlcc}
+    誤： & \verb|$f/\gcd(f,g)$| & $f/\gcd(f,g)$ & $\classDesc\mathord{f}\classDesc\mathord{/}\classDesc\mathop{\gcd}\classDesc\mathopen{(}\cdots\classDesc\mathclose{)}$ \\
+    正： & \verb|$f/{\gcd(f,g)}$| & $f/{\gcd(f,g)}$ & $\classDesc\mathord{f}\classDesc\mathord{/}\classDesc\mathord{\classDesc\mathop{\gcd}\classDesc\mathopen{(}\cdots\classDesc\mathclose{)}}$
+  \end{tabular}
+\end{center}
+
+% 一方，\cs{cdot}はBinなので\verb|x\cdot\sin x|と書く場合に\cs{sin}を囲う必要はない．
+
+\verb|\operatorname{id}\circ f|と書いた場合の数式クラスはOp--Bin--Ordとなるが，Opの直後のBinはOrdになるので，$\circ$と$f$の間には空白は入らない．
+この場合のidは単体でオペランドとして使用されているので，クラスがOrdとなるように\texttt{\{\}}で囲うかそもそも\cs{mathrm}等を使うべきである．
+\begin{center}
+  \begin{tabular}{rlcc}
+    誤： & \verb|$\operatorname{id}\circ f$| & $\operatorname{id}\circ f$ & $\classDesc\mathop{\operatorname{id}}\classDesc\mathbin{\circ}\classDesc\mathord{f}$ \\
+    正： & \verb|${\operatorname{id}}\circ f$| & ${\operatorname{id}}\circ f$ & $\classDesc\mathord{\operatorname{id}}\classDesc\mathbin{\circ}\classDesc\mathord{f}$ \\
+    正： & \verb|$\mathrm{id}\circ f$| & $\mathrm{id}\circ f$ & $\classDesc\mathord{\mathrm{id}}\classDesc\mathbin{\circ}\classDesc\mathord{f}$
+  \end{tabular}
+\end{center}
+
+\paragraph{\cs{left}/\cs{right}と関数記号}
+\verb|f\left(x\right)|と書いた時に$f$と開き括弧との間に空白が入るのは，\verb|\left(x\right)|がInnerとして扱われ，Ord--Inner間にthin spaceが入るからである．
+一方，\verb|f\bigl(x\bigr)|と書いた場合はOrd--Open--Ord--Closeとなるので$f$と開き括弧の間に空白は入らない．
+\begin{center}
+  \begin{tabular}{rlcc}
+    誤： & \verb|$f\left(\frac{x}{y}\right)$| & $f\left(\frac{x}{y}\right)$ & $\classDesc\mathord{f}\classDesc\mathinner{\bigl(\cdots\bigr)}$ \\
+    正： & \verb|$f\bigl(\frac{x}{y}\bigr)$| & $f\bigl(\frac{x}{y}\bigr)$ & $\classDesc\mathord{f}\classDesc\mathopen{\bigl(}\cdots\classDesc\mathclose{\bigr)}$ \\
+    正： & \verb|$f\mathopen{}\left(\frac{x}{y}\right)$| & $f\mathopen{}\left(\frac{x}{y}\right)$ & $\classDesc\mathord{f}\classDesc\mathopen{}\classDesc\mathinner{\bigl(\cdots\bigr)}$ \\
+    正： & \verb|$f\mleft(\frac{x}{y}\mright)$| & $f\mleft(\frac{x}{y}\mright)$ & $\classDesc\mathord{f}\classDesc\mathopen{}\classDesc\mathclose{\bigl(\cdots\bigr)}$ \\
+  \end{tabular}
+\end{center}
+\cs{left}/\cs{right}を使いつつ$f$と開き括弧の間に空白を入れないようにするには，\goodbreak
+\verb|f\mathopen{}\left(x\right)|という風に，空の\cs{mathopen}を挟めば良い．
+こうすると要素の並びはOrd--Open--Innerとなり，空白は入らない．
+\PKG{mleftright}パッケージの\cs{mleft}/\cs{mright}はこのような「\cs{left}/\cs{right}を補正する」処理をより洗練させた形で提供している．
+具体的には，後ろにコンマ等が続いた場合も考慮している．
+
+\paragraph{絶対値記号（\prettyref{example:abs-vert-symbol}）}
+\verb+|-x|+と書いた場合，\texttt{|}はOrdなのでOrd--Bin--Ord--Ordとなる．
+Binの両側にOrd--Bin間の空白が入る．
+\verb+|{-x}|+と書いた場合は，外側はOrd--Ord--Ordとなる．
+内部の\texttt{-x}の部分はBin--Ordだが，数式リストの最初にあるBinは（単項演算子として使用されたと判断され）Ordに変換されるので，Bin--Ord間の空白は入らない．
+\begin{center}
+  \begin{tabular}{rlcc}
+    誤： & \verb+$|-x|$+ & $|-x|$ & $\classDesc\mathord{|}\classDesc\mathbin{-}\classDesc\mathord{x}\classDesc\mathord{|}$ \\
+    正： & \verb+$|{-x}|$+ & $|{-x}|$ & $\classDesc\mathord{|}\classDesc\mathord{\classDesc\mathbin{-}\classDesc\mathord{x}}\classDesc\mathord{|}$ \\
+    正： & \verb+$\lvert -x \rvert$+ & $\lvert -x \rvert$ & $\classDesc\mathopen{|}\classDesc\mathbin{-}\classDesc\mathord{x}\classDesc\mathclose{|}$ \\
+  \end{tabular}
+\end{center}
+\verb+\lvert -x\rvert+と書いた場合，Open--Bin--Ord--Closeとなる．
+Open直後のBinは（単項演算子として使用されたと判断され）Ordに変換されるので，Bin--Ord間の空白は入らない．
+
+\paragraph{逆向きの括弧（\prettyref{example:reverse-bracket}）}
+%\prettyref{example:reverse-bracket}の数式クラスを見てみよう．
+\verb|x\in ]-a,b]|の要素の並びは，Ord--Rel--Close--\-Bin--Ord--Punct--Closeとなる．開き括弧として使われている最初の\hskip\ltjgetparameter{xkanjiskip}\verb+]+の数式クラスがCloseとなっているために直前の\cs{in}との間隔が詰まっているほか，直後の$-a$のマイナス記号が二項演算子扱いとなってしまっている．
+\begin{center}
+  \begin{tabular}{rlcc}
+    誤： & \verb|$x\in ]-a,b]$| & $x\in ]-a,b]$ &
+                    $\classDesc\mathord{x}\classDesc\mathrel{\in}\classDesc\mathclose{]}\classDesc\mathbin{-}\classDesc\mathord{a}\classDesc\mathpunct{,}\classDesc\mathord{b}\classDesc\mathclose{]}$ \\
+    正： & \verb|$x\in\mathopen{]}-a,b]$| & $x\in\mathopen{]}-a,b]$ &
+                                                                    $\classDesc\mathord{x}\classDesc\mathrel{\in}\classDesc\mathopen{]}\classDesc\mathbin{-}\classDesc\mathord{a}\classDesc\mathpunct{,}\classDesc\mathord{b}\classDesc\mathclose{]}$ \\
+    正： & \verb|$x\in\left]-a,b\right]$| & $x\in\left]-a,b\right]$ &
+                                                                      $\classDesc\mathord{x}\classDesc\mathrel{\in}\classDesc\mathinner{\mathopen{]}\classDesc\mathbin{-}\classDesc\mathord{a}\classDesc\mathpunct{,}\classDesc\mathord{b}\mathclose{]}}$
+  \end{tabular}
+\end{center}
+
+\verb|x\in\mathopen{]}-a,b]|は，Ord--Rel--Open--Bin--Ord--Punct--Ord--Closeとなる．マイナス記号はOpenの直後なので単項演算子扱いとなる．
+
+\verb|x\in\left]-a,b\right]|は，全体としてはOrd--Rel--Inner，\cs{left}/\cs{right}の内側はBin--Ord--Punct--Ordとなる．マイナス記号は数式リストの先頭なので単項演算子扱いとなる．
+
+% \paragraph{後置演算子}
+% 後置演算子がOrdじゃなくてCloseな理由？
+% $a!b!$において最初の!の直後に空白を入れるべき．
+
+\paragraph{集合の縦棒（\prettyref{example:set-comprehension}）}
+すでに述べたように，集合の縦棒には，関係演算子扱いの縦棒またはコロン，つまり\cs{mid}や\texttt{:}を使う．
+\begin{LTXexample}[width=.3\textwidth]
+誤：$\{x|x>5\}$\\
+正：$\{x\mid x>5\}$\\
+誤：$\{x\colon \lvert x\rvert>5\}$\\
+正：$\{x:\lvert x\rvert>5\}$
+\end{LTXexample}
+
+さて，集合の中身が縦に長いと，\cs{left} / \cs{right}によって括弧を自動的に伸長させたい．
+その際に縦棒も一緒に伸長させるには，\cs{middle}を使えば良さそうに思える．
+\begin{LTXexample}[width=.3\textwidth]
+誤：$\left\{\dfrac{x}{y}\middle|y\ne 0\right\}$
+\end{LTXexample}
+しかし，単に\texttt{\cs{middle}|}を使うのでは縦棒の前後に適切な空白（Rel前後の空白）が入らない．
+こういう場合は，ダミーのRelを入れてやるとうまくいく．
+\begin{LTXexample}[width=.3\textwidth]
+誤：$\left\{\dfrac{x}{y}\middle|y\ne 0\right\}$\\
+正：$\left\{\dfrac{x}{y}
+  \mathrel{}\middle|\mathrel{}
+  y\ne 0\right\}$\\
+（比較：$\{\dfrac{x}{y}\mid y\ne 0\}$）
+\end{LTXexample}
+参考：八登氏のブログ記事「\href{https://zrbabbler.hatenablog.com/entry/20120411/1334151482}%
+{\cs{middle}であり\cs{mid}であるもの}」
+
+\paragraph{同値関係で割る}
+集合を同値関係で割る場合に
+\verb|X/\sim|と書くと，数式クラスがOrd--Ord--Relとなり，スラッシュとニョロの間に空白が入ってしまうほか，直後の関係演算子とニョロの間が詰まってしまう．
+\verb|X/{\sim}|と書けば，数式クラスはOrd--Ord--Ordとなり，スラッシュとニョロの間に余計な空白は入らず，直後の関係演算子との間に適切な空白が入る．
+\begin{LTXexample}[width=.3\textwidth]
+誤：$X/\sim=\{[x]\mid x\in X\}$\\
+正：$X/{\sim}=\{[x]\mid x\in X\}$
+\end{LTXexample}
+
+\paragraph{整除関係の縦棒}
+整数や多項式などの「割り切る」関係（整除関係）には，縦棒がよく使われる．
+\LaTeX{}での縦棒としては\texttt{|}と\cs{mid}があるが，どちらを使うべきだろうか？
+
+この縦棒は関係演算子であることを考えると，数式クラスがRelである\cs{mid}の方を使うべきである．
+数式の「意味」を意識するなら，自分で
+\verb+\newcommand{\divides}{\mid}+
+と定義して\cs{divides}を使うと良いだろう．
+
+参考：\href{https://blog.miz-ar.info/2018/03/latex-divides-symbol/}{LaTeX での「割り切る」記号 | 雑記帳}
+
+\subsubsection{もっと詳しく知りたい方へ}
+
+こういう話に興味があったら「数式組版」や\textit{The \TeX{}book}を読むと良い．
+
+\begin{itemize}
+\item 木枝祐介，「数式組版」，ラムダノート，2018．
+\item Donald~E. Knuth, \textit{The \TeX book}, Addison-Wesley, 1984.
+\end{itemize}
 
 \newpage
 
