@@ -601,15 +601,6 @@ Times New RomanとIPA明朝．
 開発版では一定の条件下で\texttt{\textbackslash setmonojfont}が使用可能になっている．}．
 \end{itemize}
 
-\medskip
-ちなみに，\LuaTeX 本体はIVS~(\S\ref{ssec:ivs})にはまだ未対応のようであるが，
-現行の\LuaTeX-jaでは
-\begin{lstlisting}
-\usepackage{luatexja-otf}
-\directlua{luatexja.otf.enable_ivs()}
-\end{lstlisting}
-をプリアンブルに書き加えることでIVSが使用可能になる．
-
 \newpage
 \section{\PKG{fontspec}パッケージ}
 \label{sec:fontspec}

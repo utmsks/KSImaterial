@@ -25,10 +25,13 @@
   \ltjsetparameter{alxspmode={`\>,allow}}
   \ltjsetparameter{alxspmode={`\|,allow}}
   \ltjsetparameter{alxspmode={`\:,allow}}
+  \usepackage{luatexja}[2017/11/12]
   \usepackage{luatexja-adjust}
   \usepackage{luatexja-fontspec}
   \usepackage{luatexja-otf}
-  \directlua{luatexja.otf.enable_ivs()}
+  % LuaTeX-jaの2017年7月1日のコミット e615f893 以降， luatexja.otf.enable_ivs() は何もしていない．
+  % それ以降のリリースで \ProvidesPackage の日付が最初に更新されたのは2017年11月12日のようである．
+  % \directlua{luatexja.otf.enable_ivs()}
   \setmainjfont[BoldFont=ipaexg.ttf]{ipaexm.ttf}
   \setsansjfont{ipaexg.ttf}
   \usepackage{stfloats}\fnbelowfloat
