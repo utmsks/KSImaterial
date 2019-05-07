@@ -368,7 +368,7 @@ OpenTypeフォント自身に含まれる合字・アクセント位置などの
 利用できる．
 \end{itemize}
 \XeLaTeX（\XeTeX 上で\LaTeX を動かしたもの）上でこれらの機能を扱うために作られたのが，
-\texttt{fontspec}パッケージ(\S\ref{sec:fontspec})である．
+\texttt{fontspec}パッケージ(\S\ref{ssec:fontspec})である．
 \end{itemize}
 日本語で読める\XeTeX に関する情報としては，本文書の最初に挙げたもの以外に
 \begin{itemize}
@@ -602,8 +602,9 @@ Times New RomanとIPA明朝．
 \end{itemize}
 
 \newpage
-\section{\PKG{fontspec}パッケージ}
-\label{sec:fontspec}
+\section{\LuaTeX{}や\texorpdfstring{\XeTeX}{XeTeX}で使える便利なパッケージ}
+\subsection{\PKG{fontspec}パッケージ}
+\label{ssec:fontspec}
 \href{https://github.com/wspr/fontspec/}{\PKG{fontspec}パッケージ}は，
 \XeTeX と\LuaTeX において簡単にOpenTypeフォントやTrueTypeフォントを扱うためのパッケージである．
 \S\ref{ssec:luatex}で述べたように，\LuaTeX では内部処理に
@@ -635,5 +636,23 @@ Times New RomanとIPA明朝．
 詳細は\PKG{fontspec}パッケージのマニュアルや以前に挙げた八登氏の
 「\href{http://zrbabbler.sp.land.to/xelatex.html}{\XeLaTeX で日本語する件について}」
 中の記述を参照して欲しい．
+
+\newpage
+\subsection{\PKG{unicode-math}パッケージ}
+\label{ssec:unicode-math}
+
+実習資料では「数式中には和文文字は書けない」と書いた．
+一方，Unicodeにはたくさんの数学記号が収録されている．
+せっかくUnicodeに数学記号があるのだから，\TeX{}ソース中にそれらを直接記述できると便利である．
+\LuaTeX{}と\XeTeX{}では，\PKG{unicode-math}パッケージを使うとUnicodeの数学記号を直接記述することができるようになる．
+また，PDF中の数式からコピー＆ペーストした時にUnicodeの数学記号が含まれる文字列がペーストされるようになる．
+
+TODO: 書きたい
+
+\newpage
+\subsection{\TikZ{}パッケージ}
+\TikZ{}パッケージの機能の大半は他の\TeX{}エンジンでも使用できるが，graphdrawingはLuaを使うので\LuaTeX{}が必須である．
+
+TODO: 書きたい
 
 \end{document}
