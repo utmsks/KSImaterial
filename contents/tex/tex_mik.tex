@@ -299,7 +299,8 @@ This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018/W32TeX)
 \PKG{ipaex-type1}というものがあり，それをインストールした上で
 次の\FNAME{cjktest.tex}を
 \emph{UTF-8}\footnote{%
-バイトオーダーマーク(BOM)をつけるとタイプセットに失敗するので，つけないように注意．
+  \TeX~Live 2018以降であれば，BOMはあってもなくても良い．
+  Mik\TeX{}に関しては，2019年5月時点での最新のMik\TeX{}で試したところ，BOMがあっても問題ないようだ．
 }で作り，
 \begin{lstlisting}[numbers=left,numberstyle=\tiny,xleftmargin=4\jsZw]
 \documentclass{article}
