@@ -1,9 +1,9 @@
 %#!xelatex
-\documentclass[b5paper]{bxjsarticle} % 日本語用クラスファイル
+\documentclass[b5paper,xelatex,ja=standard]{bxjsarticle} % 日本語用クラスファイル
 
 % 更新日時の印字に datetime2 パッケージの \DTMnow を使う
-% ただし、 datetime2 パッケージは \today を上書きしようとするので、防止する
-% また、タイムゾーンは印字しない
+% ただし， datetime2 パッケージは \today を上書きしようとするので，防止する
+% また，タイムゾーンは印字しない
 \let\origtoday=\today
 \usepackage[datesep={/},timesep={:}]{datetime2}
 \renewcommand\DTMdisplayzone[2]{}
@@ -13,6 +13,7 @@
 \usepackage{pxrubrica} % should be loaded after xeCJK package
 
 \hypersetup{
+  %pdfusetitle, % なぜか効かない
   pdftitle={pTeX系列以外による日本語文書作成},
   pdfkeywords={MiKTeX, pdfTeX, XeTeX, LuaTeX, BXcjkjatype, ZXjatype, LuaTeX-ja}
 }
@@ -338,7 +339,7 @@ This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018/W32TeX)
 のようにすればよい．
 
 
-
+\newpage
 \section{\texorpdfstring{\XeTeX}{XeTeX}}
 \label{sec:xetex}
 \subsection{\texorpdfstring{\XeTeX}{XeTeX}とは}
@@ -445,7 +446,7 @@ Unicodeにおいて同じコードに割り当てられてしまうような細�
   または%
   \texttt{\textasciicircum\textasciicircum\textasciicircum\textasciicircum\textasciicircum xxxxxx}（\texttt{\textasciicircum} 6個に16進小文字6桁）%
   という表記ができるので，%
-  \TeX{}ソース中に「\texttt{東京都葛󠄁\textasciicircum\textasciicircum\textasciicircum\textasciicircum\textasciicircum 0e0101飾区}」と書くこともできる．
+  \TeX{}ソース中に「\texttt{\setxkanjiskip{0pt}東京都葛󠄁\textasciicircum\textasciicircum\textasciicircum\textasciicircum\textasciicircum 0e0101飾区}」と書くこともできる．
 }，
 \begin{lstlisting}
  \Large 東京都葛<01>飾区，奈良県葛<00>城市
