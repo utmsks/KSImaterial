@@ -1602,47 +1602,21 @@ DVIファイルを扱う各ソフトウェアが，
 \end{document}
 \end{lstlisting}
 
-% さて，画像挿入の際には，タイプセットを行う前に，
-% 画像がどれくらいのサイズであるかの情報(BoundingBox)を収めた
-% ファイルを作成しなければならない．コマンドプロンプトで
-% \begin{lstlisting}
+% 昔のTeX Liveでは
 % > extractbb fig1.png
 % > extractbb fig2.pdf
-% \end{lstlisting}
-% を実行すると，
-% BoundingBoxが格納された\FNAME{fig1.xbb},~\FNAME{fig2.xbb}が生成される．
-% その後のタイプセットはいつも通りである．
-これをいつも通りの方法でタイプセットすれば，画像が含まれた PDF ファイルが生成される%
-\footnote{%
-  現在の\TeX Live では\verb|extractbb|は自動実行される．
-}．
+% という風に画像ファイルごとにextractbbを実行してBoundingBoxの情報（.xbbファイル）を生成する
+% 必要があったが，TeX Live 2015以降ではデフォルトで extractbb は自動実行される．
+% 昔のTeX Liveでも -shell-escape を指定すれば extractbb が自動実行されたが，
+% -shell-escape は文書処理中に任意の外部コマンド実行を許可するオプションなので，盲目的に使うには危険である．
+% 参考：https://texwiki.texjp.org/?extractbb%20%E3%81%AE%E8%87%AA%E5%8B%95%E5%AE%9F%E8%A1%8C%E8%A8%B1%E5%8F%AF%E3%81%AE%E8%A8%AD%E5%AE%9A
+
+これをいつも通りの方法でタイプセットすれば，画像が含まれた PDF ファイルが生成される．
 \begin{lstlisting}
 > uplatex grapheg.tex
 > uplatex grapheg.tex
 > dvipdfmx grapheg.dvi
 \end{lstlisting}
-
-% \medskip
-
-% 画像ファイルが増えるたびに\FNAME{extractbb}を実行しないといけないのは
-% 面倒だ，という人は，\pLaTeX 実行時に\hskip\ltjgetparameter{xkanjiskip}%
-% \texttt{-shell-escape}オプションを追加して
-% \begin{lstlisting}
-% > platex -shell-escape grapheg.tex
-% \end{lstlisting}
-% または，\FNAME{ptex2pdf}を使うなら
-% \begin{lstlisting}
-% > ptex2pdf -l -ot -shell-escape grapheg.tex
-% \end{lstlisting}
-% のようにすれば，\FNAME{extractbb}は自動で実行される．
-% しかし，この\hskip\ltjgetparameter{xkanjiskip}%
-% \texttt{-shell-escape}オプションは外部のプログラムを実行可能にするものなので，
-% セキュリティ上の問題を引き起こすこともある\footnote{そのため，
-% 標準ではいくつかの「安全だとわかっている」プログラムに限り実行が許可されている．
-% \FNAME{extractbb}をそのリストに追加するには，
-% \href{http://oku.edu.mie-u.ac.jp/~okumura/texwiki/}{\TeX~Wiki}中の「\TeX 入門/図表」
-% を参照すること．}．
-% そのため，面倒だが手動で\FNAME{extractbb}を実行することを勧める．
 
 
 \subsection{図式}
