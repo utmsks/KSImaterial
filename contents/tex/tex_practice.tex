@@ -637,7 +637,7 @@ $f(x)=0$となる$0<x<1$が存在する．
 誤：$a+b+…+z$, $f(a,b,…,z)$\\
 正：$a+b+\cdots+z$
 \end{LTXexample}
-
+なお，Unicodeにある数学記号をそのまま\TeX{}ソース中で使いたい，という場合は，実習資料の「\pTeX{}系列以外による日本語文書作成」(\FNAME{tex_mik.pdf})にある\PKG{unicode-math}パッケージの紹介を読むと良いかもしれない．
 
 \begin{LTXexample}[caption=省略記号は周りの記号によって使い分けること．]
 誤：$f(a,b,\cdots,z)$\\
@@ -1182,7 +1182,7 @@ Knuth氏が1970年代に開発した\TeX{}はその後様々な人によって�
   \begin{tikzpicture}
     % \draw[help lines] (-8,5) grid (5,-1);
     \path[pattern=north east lines,pattern color=red!20!white,draw=red,dashed]
-      (-6.5,2.5) rectangle (4,-0.5);
+      (-6.5,2.5) rectangle (4,-0.2);
     %\path[pattern=north east lines,pattern color=yellow!30!white,draw=yellow,dashed]
     %  (-1.3,1.5) rectangle (3.8,-0.4); % LuaTeX, XeTeX
     %\path[pattern=north east lines,pattern color=yellow!30!white,draw=yellow,dashed]
@@ -1314,7 +1314,8 @@ macOS用やLinux用のバイナリには，そのような機能は実装され�
 また，\pdfTeX{}を使って欧文を書く場合でも，\TeX~Live 2018以降はUTF-8がデフォルトになっている．
 よって，新規に書く文書ではUTF-8を使うべきである．
 
-\bigskip
+\subsection{この先は}
+
 これ以上詳しくは「\pTeX 系列以外による日本語文書作成」(\FNAME{tex_mik.pdf}) を参照されたい．
 
 \newpage
@@ -2067,6 +2068,16 @@ Open直後のBinは（単項演算子として使用されたと判断され）O
 \item 木枝祐介，「数式組版」，ラムダノート，2018．
 \item Donald~E. Knuth, \textit{The \TeX book}, Addison-Wesley, 1984.
 \end{itemize}
+
+% \subsection{\TeX 自体を深く知りたい方へ}
+
+% \begin{itemize}
+% \item The \TeX{}book
+% \item \TeX{} by Topic
+% \item \LaTeX の実装：source2e
+% \end{itemize}
+% TA小話
+% TeX WikiのTeX入門
 
 \newpage
 
