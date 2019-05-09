@@ -337,6 +337,7 @@ This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018/W32TeX)
 \end{document}
 \end{lstlisting}
 のようにすればよい．
+この例では\PKG{BXjscls}に適切なクラスオプションを指定しているので，\PKG{CJK}や\PKG{BXcjkjatype}等の必要なパッケージは自動的に読み込まれる．
 
 
 \newpage
@@ -393,8 +394,7 @@ OpenTypeフォント自身に含まれる合字・アクセント位置などの
 クラスファイルも先に紹介した八登氏作の\PKG{BXjscls}を用いて，\emph{UTF-8}で
 以下のように記述するのが手っ取り早い：
 \begin{lstlisting}[numbers=left,numberstyle=\tiny,xleftmargin=4\jsZw]
-\documentclass{bxjsarticle}% 日本語用クラスファイル
-\usepackage{zxjatype}
+\documentclass[xelatex,ja=standard]{bxjsarticle}% 日本語用クラスファイル
 \setjamainfont{IPA明朝}%     \rmfamily に対応．本文など
 \setjasansfont{IPAゴシック}% \sffamily に対応．見出し，強調など
 \setjamonofont{IPAゴシック}% \ttfamily に対応．
@@ -408,6 +408,7 @@ OpenTypeフォント自身に含まれる合字・アクセント位置などの
 誰かが，「あっ」と言った．
 \end{document}
 \end{lstlisting}
+なお，\PKG{BXjscls}に適切なクラスオプションを渡していれば，\PKG{ZXjatype}パッケージは自動的に読み込まれる．
 
 タイプセットは
 \begin{lstlisting}
@@ -419,8 +420,7 @@ OpenTypeフォント自身に含まれる合字・アクセント位置などの
 \PKG{ZXjatype}パッケージは内部で\PKG{fontspec}パッケージを読み込んでいるため，
 欧文フォントもフォント名で指定できる．
 \begin{lstlisting}[numbers=left,numberstyle=\tiny,xleftmargin=4\jsZw]
-\documentclass{bxjsarticle}
-\usepackage{zxjatype}
+\documentclass[xelatex,ja=standard]{bxjsarticle}
 \setjamainfont{IPA明朝}%     \rmfamily に対応．本文など
 \setjasansfont{IPAゴシック}% \sffamily に対応．見出し，強調など
 \setjamonofont{IPAゴシック}% \ttfamily に対応．
@@ -495,6 +495,13 @@ $x=0.73908513321516$である．
 途中「\verb+\directlua{ ... }+」の中身がLuaで書かれたスクリプトであり，
 二分法を用いて$x=\cos x$の数値解を求めている．
 
+% \medskip
+% Luaスクリプトを使うと，\TeX{}言語で実装するのが難しい複雑な処理（従来は外部コマンドに頼る必要があった）を簡単に記述することができる．
+% markdownパッケージ（他のTeXエンジンでも-shell-escapeすれば利用できる）
+% TikZのgraphdrawing
+% \TikZ{}パッケージの機能の大半は他の\TeX{}エンジンでも使用できるが，graphdrawingはLuaを使うので\LuaTeX{}が必須である．
+
+
 \medskip
 さらに，このLuaスクリプトを使い，従来では\TeX ソースではいじれなかった
 （プログラムとして\TeX を改造するしかなかった）\emph{内部の挙動を
@@ -544,7 +551,7 @@ OpenTypeの各種機能を扱えるようにしている．
 \]
 ちょっとチェックしちゃった．
 
-$\pi \simeq \directlua{tex.print(math.pi())}$
+$\pi \simeq \directlua{tex.print(math.pi)}$
 \end{document}
 \end{lstlisting}
 その後
@@ -553,18 +560,15 @@ $\pi \simeq \directlua{tex.print(math.pi())}$
 \end{lstlisting}
 でタイプセットすると，\FNAME{lualatex_test.pdf}が生成されるはずである．
 \begin{curve}
-\TeX~Liveではこれでよいが，MiK\TeX では実はうまくいかない．\\\
+\TeX~Liveではこれでよいが，MiK\TeX では実はうまくいかない．\\
+% Mik\TeX にはなぜかltjsclassesのクラスファイルが収録されていないため
 \end{curve}
 
 \medskip
-\LuaTeX-jaは，\PKG{fontspec}パッケージも自動で読み込まず，また
-標準では和文フォントは埋め込まない（\pLaTeX の標準と同じ）ことになっている．
-だが，「\TeX 実習」で述べたように，表示の面から
-PDF内に日本語フォントを埋め込む方がよい場合がある．
-\LuaTeX-jaに関しては，もう一つの理由からも\emph{和文フォント埋め込みを
-推奨したい}．それは，フォント内部に含まれている各種の組版情報を利用するためである．
-
-和文フォントを埋め込む設定にする場合，
+\LuaTeX-jaは，標準でIPAexフォントを埋め込む（\pLaTeX{}の標準と同じ）ことになっている．
+% TeX Live 2015以降はIPAexフォントがデフォルト．
+% fontspecは自動では読み込まれない．
+フォントを変更する場合，
 \PKG{luatexja-fontspec}パッケージを読み込むのが簡便である．
 このパッケージを読み込むと，\texttt{fontspec}パッケージと
 その和文への拡張が使用可能となる：
@@ -592,6 +596,16 @@ Times New RomanとIPA明朝．
 明朝・ゴシックの2つだけだったことによる\footnote{%
 開発版では一定の条件下で\texttt{\textbackslash setmonojfont}が使用可能になっている．}．
 \end{itemize}
+
+よく使われるフォントの組み合わせに関しては，\PKG{luatexja-preset}パッケージを使って1行で指定することもできる．
+例えば，IPAフォントを使う場合には\PKG{luatexja-preset}パッケージへのクラスオプションとして\texttt{ipa}を指定すれば良い：
+\begin{lstlisting}
+% \usepackage{luatexja-fontspec}
+% \setmainjfont{IPAMincho}
+% \setsansjfont{IPAGothic}
+% の代わり：
+\usepackage[ipa]{luatexja-preset}
+\end{lstlisting}
 
 \newpage
 \section{\LuaTeX{}や\texorpdfstring{\XeTeX}{XeTeX}で使える便利なパッケージ}
