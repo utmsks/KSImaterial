@@ -21,24 +21,21 @@
   \newrefformat{sec}{\S\ref{#1}}
   \newrefformat{ssec}{\S\ref{#1}}
   \newrefformat{fig}{図\nobreak\ref{#1}}
+  \newrefformat{example}{例\nobreak\ref{#1}}
+  \newrefformat{fn}{\textsuperscript{\ref{#1}}} % ハイパーリンクの範囲が\footnote使用時と比べて変わってしまうが，仕方がない
 \makeatother
 
 %%% fancyvrb
 % \VerbatimFootnotes は \begin{document} の後で実行する
 \usepackage{fancyvrb}
 
-%%% \paragraph{} で「■課題 xx」という見出しをつける
-%%% このような使い方は行儀が悪いのだが……
-\makeatletter
-\newcount\assignment@count
-\assignment@count=1
-\let\orig@paragraph=\paragraph
-\def\paragraph#1{%
-  \orig@paragraph{課題\the\assignment@count}\leavevmode%
-  \global\advance\assignment@count1
-  \protected\edef\@currentlabel{\the\assignment@count}\relax
+%%% \assignment で「■課題 xx」という見出しをつける
+\newcounter{assignment}
+\setcounter{assignment}{1}
+\newcommand\assignment{%
+  \paragraph{課題\theassignment}\leavevmode%
+  \refstepcounter{assignment}%
 }
-\makeatother
 
 % 更新日時の印字に datetime2 パッケージの \DTMnow を使う
 % ただし， datetime2 パッケージは \today を上書きしようとするので，防止する
@@ -75,7 +72,7 @@
 % \item 日本語で\TeX 環境を書く際の文字コードに関する注意や，u\pTeX の話題は\prettyref{sec:chrcode}へ．
 \item 各種パッケージを有効活用して相互参照，画像挿入，可換図式を組む方法については\prettyref{sec:ref}へ．
 \item 伝統的な\pLaTeX は知っているが，\pLaTeX が利用できない場合への対処法や，
- 最近の\TeX の発展について知りたい人は\prettyref{sec:other-engines}（執筆中）か，
+ 最近の\TeX の発展について知りたい人は\prettyref{sec:other-engines}か，
  実習資料集にある「\pTeX 系列以外による日本語文書作成」（やや古い）を参照すること．
 \item バリバリ使いこなしていて，以上の範囲などとっくに知っているという人はTAを呼ぶこと．
 \end{itemize}
@@ -240,7 +237,7 @@ C:\Users\...\Documents> #\underline{ptex2pdf\ -l\ -u\ first.tex}#
 > dvipdfmx -p jisb5 hoge.dvi
 \end{lstlisting}
 
-\paragraph{}
+\assignment
 \FNAME{first.tex}の3行目
 「\hbox{\ltjsetparameter{xkanjiskip=0pt}%
   \verb*+ようこそ，\TeX の世界へ！+}」を
@@ -333,8 +330,6 @@ C:\Users\...> #\underline{updmap\ --user\ --setoption\ jaEmbed\ ipa}#
 以降の\DVIPDFMx の実行で作られるPDFファイルには，日本語フォントとして
 IPA明朝・IPAゴシックが埋め込まれることになる．
 
-% TODO: --userじゃなくて--sysを使うべき？
-
 \medskip
 macOSに商用・高品質なヒラギノフォントが付属していることは有名である%
 \footnote{「ヒラギノを買ったらMacがおまけについてきた」という有名なジョークがある．}．
@@ -382,7 +377,8 @@ macOSに商用・高品質なヒラギノフォントが付属していること
 があり，\TeX~Wiki中の「国内リンク」からも多くのページが辿れる．
 
 \TeX{} Liveがインストールされた手元のPCにもマニュアル類（多くの場合は英語）が入っている．
-それらは，コマンドプロンプトで\texttt{texdoc $\langle \textit{パッケージ名}\rangle$}を実行することによって参照できる．
+それらは，コマンドプロンプト（またはWindowsキー+Rで起動できる「ファイル名を指定して実行」）で
+\texttt{texdoc $\langle \textit{パッケージ名}\rangle$}を実行することによって参照できる．
 例えば，\texttt{texdoc}コマンドのマニュアルを参照したければ，\texttt{texdoc texdoc}を実行すれば良い．
 
 \medskip
@@ -568,7 +564,7 @@ C:\Users\...\Documents> #\underline{latexmk\ first.tex}#
 \emph{論文誌の投稿規定や各出版社の組版ルールがある場合には，
 当然ながらそちらを優先し，勝手な変更や超絶技巧はしないこと．}
 
-\subsection{数式}
+\subsection{数式}\label{ssec:math-formula}
 特に数式を入力する際には，その記号はどのような（組版上の）役割で用いられているか，
 ということを気にするのが大事である．
 
@@ -588,7 +584,7 @@ $f(x)=0$となる$0<x<1$が存在する．
 \end{LTXexample}
 
 \subsubsection{基本}
-\begin{LTXexample}[caption=sinなどの関数名は専用の命令を使って立体で表記すること．]
+\begin{LTXexample}[caption=sinなどの関数名は専用の命令を使って立体で表記すること．,label=example:function-name]
 誤：$sin x$, $\mathrm{sin} x$\\
 正：$\sin x$
 \end{LTXexample}
@@ -619,9 +615,20 @@ $f(x)=0$となる$0<x<1$が存在する．
 いちいち命令を定義したくない場合は，\cs{operatorname}命令を使って数式中に直接\verb@\operatorname{dom}@と書くこともできる．
 
 \begin{curve}
-  TODO: $\operatorname{id}\otimes f$みたいな失敗例（$\otimes$と$f$の間の空白の量が少ない．正：${\operatorname{id}}\otimes f$）
-  % \eval\circ\id
-  % 数式クラスの話題としては X/\sim もある
+  単なる\cs{mathrm}ではなく\cs{mathop}を使う\footnote{%
+    \cs{DeclareMathOperator}や\cs{operatorname}も内部で\cs{mathop}を使っている
+  }ことの効果は「直後に変数が置かれた場合に適宜空白をあける（例：$\sin x$）」「ただし，括弧類が置かれた場合は空白を入れない（例：$\sin(x+y)$）」である．
+  だが，それゆえの注意点もある．
+
+  例えば，スラッシュ$/$の直後にこのような関数名が置かれた場合に，関数名の\emph{前に}空白が入ってしまう（例：\verb|f/\gcd(f,g)|, $f/\gcd(f,g)$）．
+  この空白を入れないためには，関数とその引数を波括弧で囲えば良い（例：\verb|f/{\gcd(f,g)}|, $f/{\gcd(f,g)}$）．
+
+  別の例として，関数に対して合成やテンソル等の演算子を適用するときに，演算子の後の空白が変わってしまう場合がある
+  （例：\verb|\operatorname{id}\circ f|, $\operatorname{id}\circ f$では$\circ$と$f$の間の空白が消えてしまう．比較：$g\circ f$）．
+  これも関数名を波括弧で囲えば良い（\verb|{\operatorname{id}}\circ f}|, ${\operatorname{id}}\circ f$）．
+あるいは，圏の射のように引数を適用することがない（$\operatorname{id}x$のような書き方をしない）場合は\cs{mathop}を使わずに単に\cs{mathrm}で済ませてしまうという手もある（例：\verb|\newcommand{\id}{\mathrm{id}}|）．
+
+  詳しくは\prettyref{ssec:math-class}を参照．
 \end{curve}
 
 \medskip
@@ -630,7 +637,7 @@ $f(x)=0$となる$0<x<1$が存在する．
 誤：$a+b+…+z$, $f(a,b,…,z)$\\
 正：$a+b+\cdots+z$
 \end{LTXexample}
-
+なお，Unicodeにある数学記号をそのまま\TeX{}ソース中で使いたい，という場合は，実習資料の「\pTeX{}系列以外による日本語文書作成」(\FNAME{tex_mik.pdf})にある\PKG{unicode-math}パッケージの紹介を読むと良いかもしれない．
 
 \begin{LTXexample}[caption=省略記号は周りの記号によって使い分けること．]
 誤：$f(a,b,\cdots,z)$\\
@@ -691,7 +698,10 @@ $f(x)           , f\bigl(A^B_D\bigr)$
 余計に入っていることが分かる．
 
 しかし，それは\TeX の仕様である．\TeX は数式中の要素をいくつかに分類し，
-その分類に応じて要素と要素の間に入る空白を決定するのだが，次のようになっている：
+その分類に応じて要素と要素の間に入る空白を決定する\footnote{%
+  詳しくは\prettyref{ssec:math-class}を参照．
+}のだが，次のようになっている：
+% TODO: 「数式クラス」のセクション (ssec:math-class) に譲ってこの辺の記述は割愛する？
 \begin{itemize}
  \item ``$f$''は「通常の文字」， ``,''は「句読点」である．
  \item 2行目中の``$($''~(\verb+(+), ``$\bigl($''~(\verb+\bigl(+)は「開き括弧」，
@@ -718,7 +728,7 @@ $f(x)             , f\bigl(A^B_D\bigr)$
 
 
 \begin{LTXexample}[caption={絶対値やノルムに用いる``$|$'',~``$\|$''には左右の区別がなく
- 注意が必要．}]
+ 注意が必要．},label=example:abs-vert-symbol]
 誤：$|-x|$\\
 正：$|{-x}|$\\
 正：$\lvert -x \rvert$（要amsmath）
@@ -729,10 +739,10 @@ $f(x)             , f\bigl(A^B_D\bigr)$
 \medskip
 
 \begin{LTXexample}[width=.3\textwidth,caption=「本来の意味」と異なる使い方で
-記号を使う場合も注意．]
-誤：$x\in ]a,b]$\\
-正：$x\in \mathopen{]}a,b]$,
-    $x\in \left]a,b\right]$
+記号を使う場合も注意．,label=example:reverse-bracket]
+誤：$x\in ]-a,b]$\\
+正：$x\in \mathopen{]}-a,b]$,
+    $x\in \left]-a,b\right]$
 \end{LTXexample}
 普通に\hskip\ltjgetparameter{xkanjiskip}\verb+]+と入力すると
 「閉じ括弧扱い」になるが，ここでは開き括弧の意味で用いているので
@@ -771,7 +781,7 @@ $f\coloneqq a^2-b+c^d$（mathtools等要）
 \end{curve}
 \medskip
 
-\begin{LTXexample}[caption=集合の内包的記法]
+\begin{LTXexample}[caption=集合の内包的記法,label=example:set-comprehension]
 $\{\,x\mid x>5\,\}$\\
 $\{\,x:x>5\,\}$\\
 $\{x:x>5\}$\\
@@ -909,7 +919,7 @@ section番号の表示形式のカスタマイズは
 などとすれば一応可能だが，
 subsectionや定理番号の表示がおかしくなってしまう．
 このあたりは\url{https://togetter.com/li/1124861}などを参考にして，各自調べること\footnote{%
-  結論を言うと，文書クラスがbxjsclassesであればクラスオプション\texttt{label-section=modern}を指定し，\cs{thesection}の代わりに\cs{pre}/\cs{postsectionname}をカスタマイズすれば良い．
+  結論を言うと，文書クラスがBXjsclsであればクラスオプション\texttt{label-section=modern}を指定し，\cs{thesection}の代わりに\cs{pre}/\cs{postsectionname}をカスタマイズすれば良い．
   それ以外の文書クラスの場合は，上手いカスタマイズ方法はない．
 }．
 
@@ -1037,7 +1047,7 @@ $\mathbb{R}$に右半開区間位相を入れたものを$\mathcal{S}$とおく�
 あと，「課題」と名乗ってはいるが，提出不要である．
 
 \subsection{\TeX ソースの例}
-\paragraph{}
+\assignment
 以下のソースファイルを自分で入力し，そこからPDFファイルを作成せよ．
 全角文字と半角文字を間違えないようにすること%
 \footnote{特に，7行目の「I」は半角英大文字であって，
@@ -1053,7 +1063,7 @@ $\mathbb{R}$に右半開区間位相を入れたものを$\mathcal{S}$とおく�
 以下の数学の問題を解き，\TeX によって解答を作れ．
 その際，\emph{\prettyref{sec:typeset}のような間違いを起こさないように}注意せよ．
 
-\paragraph{}
+\assignment
 関数$f\colon \mathbb R^2\rightarrow\mathbb R$を
 \[
  f(x,y):=
@@ -1064,14 +1074,14 @@ $\mathbb{R}$に右半開区間位相を入れたものを$\mathcal{S}$とおく�
 \]
 で定める．この$f$が連続関数であることを示せ．
 
-\paragraph{}
+\assignment
 $n\in\mathbb N$に対し，
 \[
  I_n:=\int_0^{\pi/2} \cos^n \theta\,d\theta
 \]
 の値を求めよ．なお，$\mathbb{N}$に0を含めるか否かについては，どちらでもよい．
 
-\paragraph{}\
+\assignment\
 \[
  A:=\begin{pmatrix}
      2/5&11/5\\-1&2
@@ -1085,14 +1095,14 @@ $n\in\mathbb N$に対し，
  \item 前問を用いて，$A$を正定値対称行列と直交行列の積として表せ．
 \end{enumerate}
 
-\paragraph{}
+\assignment
 $T$をHausdorff空間とする．$T$内の点列$(p_n)_{n\in\mathbb N}$が
 点$p$と点$q$に収束するならば，$p=q$であることを示せ．
 
-\paragraph{}
+\assignment
 2次元トーラス$T^2$の整係数ホモロジー群を求めよ．
 
-\paragraph{}
+\assignment
 直後の\prettyref{ex:sorgenfrey}の問題文にある$\mathcal{S}$（Sorgenfrey直線）に関する1.--3.の性質を
 証明し，\TeX ソースの形で解答を書け．その際，本章に今まで記述したような
 間違いを起こさないように注意せよ．
@@ -1102,7 +1112,7 @@ $T$をHausdorff空間とする．$T$内の点列$(p_n)_{n\in\mathbb N}$が
 
 \subsection{\TeX ソースの修正練習}
 
-\paragraph{}\label{ex:sorgenfrey}
+\assignment\label{ex:sorgenfrey}
 \ref{sssec:itemize}節で挙げられていた「悪い例」：
 \begin{lstlisting}
 $\mathbb{R}$に右半開区間位相を入れたものを$\mathcal{S}$とおく．
@@ -1122,22 +1132,19 @@ $\mathbb{R}$に右半開区間位相を入れたものを$\mathcal{S}$とおく�
 
 \medskip
 
-\paragraph{}
+\assignment
 \href{https://github.com/utmsks/KSImaterial/blob/master/contents/tex/KS_3a.tex}{\FNAME{KS\_3a.tex}}%
 はタイプセットが正常にできない（エラーが発生する）ソースである．
 タイプセットが可能になるように修正せよ．
 
-\paragraph{}\label{ex:fix}
+\assignment\label{ex:fix}
 \href{https://github.com/utmsks/KSImaterial/blob/master/contents/tex/KS_3b.tex}{\FNAME{KS\_3b.tex}}%
 はタイプセット自体は可能だが，誤植や見た目の良くない点を含んでいる．
 \prettyref{sec:typeset}の記述を参考にしてソースを修正せよ．
 
 \newpage
-\section{p\TeX 系列以外による日本語文書作成}
+\section{\pTeX 系列以外の\TeX エンジンについて}
 \label{sec:other-engines}
-
-（このセクションは執筆中です）
-% （TODO: \texttt{tex\_mik.tex} の内容を移植する？）
 
 \subsection{\TeX{}エンジン}
 
@@ -1147,13 +1154,11 @@ Knuth氏が1970年代に開発した\TeX{}はその後様々な人によって�
 この実習では\TeX{}エンジンとしては\upTeX{}を使っているが，受講生諸君が今後\TeX{}で文書を書いていく際，\pTeX{}系以外の\TeX{}エンジンを使うこともあるだろう．
 というわけで，主な\TeX{}エンジンを簡単に紹介しておく．
 エンジン間の派生関係を大雑把に表すと\prettyref{fig:tex-engines}である\footnote{%
-  最近のLua\TeX{}は\pdfTeX{}との命令名レベルの互換性を切り捨てているので
+  最近の\LuaTeX{}は\pdfTeX{}との命令名レベルの互換性を切り捨てているので
   派生関係にあるからといって必ず互換性があるというわけではないし，
   逆に\pdfTeX{}派生ではない\epTeX{}や\XeTeX{}に\pdfTeX{}由来の命令が取り込まれていたりするので，
   派生関係にないからといって全く互換性がないというわけでもない．
 }．
-
-% （TODO: ちゃんとした紹介は？）
 
 \begin{description}
 \item[\TeX82] Knuth氏が作った，現在に連なる各種\TeX{}エンジンの直接の祖先．
@@ -1163,21 +1168,21 @@ Knuth氏が1970年代に開発した\TeX{}はその後様々な人によって�
   欧米でのスタンダード．
 \item[\XeTeX] OSのフォントを直接使えるようにしたもの．
   \pdfTeX{}と同じく，PDFを直接出力する．また，Unicodeに直接対応する．
-\item[Lua\TeX] スクリプト言語Luaを組み込んだもの．% つまり最強
+\item[\LuaTeX] スクリプト言語Luaを組み込んだもの．% つまり最強
   Unicodeに直接対応する．
 \item[\pTeX] アスキーが日本語対応させたもの．
 \item[\upTeX] \pTeX{}をUnicode対応させたもの．
 \item[\epTeX, \eupTeX] \pTeX{}, \upTeX{}に\eTeX{}拡張を施したもの．
 \end{description}
 
-% Lua\TeX, \XeTeX{}はフォントの扱いに長ける（\PKG{fontspec}），任意のUnicode文字をアクティブ化できる（\PKG{unicode-math}）等の特徴がある．
+% \LuaTeX, \XeTeX{}はフォントの扱いに長ける（\PKG{fontspec}），任意のUnicode文字をアクティブ化できる（\PKG{unicode-math}）等の特徴がある．
 
 \begin{figure}
   \centering
   \begin{tikzpicture}
     % \draw[help lines] (-8,5) grid (5,-1);
     \path[pattern=north east lines,pattern color=red!20!white,draw=red,dashed]
-      (-6.5,2.5) rectangle (4,-0.5);
+      (-6.5,2.5) rectangle (4,-0.2);
     %\path[pattern=north east lines,pattern color=yellow!30!white,draw=yellow,dashed]
     %  (-1.3,1.5) rectangle (3.8,-0.4); % LuaTeX, XeTeX
     %\path[pattern=north east lines,pattern color=yellow!30!white,draw=yellow,dashed]
@@ -1186,7 +1191,7 @@ Knuth氏が1970年代に開発した\TeX{}はその後様々な人によって�
       \node (tex82) at (0,5) {\TeX82};
       \node (etex) at (0,3.5) {\eTeX};
       \node (pdftex) at (0,2) {pdf\TeX};
-      \node (luatex) at (0,0.5) {Lua\TeX};
+      \node (luatex) at (0,0.5) {\LuaTeX};
       \node (xetex) at (2.5,0.7) {\XeTeX};
       \node (ptex)at (-3,3.2) {\pTeX};
       \node (eptex) at (-3,1.2) {\epTeX};
@@ -1207,6 +1212,7 @@ Knuth氏が1970年代に開発した\TeX{}はその後様々な人によって�
     % \draw[->,dashed] (pdftex) -- (eptex);
     % \draw[->,dashed] (pdftex) -- (xetex);
   \end{tikzpicture}
+  \captionsetup{justification=centering}
   \caption{現在に連なる主な\TeX{}エンジン}
   \label{fig:tex-engines}
 \end{figure}
@@ -1216,14 +1222,16 @@ Knuth氏が1970年代に開発した\TeX{}はその後様々な人によって�
 \subsection{マクロパッケージ}
 
 \TeX{}エンジンに組版の機能が備わっていると言っても，一般のユーザーがそれを直接使って文書を書くのは大変である．
-そこで，\TeX{}のマクロによって命令や文法を追加し，文書を書きやすくしたものが\LaTeX{}等のマクロパッケージである．
-例えば，文書クラス\cs{documentclass}や環境（\cs{begin}, \cs{end}コマンド）は，\LaTeX{}が提供する概念である．
-\LaTeX{}以外のそういう枠組みとしては，plain~\TeX{}や\ConTeXt{}がある．
+そこで，\TeX{}のマクロによって命令や文法を追加し，文書を書きやすくする\emph{マクロパッケージ}が多数開発されている．
+\LaTeX{}はそうしたマクロパッケージの一種である．
+例えば，文書クラス\cs{documentclass}や環境（\cs{begin}, \cs{end}コマンド）等の概念は，\LaTeX{}によって提供されたものである．
+\LaTeX{}以外の枠組みとしては，plain~\TeX{}や\ConTeXt{}がある．
 
 \begin{center}
   \begin{tikzpicture}
     \node[left] at (0,.5) {\TeX{}エンジン};
-    \draw (0,0) rectangle node {\TeX82, ($\varepsilon$-)(u)\pTeX, \pdfTeX, \XeTeX, Lua\TeX{}等} (9,1);
+    \draw (0,0) rectangle node {\TeX82, ($\varepsilon$-)(u)\pTeX, \pdfTeX, \XeTeX, \LuaTeX{}等} (9,1);
+    \node[left] at (0,2) {マクロパッケージ};
     \draw (0,1.05) rectangle node {plain \TeX} (2.95,1.95);
     \draw (3.05,1.05) rectangle node {\LaTeX} (5.95,1.95);
     \draw (6.05,1.05) rectangle node {\ConTeXt} (9,1.95);
@@ -1231,24 +1239,43 @@ Knuth氏が1970年代に開発した\TeX{}はその後様々な人によって�
   \end{tikzpicture}
 \end{center}
 
-さて，Lua\TeX{}や\XeTeX{}は多言語に対応していると言っても，エンジン自体は日本語組版の事情を知らない．
-そこで，Lua\TeX{}や\XeTeX{}でも日本語組版を行うためのマクロパッケージが開発されている．
-Lua\TeX{}の場合はLua\TeX-ja, \XeTeX{}の場合は\PKG{xeCJK}や\PKG{ZXjatype}がそれである．
+さて，\LuaTeX{}や\XeTeX{}は多言語に対応していると言っても，エンジン自体は日本語組版の事情を知らない．
+したがって，\LuaTeX{}や\XeTeX{}で日本語組版を行うには，そのためのマクロパッケージが必要である．
+\LuaTeX{}の場合は\LuaTeX-jaが，\XeTeX{}の場合は\PKG{xeCJK}や\PKG{ZXjatype}がそれである．
 
-ちなみに，この資料（\texttt{tex\_practice.pdf}）はLua\TeX{} (\& Lua\TeX-ja) を用いて組版されている．
+ちなみに，この資料（\FNAME{tex_practice.pdf}）は\LuaTeX{} (\& \LuaTeX-ja) を用いて組版されている．
 
-% (e-)(u)pTeX, pdfTeX, LuaTeX, XeTeXの説明を追加
-% 文書クラス：jsclasses, ltjsclasses, bxjscls, jlreq
+\subsection{文書クラス}
 
-%日本語文書を書く時によく使われる文書クラス
-%\begin{description}
-%\item[jclasses] (u)\pLaTeX{}用
-%\item[jsclasses] (u)\pLaTeX{}用．
-%\item[ltjsclasses] Lua\TeX-ja用
-%\item[bxjscls] (u)\pLaTeX, \pdfTeX, \XeTeX, \LuaTeX{}対応
-%\item[jlreq] Lua\TeX-ja, \pLaTeX, \upLaTeX{}対応
-%\end{description}
-% beamer, standalone
+\PKG{jsarticle}をはじめとする「\pLaTeXe 新ドキュメントクラス」(\PKG{jsclasses}) はその名の通り\pLaTeX{}系専用である．
+よって，\LuaTeX{}や\XeTeX{}等のエンジンを用いて日本語文書を書く際には，\PKG{jsclasses}以外の文書クラスを使うことになる．
+というわけで，日本語文書を書くのに使える文書クラスを（\pLaTeX{}専用のものも含めて）いくつか挙げておく．
+\begin{description}
+\item[jclasses]
+  アスキーによる，\pTeX{}用の文書クラス．(u)\pLaTeX{}用
+\item[jsclasses]
+  奥村晴彦氏による「\pLaTeXe 新ドキュメントクラス」．(u)\pLaTeX{}用．
+\item[ltjsclasses]
+  \PKG{jsclasses}を\LuaTeX-ja用に移植したもの．
+\item[BXjscls]
+  \PKG{jsclasses}を拡張したもの．
+  (u)\pLaTeX, \pdfLaTeX, \XeLaTeX, \LuaLaTeX{}と，幅広いエンジンに対応している．
+\item[jlreq]
+  「日本語組版の要件」\footnote{%
+    \url{https://www.w3.org/TR/jlreq/ja/}
+  }を満たすことを目指す文書クラス．\LuaTeX-ja, \pLaTeX, \upLaTeX{}対応．
+\end{description}
+
+その他，特定の用途に使われる文書クラスもある．
+\begin{description}
+\item[beamer]
+  \LaTeX{}でスライドを作るための文書クラス．
+\item[standalone]
+  文書ではなく単体の図を出力できる文書クラス．
+  数式や（\TikZ{}で描いた）図を他の文書に貼り付けたり，画像化して他のアプリケーションに貼り付けたり，という目的で使える．
+\end{description}
+
+% DVIwareの指定についてもどこかに書く？
 
 \subsection{文字コード}
 文字をコンピュータで扱うためには，「使用出来る文字」の集合と，それに属する各文字から
@@ -1269,7 +1296,10 @@ Windows上の\TeX~Liveの\pLaTeX の標準設定では，「\TeX ソースの文
 \texttt{-guess-input-enc}オプション．
 macOS用やLinux用のバイナリには，そのような機能は実装されていない．
 }．
-自動判別が不安な場合は，明示的に\texttt{-kanji=utf8}を指定する（\TeX ソースがUTF-8の場合）．
+自動判別が不安な場合は，明示的に\texttt{-kanji=utf8}を指定する（\TeX ソースがUTF-8の場合）か，\TeX{}ソースをBOM付き\footnote{%
+  一般論としてUTF-8の「BOM」は8ビットクリーンなソフトウェアにおいて問題を引き起こす可能性があるので要注意だが，\TeX~Live~2018以降の\TeX{}の場合はUTF-8のBOMは正常に解釈される（一方，古い\TeX~Liveでは\pdfTeX{}がUTF-8のBOMを認識しない）．
+  よって，最新の\TeX~Liveで処理させる\TeX{}ファイルに関してはUTF-8のBOMはあってもなくても良い．
+}UTF-8で保存する．
 \begin{lstlisting}
 > uplatex -kanji=utf8 hoge.tex
 \end{lstlisting}
@@ -1280,9 +1310,13 @@ macOS用やLinux用のバイナリには，そのような機能は実装され�
 \end{lstlisting}
 
 \medskip
-一方，Lua\TeX{}や\XeTeX{}を使う場合や，macOSやLinuxで\pLaTeX{}を使う場合は，UTF-8しか使えない\footnote{一応\XeTeX{}はBOM付きUTF-16を解釈するようである．}．
+一方，\LuaTeX{}や\XeTeX{}を使う場合や，macOSやLinuxで\pLaTeX{}を使う場合は，UTF-8しか使えない\footnote{一応\XeTeX{}はBOM付きUTF-16を解釈するようである．}．
 また，\pdfTeX{}を使って欧文を書く場合でも，\TeX~Live 2018以降はUTF-8がデフォルトになっている．
 よって，新規に書く文書ではUTF-8を使うべきである．
+
+\subsection{この先は}
+
+これ以上詳しくは「\pTeX 系列以外による日本語文書作成」(\FNAME{tex_mik.pdf}) を参照されたい．
 
 \newpage
 \section{雑多な話題}\label{sec:ref}
@@ -1326,11 +1360,7 @@ end program test
 \emph{\PKG{listings}パッケージは日本語との相性が良くないことが知られている}\footnote{%
 \LuaTeX-jaの下で\PKG{listings}パッケージを使用する場合は，自動的に日本語対応強化用の
 パッチを適用するので特に何もしなくても良い．}．
-\pLaTeX・u\pLaTeX においては，My\TeX pertプロジェクト（渡辺徹氏）の
-\href{http://mytexpert.osdn.jp/index.php?FrontPage}{Wiki}内から
-ダウンロードできる\PKG{jlisting.sty}と併用することになる．
-
-TODO: plistingsパッケージ
+\pLaTeX・u\pLaTeX においては，\href{https://github.com/h-kitagawa/plistings}{\PKG{plistings}}パッケージと併用することになる．
 
 \PKG{listings}以外のソースコード組版パッケージとしては\href{https://ctan.org/pkg/minted}{\PKG{minted}パッケージ}がある．
 \PKG{minted}はPythonで書かれたPygmentsというライブラリを使うため，Pygmentsを別途インストールする必要があるほか，\LaTeX{}処理の際に\texttt{-shell-escape}オプションを指定する必要がある．
@@ -1497,13 +1527,13 @@ LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 さて，PDFのしおりを見ると，\verb+\section+,~\verb+\subsection+で作った見出しが
 （階層構造込みで）含まれ，それぞれをクリックすると各節の最初に飛べる……のだが，
 1つめのしおりが「%
-\hbox{}{\makeatletter\rmfamily\ltj@allalchar “Å‘›‡Ì’ß}\hbox{}%
+\hbox{}{\makeatletter\rmfamily\ltj@allalchar æœ•å‹šã†®ç¯•}\hbox{}%
 」といったわけのわからない文字列に化けている．
 \begin{curve}
- 「最初の例」をShift\_JISで符号化すると
-\texttt{8DC5 8F89 82CC 90DF}となる．これをバイトごとに区切り，
+ 「最初の節」をUTF-8で符号化すると
+\texttt{E6\,9C\,80 E5\,88\,9D E3\,81\,AE E7\,AF\,80}となる．これをバイトごとに区切り，
 各バイトをPDFDocEncodingというエンコーディングで読んだものがこの「%
-\hbox{}{\makeatletter\rmfamily\ltj@allalchar “Å‘›‡Ì’ß}\hbox{}%
+\hbox{}{\makeatletter\rmfamily\ltj@allalchar æœ•å‹šã†®ç¯•}\hbox{}%
 」である．
 \end{curve}
 
@@ -1520,7 +1550,7 @@ LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 \usepackage{pxjahyper}
 \begin{document}
 \end{lstlisting}
-のように変更し，タイプセットを2回，PDF生成を行えば，しおりも「最初の例」
+のように変更し，タイプセットを2回，PDF生成を行えば，しおりも「最初の節」
 と化けないPDFが作成できる．
 
 \subsection{画像}
@@ -1573,47 +1603,21 @@ DVIファイルを扱う各ソフトウェアが，
 \end{document}
 \end{lstlisting}
 
-% さて，画像挿入の際には，タイプセットを行う前に，
-% 画像がどれくらいのサイズであるかの情報(BoundingBox)を収めた
-% ファイルを作成しなければならない．コマンドプロンプトで
-% \begin{lstlisting}
+% 昔のTeX Liveでは
 % > extractbb fig1.png
 % > extractbb fig2.pdf
-% \end{lstlisting}
-% を実行すると，
-% BoundingBoxが格納された\FNAME{fig1.xbb},~\FNAME{fig2.xbb}が生成される．
-% その後のタイプセットはいつも通りである．
-これをいつも通りの方法でタイプセットすれば，画像が含まれた PDF ファイルが生成される%
-\footnote{%
-  現在の\TeX Live では\verb|extractbb|は自動実行される．
-}．
+% という風に画像ファイルごとにextractbbを実行してBoundingBoxの情報（.xbbファイル）を生成する
+% 必要があったが，TeX Live 2015以降ではデフォルトで extractbb は自動実行される．
+% 昔のTeX Liveでも -shell-escape を指定すれば extractbb が自動実行されたが，
+% -shell-escape は文書処理中に任意の外部コマンド実行を許可するオプションなので，盲目的に使うには危険である．
+% 参考：https://texwiki.texjp.org/?extractbb%20%E3%81%AE%E8%87%AA%E5%8B%95%E5%AE%9F%E8%A1%8C%E8%A8%B1%E5%8F%AF%E3%81%AE%E8%A8%AD%E5%AE%9A
+
+これをいつも通りの方法でタイプセットすれば，画像が含まれた PDF ファイルが生成される．
 \begin{lstlisting}
 > uplatex grapheg.tex
 > uplatex grapheg.tex
 > dvipdfmx grapheg.dvi
 \end{lstlisting}
-
-% \medskip
-
-% 画像ファイルが増えるたびに\FNAME{extractbb}を実行しないといけないのは
-% 面倒だ，という人は，\pLaTeX 実行時に\hskip\ltjgetparameter{xkanjiskip}%
-% \texttt{-shell-escape}オプションを追加して
-% \begin{lstlisting}
-% > platex -shell-escape grapheg.tex
-% \end{lstlisting}
-% または，\FNAME{ptex2pdf}を使うなら
-% \begin{lstlisting}
-% > ptex2pdf -l -ot -shell-escape grapheg.tex
-% \end{lstlisting}
-% のようにすれば，\FNAME{extractbb}は自動で実行される．
-% しかし，この\hskip\ltjgetparameter{xkanjiskip}%
-% \texttt{-shell-escape}オプションは外部のプログラムを実行可能にするものなので，
-% セキュリティ上の問題を引き起こすこともある\footnote{そのため，
-% 標準ではいくつかの「安全だとわかっている」プログラムに限り実行が許可されている．
-% \FNAME{extractbb}をそのリストに追加するには，
-% \href{http://oku.edu.mie-u.ac.jp/~okumura/texwiki/}{\TeX~Wiki}中の「\TeX 入門/図表」
-% を参照すること．}．
-% そのため，面倒だが手動で\FNAME{extractbb}を実行することを勧める．
 
 
 \subsection{図式}
@@ -1692,7 +1696,7 @@ DVIファイルを扱う各ソフトウェアが，
   オプションの値として数値を指定することで，曲がり具合を調整できる（小さい方がより真っ直ぐに近い）．
 \end{itemize}
 
-\paragraph{}
+\assignment
 次の図式（five lemmaの図）をタイプセットせよ．
 \[
   \begin{tikzcd}
@@ -1701,7 +1705,7 @@ DVIファイルを扱う各ソフトウェアが，
     \end{tikzcd}
 \]
 
-\paragraph{}
+\assignment
 次の各図式をタイプセットせよ．
 \begin{align*}
   \begin{tikzcd}[ampersand replacement=\&]
@@ -1717,7 +1721,7 @@ DVIファイルを扱う各ソフトウェアが，
   \end{tikzcd}
 \end{align*}
 
-\paragraph{}
+\assignment
 次の図式をタイプセットせよ．
 \[
   \begin{tikzcd}
@@ -1738,17 +1742,386 @@ DVIファイルを扱う各ソフトウェアが，
 
 % 複雑な配置を行いたい場合は，\PKG{tikzcd}を使うよりも，大本となる図形描画パッケージTikZを直接使った方がいいかもしれない．
 
-\subsection{数式クラス}
+\clearpage
+\subsection{数式クラス}\label{ssec:math-class}
 
-TODO: 書きたい
+\prettyref{ssec:math-formula}では数式入力の際に気をつけることの例を挙げた．
+\TeX{}での数式組版についてもっと体系的に知るためには，数式クラスの知識が不可欠である．
+そこで，ここで数式クラスについての最低限の解説を行っておく．
 
-「数式組版」を紹介する？
+\subsubsection{数式クラスとは}
+
+\TeX{}における数式中の要素には，その役割に応じて\emph{数式クラス}が割り当てられる．
+数式クラスは大雑把に言うと以下の8つである．
+
+\begin{description}
+\item[Ord] 通常記号 (ordinary).
+  アルファベットや$\infty$, $\emptyset$などの単体でオペランドとなる記号や，$\partial$や$\neg$等の，中置演算子として使用されない前置演算子が該当する．
+\item[Op] 作用素 (large operator).
+  % 「数式組版」では「作用素」
+  \cs{sum}や\cs{int}が代表的．
+  \cs{sin}や\cs{lim}もこれに該当する．
+  \cs{limits}指定により，添字を上下に配置できる．
+\item[Bin] 二項演算子 (binary operation).
+  \texttt{+}や\texttt{-}.
+  単項演算子として使用された場合（後述）はOrdに変化する．
+\item[Rel] 関係演算子 (relation).
+  % 「数式組版」では「関係子」
+  イコール\texttt{=}, 不等号\texttt{<}, \texttt{>}, \cs{subset},
+  コロン\texttt{:}など．
+  二項演算子と比べて，前後の空白の量が多い．
+  関係演算子が並んだ場合には，間に空白は入らない（例：\verb|:=|と書いた場合にコロンとイコールの間に空白は入らない）．
+\item[Open] 開き括弧 (opening symbol).
+\item[Close] 閉じ括弧 (closing symbol).
+  後置演算子にも使用される．
+\item[Punct] 句読点 (punctuation).
+  コンマ\texttt{,}や\cs{colon}など．後ろ側に若干空白が入る．
+\item[Inner] 内部数式 (inner formula).
+  $\cs{left}\langle\text{デリミタ}\rangle\langle\text{中身}\rangle\cs{right}\langle\text{デリミタ}\rangle$や$\langle\text{分子}\rangle\text{\cs{over}}\langle\text{分母}\rangle$など．
+\end{description}
+
+特定の要素の数式クラスを変更したい場合，または特定の数式クラスを持つ空の要素を作り出したい場合は，\cs{math***}系コマンド\footnote{\cs{mathord}, \cs{mathop}, \cs{mathbin}, \cs{mathrel}, \cs{mathopen}, \cs{mathclose}, \cs{mathpunct}, \cs{mathinner}}を使えば良い．
+また，要素を波括弧で囲うことにより，数式クラスがOrdになる．
+
+二項演算子 (Bin) に分類される記号のうち，$-$や$\pm$などは前置の単項演算子としての用法もある．
+\TeX{}は，Bin要素が以下に該当する場合，単項演算子として使用されたと判断し，その要素の数式クラスをBinからOrdへ変更する．
+\begin{itemize}
+\item 数式リストの先頭または末尾に置かれている（例：$-a$）
+\item 直前の要素がOp, Bin, Rel, Open, Punctの場合（例：$a=-b$, $(-a)$, $(a,-b)$）
+\item 直後の要素がRel, Close, Punctの場合
+\end{itemize}
+
+\subsubsection{数式クラスと要素間の空白}
+
+数式中の要素間の空白は，数式クラスに応じて決定される．
+具体的には，次の表によって定まる：
+\begin{center}
+  \setlength{\tabcolsep}{3pt} % default: 6pt
+  \begin{tabular}{cc}
+    & 後 \\
+    前 &
+         \begin{tabular}{r|cccccccc}
+           & Ord & Op & Bin & Rel & Open & Close & Punct & Inner \\ \hline
+           Ord & 0 & thin & (med) & (thick) & 0 & 0 & 0 & (thin) \\
+           Op & thin & thin & * & (thick) & 0 & 0 & 0 & (thin) \\
+           Bin & (med) & (med) & * & * & (med) & * & * & (med) \\
+           Rel & (thick) & (thick) & * & 0 & (thick) & 0 & 0 & (thick) \\
+           Open & 0 & 0 & * & 0 & 0 & 0 & 0 & 0 \\
+           Close & 0 & thin & (med) & (thick) & 0 & 0 & 0 & (thin) \\ % Ordの行と同じ
+           Punct & (thin) & (thin) & * & (thin) & (thin) & (thin) & (thin) & (thin) \\
+           Inner & (thin) & thin & (med) & (thick) & (thin) & 0 & (thin) & (thin)
+         \end{tabular}
+  \end{tabular}
+  % TeX by Topic にある同等の表は Rel に関する記述が間違っているようだ．
+\end{center}
+ただし，
+\begin{itemize}
+\item 0：空白なし
+\item 括弧：スクリプトスタイルでは空白なし
+\item *：この場合はBinが単項演算子として使用されたと判断され，あらかじめクラスがOrdに変更されている（ので考慮しなくて良い）
+\end{itemize}
+を意味する．
+
+数式クラスによって自動的に挿入される空白の量はthin, medium, thickの3種類である．
+これらの空白を手動で挿入するコマンドは，次の通りである：
+{
+  % tabularを使った場合、\footnoteが動作しない．
+  % そのためlongtableを使っているが，longtableの場合はタイプセットに必要な回数が増えるので注意．
+  \setlength{\LTpre}{\medskipamount} % default: \bigskipamount
+  \setlength{\LTpost}{0pt} % default: \bigskipamount
+  \begin{longtable}{lll}
+    & 挿入用コマンド & 量 \\ \hline
+    thin & \cs{,}, \cs{thinspace}\footnote{\PKG{amsmath}使用時．\PKG{amsmath}を読み込まない状態では，\cs{thinspace}は\cs{,}とは異なる定義が使われる．}
+    & ${\Rightarrow}\,{\Leftarrow}$ \\
+    medium & \cs{:}, \cs{>}\footnote{\ENV{tabbing}環境の中では\cs{>}は使えないことに注意．}, \cs{medspace}\footnote{\label{fn:amsmath-spacing-commands}\PKG{amsmath}使用時．}
+    & ${\Rightarrow}\>{\Leftarrow}$ \\
+    thick & \cs{;}, \cs{thickspace}\prettyref{fn:amsmath-spacing-commands}
+    & ${\Rightarrow}\;{\Leftarrow}$
+  \end{longtable}
+}
+
+\subsubsection{各種記号の数式クラス}
+
+代表的な数学記号について，どういう数式クラスが割り当てられるか確認しておこう．
+\begin{description}
+\item[Ord]
+  ラテンアルファベット，ギリシャ文字，
+  ピリオド\texttt{.}, スラッシュ\texttt{/}, 縦棒\texttt{|},
+  \cs{partial}~$\partial$, \cs{infty}~$\infty$, \cs{emptyset}~$\emptyset$, \cs{forall}~$\forall$, \cs{exists}~$\exists$, \cs{neg}~(\cs{lnot})~$\neg$, \cs{backslash}~$\backslash$, \cs{nabla}~$\nabla$
+  % \aleph, \hbar, \imath, \jmath, \ell, \wp, \Re, \Im, \partial, \infty, \prime, \emptyset, \nabla, \surd, \top, \bot, \angle, \triangle, \forall, \exists, \neg=\lnot, \flat, \natural, \sharp, \clubsuit, \diamondsuit, \heartsuit, \spadesuit
+  % (Delimiter) \arrowvert, \Arrowvert, \Vert, \|, \vert: ord
+  % (Delimiter) \backslash: ord
+  % (Delimiter) \mathparagraph, \mathsection, \mathdollar: ord
+  % \frac: ord
+\item[Op]
+  \cs{int}~$\int$, \cs{prod}~$\prod$, \cs{sum}~$\sum$, \cs{log}~$\log$, \cs{sin}~$\sin$, \cs{lim}~$\lim$
+  % \coprod, \bigvee, \bigwedge, \biguplus, \bigcap, \bigcup, \int (with nolimits), \prod, \sum, \bigotimes, \bigoplus, \bigodot, \oint (with nolimits), \bigsqcup, \smallint
+\item[Bin]
+  \texttt{*}, \texttt{+}, \texttt{-},
+  \cs{pm}~$\pm$, \cs{circ}~$\circ$, \cs{times}~$\times$, \cs{cdot}~$\cdot$, \cs{otimes}~$\otimes$, \cs{dagger}~$\dagger$
+  % \triangleleft, \triangleright, \bigtriangleup, \bigtriangledown, \wedge=\land, \vee=\lor, \cap, \cup, \ddagger, \dagger, \sqcap, \sqcup, \uplus, \amalg, \diamond, \bullet, \wr, \div, \odot, \oslash, \otimes, \ominus, \oplus, \mp, \pm, \circ, \bigcirc, \setminus, \cdot, \ast, \times, \star
+\item[Rel]
+  コロン\texttt{:}, \texttt{=}, \texttt{<}, \texttt{>},
+  \cs{mid}~$\mid$, \cs{rightarrow}~(\cs{to})~$\rightarrow$, \cs{sim}~$\sim$
+  % \propto, \sqsubseteq, \sqsupseteq, \parallel, \mid, \dashv, \vdash, \nearrow, \searrow, \nwarrow, \swarrow, \Leftrightarrow, \Leftarrow, \Rightarrow, \neq=\ne, \leq=\le, \geq=\ge, \succ, \prec, \approx, \succeq, \preceq, \supset, \subset, \supseteq, \subseteq, \in, \ni=\owns, \gg, \ll, \not, \leftrightarrow, \leftarrow=\gets, \rightarrow=\to, \mapsto, \sim, \simeq, \perp, \equiv, \asymp, \smile, \frown, \leftharpoonup, \leftharpoondown, \rightharpoonup, \rightharpoondown
+  % \cong, \notin, \rightleftharpoons, \doteq
+  % \lhook, \hookrightarrow, \rhook, \hookleftrarrow, \bowtie, \models, \Longrightarrow, \longrightarrow, \longleftarrow,
+  % \Longleftarrow, \longmapsto, \longleftrightarrow, \Longleftrightarrow
+  % \iff
+  % (Delimiter) \uparrow, \downarrow, \updownarrow, \Uparrow, \Downarrow, \Updownarrow: rel
+  % \stackrel: rel
+\item[Open]
+  \texttt{(}, \texttt{[}, \cs{\{}~$\{$,
+  \cs{langle}~$\langle$
+  % (Delimiter) \lmoustache, \rmoustache: open and close
+  % (Delimiter) \langle, \rangle, \lbrace, \rbrace, \lceil, \rceil, \lfloor, \rfloor: open and close
+  % (Delimiter) \lgroup, \rgroup: open and close
+\item[Close]
+  \texttt{)}, \texttt{]}, \cs{\}}~$\}$,
+  \cs{rangle}~$\rangle$,
+  \texttt{!}, \texttt{?}
+\item[Punct]
+  コンマ\texttt{,}, セミコロン\texttt{;},
+  \cs{colon}~$\colon$, \cs{cdots}~$\cdots$
+  % \ldotp, \cdotp, \colon, \cdots, \vdots, \ddots
+\end{description}
+
+% AMSmath
+% \operatorname
+% \mod, \bmod, \pmod, \pod
+% \text
+% \substack, subarray
+% \sideset
+% \iint, \iiint, \iiiint, \idotsint
+
+見た目が同じ記号でも，役割によってコマンドが分かれていることがある．
+\begin{center}
+  \begin{tabular}{r|ccccc}
+    & Ord & Rel & Open & Close & Punct \\ \hline
+    縦棒 & \texttt{|}, \cs{vert} & \cs{mid} & \cs{lvert} & \cs{rvert} & \\
+    コロン & & \texttt{:} & & & \cs{colon} \\
+    \cs{big}系 & \cs{big} & \cs{bigm} & \cs{bigl} & \cs{bigr} &
+  \end{tabular}
+\end{center}
+
+\subsubsection{数式クラスで読み解く\LaTeX{}の作法}
+
+数式クラスについて学んだので，\prettyref{ssec:math-formula}の例を数式クラスを踏まえて再考してみよう．
+
+\newcommand{\classDesc}[2]{%
+  #1{\mathop{%
+      \setlength{\fboxsep}{1pt}% default: 3pt
+      \boxed{\mathstrut{#2}}%
+    }\limits_{\text{%
+        \ifx#1\mathord Ord\else
+        \ifx#1\mathop Op\else
+        \ifx#1\mathbin Bin\else
+        \ifx#1\mathrel Rel\else
+        \ifx#1\mathopen Open\else
+        \ifx#1\mathclose Close\else
+        \ifx#1\mathpunct Punct\else
+        \ifx#1\mathinner Inner\else
+        ???
+        \fi\fi\fi\fi\fi\fi\fi\fi
+      }}}}
+
+\paragraph{複数文字からなる関数}
+\prettyref{example:function-name}について．
+\verb|y\mathrm{sin} x|と書いた場合はOrd--Ord--Ordとして扱われる．
+\verb|y\sin x|と書いた場合はOrd--Op--Ordとして扱われ，$\sin$の前後にthin spaceが挿入される．
+\begin{center}
+  \begin{tabular}{rlcc}
+    誤： & \verb|$y\mathrm{sin} x$| & $y\mathrm{sin} x$ & $\classDesc\mathord{y}\classDesc\mathord{\mathrm{sin}}\classDesc\mathord{x}$ \\
+    正： & \verb|$y\sin x$| & $y\sin x$ & $\classDesc\mathord{y}\classDesc\mathop{\sin}\classDesc\mathord{x}$
+  \end{tabular}
+\end{center}
+
+% \verb|1+\sin x+\cos(x+y)|の場合，
+
+\verb|f/\gcd(f,g)|と書いた場合のスラッシュと\cs{gcd}．
+スラッシュはOrdなので，Ord--Opという並びになり，thin spaceが挿入される．
+\verb|\gcd(f,g)|を\texttt{\{\}}で囲えば，囲った部分がOrd扱いになり，空白は挿入されなくなる．
+\begin{center}
+  \begin{tabular}{rlcc}
+    誤： & \verb|$f/\gcd(f,g)$| & $f/\gcd(f,g)$ & $\classDesc\mathord{f}\classDesc\mathord{/}\classDesc\mathop{\gcd}\classDesc\mathopen{(}\cdots\classDesc\mathclose{)}$ \\
+    正： & \verb|$f/{\gcd(f,g)}$| & $f/{\gcd(f,g)}$ & $\classDesc\mathord{f}\classDesc\mathord{/}\classDesc\mathord{\classDesc\mathop{\gcd}\classDesc\mathopen{(}\cdots\classDesc\mathclose{)}}$
+  \end{tabular}
+\end{center}
+
+% 一方，\cs{cdot}はBinなので\verb|x\cdot\sin x|と書く場合に\cs{sin}を囲う必要はない．
+
+\verb|\operatorname{id}\circ f|と書いた場合の数式クラスはOp--Bin--Ordとなるが，Opの直後のBinはOrdになるので，$\circ$と$f$の間には空白は入らない．
+この場合のidは単体でオペランドとして使用されているので，クラスがOrdとなるように\texttt{\{\}}で囲うかそもそも\cs{mathrm}等を使うべきである．
+\begin{center}
+  \begin{tabular}{rlcc}
+    誤： & \verb|$\operatorname{id}\circ f$| & $\operatorname{id}\circ f$ & $\classDesc\mathop{\operatorname{id}}\classDesc\mathbin{\circ}\classDesc\mathord{f}$ \\
+    正： & \verb|${\operatorname{id}}\circ f$| & ${\operatorname{id}}\circ f$ & $\classDesc\mathord{\operatorname{id}}\classDesc\mathbin{\circ}\classDesc\mathord{f}$ \\
+    正： & \verb|$\mathrm{id}\circ f$| & $\mathrm{id}\circ f$ & $\classDesc\mathord{\mathrm{id}}\classDesc\mathbin{\circ}\classDesc\mathord{f}$
+  \end{tabular}
+\end{center}
+
+\paragraph{\cs{left}/\cs{right}と関数記号}
+\verb|f\left(x\right)|と書いた時に$f$と開き括弧との間に空白が入るのは，\verb|\left(x\right)|がInnerとして扱われ，Ord--Inner間にthin spaceが入るからである．
+一方，\verb|f\bigl(x\bigr)|と書いた場合はOrd--Open--Ord--Closeとなるので$f$と開き括弧の間に空白は入らない．
+\begin{center}
+  \begin{tabular}{rlcc}
+    誤： & \verb|$f\left(\frac{x}{y}\right)$| & $f\left(\frac{x}{y}\right)$ & $\classDesc\mathord{f}\classDesc\mathinner{\bigl(\cdots\bigr)}$ \\
+    正： & \verb|$f\bigl(\frac{x}{y}\bigr)$| & $f\bigl(\frac{x}{y}\bigr)$ & $\classDesc\mathord{f}\classDesc\mathopen{\bigl(}\cdots\classDesc\mathclose{\bigr)}$ \\
+    正： & \verb|$f\mathopen{}\left(\frac{x}{y}\right)$| & $f\mathopen{}\left(\frac{x}{y}\right)$ & $\classDesc\mathord{f}\classDesc\mathopen{}\classDesc\mathinner{\bigl(\cdots\bigr)}$ \\
+    正： & \verb|$f\mleft(\frac{x}{y}\mright)$| & $f\mleft(\frac{x}{y}\mright)$ & $\classDesc\mathord{f}\classDesc\mathopen{}\classDesc\mathclose{\bigl(\cdots\bigr)}$ \\
+  \end{tabular}
+\end{center}
+\cs{left}/\cs{right}を使いつつ$f$と開き括弧の間に空白を入れないようにするには，\goodbreak
+\verb|f\mathopen{}\left(x\right)|という風に，空の\cs{mathopen}を挟めば良い．
+こうすると要素の並びはOrd--Open--Innerとなり，空白は入らない．
+\PKG{mleftright}パッケージの\cs{mleft}/\cs{mright}はこのような「\cs{left}/\cs{right}を補正する」処理をより洗練させた形で提供している．
+具体的には，後ろにコンマ等が続いた場合も考慮している．
+
+\paragraph{絶対値記号（\prettyref{example:abs-vert-symbol}）}
+\verb+|-x|+と書いた場合，\texttt{|}はOrdなのでOrd--Bin--Ord--Ordとなる．
+Binの両側にOrd--Bin間の空白が入る．
+\verb+|{-x}|+と書いた場合は，外側はOrd--Ord--Ordとなる．
+内部の\texttt{-x}の部分はBin--Ordだが，数式リストの最初にあるBinは（単項演算子として使用されたと判断され）Ordに変換されるので，Bin--Ord間の空白は入らない．
+\begin{center}
+  \begin{tabular}{rlcc}
+    誤： & \verb+$|-x|$+ & $|-x|$ & $\classDesc\mathord{|}\classDesc\mathbin{-}\classDesc\mathord{x}\classDesc\mathord{|}$ \\
+    正： & \verb+$|{-x}|$+ & $|{-x}|$ & $\classDesc\mathord{|}\classDesc\mathord{\classDesc\mathbin{-}\classDesc\mathord{x}}\classDesc\mathord{|}$ \\
+    正： & \verb+$\lvert -x \rvert$+ & $\lvert -x \rvert$ & $\classDesc\mathopen{|}\classDesc\mathbin{-}\classDesc\mathord{x}\classDesc\mathclose{|}$ \\
+  \end{tabular}
+\end{center}
+\verb+\lvert -x\rvert+と書いた場合，Open--Bin--Ord--Closeとなる．
+Open直後のBinは（単項演算子として使用されたと判断され）Ordに変換されるので，Bin--Ord間の空白は入らない．
+
+\paragraph{逆向きの括弧（\prettyref{example:reverse-bracket}）}
+%\prettyref{example:reverse-bracket}の数式クラスを見てみよう．
+\verb|x\in ]-a,b]|の要素の並びは，Ord--Rel--Close--\-Bin--Ord--Punct--Closeとなる．開き括弧として使われている最初の\hskip\ltjgetparameter{xkanjiskip}\verb+]+の数式クラスがCloseとなっているために直前の\cs{in}との間隔が詰まっているほか，直後の$-a$のマイナス記号が二項演算子扱いとなってしまっている．
+\begin{center}
+  \begin{tabular}{rlcc}
+    誤： & \verb|$x\in ]-a,b]$| & $x\in ]-a,b]$ &
+                    $\classDesc\mathord{x}\classDesc\mathrel{\in}\classDesc\mathclose{]}\classDesc\mathbin{-}\classDesc\mathord{a}\classDesc\mathpunct{,}\classDesc\mathord{b}\classDesc\mathclose{]}$ \\
+    正： & \verb|$x\in\mathopen{]}-a,b]$| & $x\in\mathopen{]}-a,b]$ &
+                                                                    $\classDesc\mathord{x}\classDesc\mathrel{\in}\classDesc\mathopen{]}\classDesc\mathbin{-}\classDesc\mathord{a}\classDesc\mathpunct{,}\classDesc\mathord{b}\classDesc\mathclose{]}$ \\
+    正： & \verb|$x\in\left]-a,b\right]$| & $x\in\left]-a,b\right]$ &
+                                                                      $\classDesc\mathord{x}\classDesc\mathrel{\in}\classDesc\mathinner{\mathopen{]}\classDesc\mathbin{-}\classDesc\mathord{a}\classDesc\mathpunct{,}\classDesc\mathord{b}\mathclose{]}}$
+  \end{tabular}
+\end{center}
+
+\verb|x\in\mathopen{]}-a,b]|は，Ord--Rel--Open--Bin--Ord--Punct--Ord--Closeとなる．マイナス記号はOpenの直後なので単項演算子扱いとなる．
+
+\verb|x\in\left]-a,b\right]|は，全体としてはOrd--Rel--Inner，\cs{left}/\cs{right}の内側はBin--Ord--Punct--Ordとなる．マイナス記号は数式リストの先頭なので単項演算子扱いとなる．
+
+% \paragraph{後置演算子}
+% 後置演算子がOrdじゃなくてCloseな理由？
+% $a!b!$において最初の!の直後に空白を入れるべき．
+
+\paragraph{集合の縦棒（\prettyref{example:set-comprehension}）}
+すでに述べたように，集合の縦棒には，関係演算子扱いの縦棒またはコロン，つまり\cs{mid}や\texttt{:}を使う．
+\begin{LTXexample}[width=.3\textwidth]
+誤：$\{x|x>5\}$\\
+正：$\{x\mid x>5\}$\\
+誤：$\{x\colon \lvert x\rvert>5\}$\\
+正：$\{x:\lvert x\rvert>5\}$
+\end{LTXexample}
+
+さて，集合の中身が縦に長いと，\cs{left} / \cs{right}によって括弧を自動的に伸長させたい．
+その際に縦棒も一緒に伸長させるには，\cs{middle}を使えば良さそうに思える．
+\begin{LTXexample}[width=.3\textwidth]
+誤：$\left\{\dfrac{x}{y}\middle|y\ne 0\right\}$
+\end{LTXexample}
+しかし，単に\texttt{\cs{middle}|}を使うのでは縦棒の前後に適切な空白（Rel前後の空白）が入らない．
+こういう場合は，ダミーのRelを入れてやるとうまくいく．
+\begin{LTXexample}[width=.3\textwidth]
+誤：$\left\{\dfrac{x}{y}\middle|y\ne 0\right\}$\\
+正：$\left\{\dfrac{x}{y}
+  \mathrel{}\middle|\mathrel{}
+  y\ne 0\right\}$\\
+（比較：$\{\dfrac{x}{y}\mid y\ne 0\}$）
+\end{LTXexample}
+参考：八登氏のブログ記事「\href{https://zrbabbler.hatenablog.com/entry/20120411/1334151482}%
+{\cs{middle}であり\cs{mid}であるもの}」
+
+\paragraph{同値関係で割る}
+集合を同値関係で割る場合に
+\verb|X/\sim|と書くと，数式クラスがOrd--Ord--Relとなり，スラッシュとニョロの間に空白が入ってしまうほか，直後の関係演算子とニョロの間が詰まってしまう．
+\verb|X/{\sim}|と書けば，数式クラスはOrd--Ord--Ordとなり，スラッシュとニョロの間に余計な空白は入らず，直後の関係演算子との間に適切な空白が入る．
+\begin{LTXexample}[width=.3\textwidth]
+誤：$X/\sim=\{[x]\mid x\in X\}$\\
+正：$X/{\sim}=\{[x]\mid x\in X\}$
+\end{LTXexample}
+
+\paragraph{整除関係の縦棒}
+整数や多項式などの「割り切る」関係（整除関係）には，縦棒がよく使われる．
+\LaTeX{}での縦棒としては\texttt{|}と\cs{mid}があるが，どちらを使うべきだろうか？
+
+この縦棒は関係演算子であることを考えると，数式クラスがRelである\cs{mid}の方を使うべきである．
+数式の「意味」を意識するなら，自分で
+\verb+\newcommand{\divides}{\mid}+
+と定義して\cs{divides}を使うと良いだろう．
+
+参考：\href{https://blog.miz-ar.info/2018/03/latex-divides-symbol/}{LaTeX での「割り切る」記号 | 雑記帳}
+
+\subsubsection{もっと詳しく知りたい方へ}
+
+こういう話に興味があったら「数式組版」や\textit{The \TeX{}book}を読むと良い．
+
+\begin{itemize}
+\item 木枝祐介，「数式組版」，ラムダノート，2018．
+\item Donald~E. Knuth, \textit{The \TeX book}, Addison-Wesley, 1984.
+\end{itemize}
+
+% \subsection{\TeX 自体を深く知りたい方へ}
+
+% \begin{itemize}
+% \item The \TeX{}book
+% \item \TeX{} by Topic
+% \item \LaTeX の実装：source2e
+% \end{itemize}
+% TA小話
+% TeX WikiのTeX入門
+
+\clearpage
+\subsection{\pTeX{}系列で縦書き等をする場合に発生する問題とその対処}
+% plautopatchの紹介
+
+欧米で開発されているパッケージは日本語組版の事情，特に縦書きを考慮していない場合が多い．
+例えば，\PKG{array}パッケージと，\pLaTeX{}の\PKG{plext}パッケージは，どちらも\LaTeX{}標準の\ENV{tabular}環境を拡張しており，お互いに相容れない．
+他にも\pLaTeX{}で問題が起こりうるパッケージが多数あり，それらに対して対策をするパッケージが開発されている．
+例えば，\PKG{array}パッケージ+\PKG{plext}パッケージの問題に対しては\PKG{plextarray}パッケージ，という具合である．
+
+ただ，問題が起こりうるパッケージに対していちいち対策パッケージを調べて読み込むのは面倒である．
+この手間を省くために山下弘展氏が製作しているのが\href{https://www.ctan.org/pkg/plautopatch}{\PKG{plautopatch}パッケージ}である．
+% https://github.com/aminophen/plautopatch
+% \PKG{plautopatch}を使うには，\cs{documentclass}の前に\verb+\RequirePackage{plautopatch}+を書く．
+\begin{itemize}
+\item 山下弘展「日本語の\LaTeX で幸せになる，かもしれない方法」, TeXConf 2018
+  \url{https://aminophen.github.io/slide/hytexconf18.pdf}
+\end{itemize}
+
+% 関連？
+% pLaTeX の新しいパッケージバンドル「platex-tools」の紹介
+% http://acetaminophen.hatenablog.com/entry/2016/10/17/235850
+
+% 以下はボツ：
+% 高機能作図パッケージ\TikZ{}の機能に，「異なる\TikZ{}図形の位置を参照する」というものがある．
+% \begin{LTXexample}[pos=b]
+% \[a^{\tikz[remember picture] \node[draw,inner sep=1pt] (sisuu) {$\scriptstyle b$};}\]
+% べき乗の\tikz[remember picture,baseline=(kono.base)] \node[draw,inner sep=1pt] (kono) {この};部分を指数と呼ぶ．
+% \tikz[remember picture,overlay] \draw[->] (kono) -- (sisuu);
+% \end{LTXexample}
+% \begin{itemize}
+% \item \href{https://zrbabbler.hatenablog.com/entry/20130222/1361495591}{TikZ は dvipdfmx をどこまでサポートするか？ (1)}
+% \item \href{https://zrbabbler.hatenablog.com/entry/20130302/1362228901}{TikZ は dvipdfmx をどこまでサポートするか？ (2)}
+% \end{itemize}
+% そこで\PKG{pxpgfmark}を使う必要がある……と言いたいところだったが，
+% TeX Live 2018では pgfsys-dvipdfmx.pdf が改修されたのか，pxpgfmarkがなくてもremember picture系の機能が使えるようだ．
+% https://github.com/pgf-tikz/pgf/commit/bf7d99e9b81034a3dfbaa880f19a5f1cd132a546#diff-b929ac9caab8c299d30b6967d4a65e30
+% このコミットで \pdftexversion に対する検査が \pdfsavepos に対する検査に変わったためか．
 
 \newpage
 
 \subsection{難しい小ネタ}
 
-\paragraph{}
+\assignment
 以下の内容のソースファイルを\FNAME{twice.tex}として保存し，タイプセットせよ．
 そして，なぜそのような出力結果が得られるのかを説明せよ．
 \begin{lstlisting}[xleftmargin=3\zw, numbers=left, numberstyle=\tiny]
@@ -1807,7 +2180,7 @@ TODO: 書きたい
 %%%    >
 %%%    > \end{document}
 
-\paragraph{}
+\assignment
 \<\emph{（幻の``\texttt{This can't happen}''を拝もう）}
 
 

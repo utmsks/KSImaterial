@@ -1,17 +1,31 @@
 %#!xelatex
-\documentclass[b5paper]{bxjsarticle} % 日本語用クラスファイル
+\documentclass[b5paper,xelatex,ja=standard]{bxjsarticle} % 日本語用クラスファイル
+
+\usepackage{showexpl}
+\lstset{pos=l, width=.4\textwidth,
+  explpreset={numbers=left,numberstyle=\tiny,literate={\\\\}{}0 }}
+% showexplの出力が邪魔なので表示しない
+\makeatletter\let\SX@Info=\relax\makeatother
 
 % 更新日時の印字に datetime2 パッケージの \DTMnow を使う
-% ただし、 datetime2 パッケージは \today を上書きしようとするので、防止する
-% また、タイムゾーンは印字しない
+% ただし， datetime2 パッケージは \today を上書きしようとするので，防止する
+% また，タイムゾーンは印字しない
 \let\origtoday=\today
 \usepackage[datesep={/},timesep={:}]{datetime2}
 \renewcommand\DTMdisplayzone[2]{}
 \let\today=\origtoday
 
-\usepackage{xltxtra,mystyle}
-%%% listings
+\usepackage{mystyle}
+\usepackage{pxrubrica} % should be loaded after xeCJK package
+
+\usepackage{fontspec}
+\usepackage{unicode-math}
+% \newfontfamily\LatinModernMath{latinmodern-math.otf}
+% \newfontfamily\STIXMath{STIXMath-Regular.otf}
+\newfontfamily\FiraMath{FiraMath-Regular.otf}
+
 \hypersetup{
+  %pdfusetitle, % なぜか効かない
   pdftitle={pTeX系列以外による日本語文書作成},
   pdfkeywords={MiKTeX, pdfTeX, XeTeX, LuaTeX, BXcjkjatype, ZXjatype, LuaTeX-ja}
 }
@@ -74,8 +88,8 @@ TUGboat~\emph{11}, No.~4,  1990.\\
 \item Arno Trautmann, \textit{%
   An overview of \TeX, its children and their friends $\ldots$\,}\\
 \url{http://mirrors.ctan.org/info/tex-overview/tex-overview.pdf}
-\item \href{http://oku.edu.mie-u.ac.jp/~okumura/texwiki/}{\TeX~Wiki}\>
-  中の「Lua\TeX」「\XeTeX」「u\pTeX」「\eTeX」等の各記事
+\item \href{https://texwiki.texjp.org/}{\TeX~Wiki}\>
+  中の「\LuaTeX」「\XeTeX」「\upTeX」「\eTeX」等の各記事
 \end{itemize}
 などを参照．
 
@@ -129,7 +143,7 @@ Last update: \texttt{\DTMnow}.
 \begin{itemize}
  \item \emph{「\TeX が入っている」と「\pTeX が利用できる」とは同義ではない．}\\
 \pTeX 自体は1990年代からあるが，それが「上流」の\TeX~Liveで利用できるようになったのは2010年という
-つい最近である．
+比較的最近である．
 また，すぐ後に述べるMiK\TeX という
 Windows用の\TeX ディストリビューションでは，
 \pTeX は未だに含まれていない．
@@ -145,7 +159,7 @@ u\pTeX で「和文の部分」がUnicode化されたりしているが，これ
 \end{itemize}
 
 
-例えば，\href{http://miktex.org/}{\emph{MiK\TeX}}\>という
+例えば，\href{https://miktex.org/}{\emph{MiK\TeX}}\>という
 海外でよく使われているWindows用の\TeX ディストリビューションがある．
 面白いのは，MiK\TeX のパッケージとしては存在するが
 システムにまだインストールされていないファイルがタイプセット時に
@@ -169,22 +183,23 @@ u\pTeX で「和文の部分」がUnicode化されたりしているが，これ
 \section{予備知識：\eTeX 拡張}
 \label{sec:etex}
 表\>\ref{tab:non-ptex}\>に載せた4つのどの方法でも使えるのが，\emph{\eTeX 拡張}である．
-これはThe NTS team (Peter Breitenlohner et~al.)によって
+これはThe \NTS{} team (Peter Breitenlohner et~al.)によって
 開発された\TeX82の拡張であり，
 一般利用者にとって特に有用なものを挙げると，次のようなものがある．
 \begin{itemize}
 \item \verb!\numexpr 4-(3*2)+\count0!のように内部整数・長さなどを
   式の形で表現できる．
-\item 使用可能なレジスタが各種類ごとに256個から32768個まで激増した．
+\item 使用可能なレジスタが各種類ごとに256個から32768個まで激増した\footnote{%
+  \LuaTeX{}ではさらに65536個まで増えている．}．
 
 これにより，たくさんパッケージ読み込んだときに発生しうる
 \begin{lstlisting}
 ! No room for a new \count .
 \end{lstlisting}
-がほとんど起こらなくなった\footnote{%
-  実際には，このエラーはレジスタ確保用の\emph{マクロ}が出しているため，\LaTeX では
-  \PKG{etex}パッケージなどを読み込むなどしてマクロ側で対応させる必要がある．
-}．
+がほとんど起こらなくなった．
+% 実際には，このエラーはレジスタ確保用の\emph{マクロ}が出している．
+% 以前は\LaTeX では\PKG{etex}パッケージを読み込むなどしてマクロ側で対応させる必要があったが，
+% 最近（2015年以降？）は\LaTeX カーネル自身がe-TeX拡張を検出して対応するようになった．
 
 \item 数式中の「サイズが自動的に変わる括弧」に使われる\verb+\left+・
   \verb+\right+に加えて，\verb+\middle+が利用できるようになった．
@@ -198,10 +213,10 @@ u\pTeX で「和文の部分」がUnicode化されたりしているが，これ
   \middle| \psi \right\rangle
 \end{lstlisting}
   と簡単に組めるようになった%
-  \footnote{なお，集合の内包的記法の時に\texttt{\char92middle}を使うときには
+  \footnote{なお，集合の内包的記法の時に\cs{middle}を使うときには
   周囲の空白に注意が必要である．\\
-  八登氏のブログ記事「\href{http://d.hatena.ne.jp/zrbabbler/20120411/1334151482}%
-  {\texttt{\char92middle}であり\texttt{\char92mid}であるもの}」
+  八登氏のブログ記事「\href{https://zrbabbler.hatenablog.com/entry/20120411/1334151482}%
+  {\cs{middle}であり\cs{mid}であるもの}」
   を参照すること．}．
 \end{itemize}
 \eTeX 拡張は現在開発されている様々な\TeX の拡張において標準的な地位を占めており，
@@ -218,16 +233,16 @@ u\pTeX で「和文の部分」がUnicode化されたりしているが，これ
 \item 日本語が処理できる\pTeX, u\pTeX に関しても例外ではない．「\TeX 実習」のPDFでは
 ごまかしてきたが，\FNAME{platex}, \FNAME{uplatex}と打って
 実際に起動されるプログラムは，\eTeX 拡張が取り込まれた
-\href{http://sourceforge.jp/projects/eptex/wiki/FrontPage}{\emph{$\varepsilon$-\pTeX}},~%
+\href{https://ja.osdn.net/projects/eptex/wiki/FrontPage}{\emph{$\varepsilon$-\pTeX}},~%
 $\varepsilon$-u\pTeX である：
 \begin{lstlisting}
 > platex
-This is e-pTeX, Version 3.14159265-p3.5-130605-2.6 (sjis) (TeX Live 2014
-/W32TeX)
+This is e-pTeX, Version 3.14159265-p3.8.1-180226-2.6 (utf8.sjis)
+ (TeX Live 2018/W32TeX) (preloaded format=platex)
 ...
 > uplatex
-This is e-upTeX, Version 3.14159265-p3.5-u1.11-130605-2.6 (utf8.uptex) (
-TeX Live 2014/W32TeX)
+This is e-upTeX, Version 3.14159265-p3.8.1-u1.23-180226-2.6 (utf8.uptex)
+ (TeX Live 2018/W32TeX) (preloaded format=uplatex)
 ...
 \end{lstlisting}
 \end{itemize}
@@ -263,7 +278,7 @@ Hàn Thế Thành氏による\TeX の拡張であり，海外で主に利用さ�
   to the \TeX\ typesetting system}, dissertation.
   \url{http://www.pragma-ade.com/pdftex/thesis.pdf}
 \item R.~Schlicht, \textit{The \PKG{microtype} package}.
-（\href{http://ctan.org/pkg/microtype}{\PKG{microtype}パッケージ}のドキュメント）
+（\href{https://ctan.org/pkg/microtype}{\PKG{microtype}パッケージ}のドキュメント）
 \end{itemize}
 に詳しい．
 \item \emph{\mathversion{bold}\eTeX 拡張}\>(\S\ref{sec:etex})も搭載されている．
@@ -282,21 +297,23 @@ Hàn Thế Thành氏による\TeX の拡張であり，海外で主に利用さ�
 起動するプログラムは，dvi出力モードの（\eTeX 拡張が有効な）pdf\TeX である：
 \begin{lstlisting}
 > latex
-This is pdfTeX, Version 3.14159265-2.6-1.40.14 (TeX Live 2014/W32TeX)
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018/W32TeX)
+ (preloaded format=latex)
 ...
 \end{lstlisting}
 
 \newpage
 
 \subsection{\PKG{CJK}パッケージと\PKG{BXcjkjatype}パッケージ}
-  \href{http://www.ctan.org/pkg/cjk}{\PKG{CJK}パッケージ}は，
+  \href{https://ctan.org/pkg/cjk}{\PKG{CJK}パッケージ}は，
   欧文用の\LaTeX で中国語・日本語・韓国語の入った
   文書を組版するためのパッケージである．
 \PKG{CJK}パッケージで利用可能な日本語フォントとしては
 \PKG{ipaex-type1}というものがあり，それをインストールした上で
 次の\FNAME{cjktest.tex}を
 \emph{UTF-8}\footnote{%
-バイトオーダーマーク(BOM)をつけるとタイプセットに失敗するので，つけないように注意．
+  \TeX~Live 2018以降であれば，BOMはあってもなくても良い．
+  Mik\TeX{}に関しては，2019年5月時点での最新のMik\TeX{}で試したところ，BOMがあっても問題ないようだ．
 }で作り，
 \begin{lstlisting}[numbers=left,numberstyle=\tiny,xleftmargin=4\jsZw]
 \documentclass{article}
@@ -316,39 +333,30 @@ This is pdfTeX, Version 3.14159265-2.6-1.40.14 (TeX Live 2014/W32TeX)
 しかし，結果を見ると，和文文字と欧文文字の間に入る（通常$1/4$全角の）空白が挿入されなかったり，
 全角コンマと開き鍵括弧の間が間延びしていたりと正しく組版されていない．
 
- 日本語がメインの文書を作成する場合，\href{http://oku.edu.mie-u.ac.jp/~okumura/texwiki/?LaTeX-CJK}%
+ 日本語がメインの文書を作成する場合，\href{https://texwiki.texjp.org/?LaTeX-CJK}%
 {\TeX~Wiki中のページ}によると，八登崇之氏による
 \begin{itemize}
-\item \href{http://zrbabbler.sp.land.to/bxjscls.html}{\PKG{BXjscls}パッケージ}：
+\item \href{https://texwiki.texjp.org/?BXjscls}{\PKG{BXjscls}パッケージ}：% 旧ページ： http://zrbabbler.sp.land.to/bxjscls.html
 「\pLaTeXe 用新ドキュメントクラス」からの派生
-\item \href{http://www.ctan.org/pkg/bxcjkjatype}{\PKG{BXcjkjatype}パッケージ}：
+\item \href{https://ctan.org/pkg/bxcjkjatype}{\PKG{BXcjkjatype}パッケージ}：
 日本語組版に適した\PKG{CJK}パッケージの設定と，上記の問題点の修正
 \end{itemize}
 を利用して
-  \begin{lstlisting}
-\documentclass[pdflatex,jadriver=standard]{bxjsarticle}
+\begin{lstlisting}
+\documentclass[pdflatex,ja=standard]{bxjsarticle}
 \begin{document}
 ...
 \end{document}
-  \end{lstlisting}
-  のようにすればよい，とある．
-だが，残念ながらMik\TeX~2.9では
-  \PKG{BXjscls}のバージョンが古いためにこれではうまくいかず，
-  \begin{lstlisting}
-\documentclass{article} % 欧文用クラスファイル!
-\usepackage[whole]{bxcjkjatype}
-\begin{document}
-...
-\end{document}
-  \end{lstlisting}
-  のようにしないといけないようである．
+\end{lstlisting}
+のようにすればよい．
+この例では\PKG{BXjscls}に適切なクラスオプションを指定しているので，\PKG{CJK}や\PKG{BXcjkjatype}等の必要なパッケージは自動的に読み込まれる．
 
 
-
+\newpage
 \section{\texorpdfstring{\XeTeX}{XeTeX}}
 \label{sec:xetex}
 \subsection{\texorpdfstring{\XeTeX}{XeTeX}とは}
-\href{http://xetex.sourceforge.net/}{\emph{\XeTeX}}~(\texttt{XeTeX})は，\TeX のUnicode拡張であるとともに，
+\href{http://xetex.sourceforge.net/}{\emph{\aruby{\hologo{Xe}}{ズィー}\kern-.15em\relax\TeX}}~(\texttt{XeTeX})は，\TeX のUnicode拡張であるとともに，
 OpenTypeなどの最新のフォント技術に統合させたものであり，次の特徴がある：
 \begin{itemize}
  \item \pdfTeX と同様に，PDFファイルを直接生成\footnote{実際には，
@@ -359,13 +367,13 @@ DVIを拡張した\FNAME{xdv}形式で出力し，それを\FNAME{xdvipdfmx}に�
  \item OS側で使用出来るフォント，例えば「ＭＳ~明朝」，を直に扱える\footnote{%
 従来，\TeX で使用出来るフォントは，OS側で利用できるフォントとは全く独立であり，
 新たなフォントを\TeX で扱えるようにするためには面倒な作業が必要であった．}．
- \item \href{http://freedesktop.org/wiki/Software/HarfBuzz/}{HarfBuzz}という
+ \item \href{https://freedesktop.org/wiki/Software/HarfBuzz/}{HarfBuzz}という
 OpenTypeレイアウトエンジンを採用しており，これによって
 OpenTypeフォント自身に含まれる合字・アクセント位置などの情報が
 利用できる．
 \end{itemize}
 \XeLaTeX（\XeTeX 上で\LaTeX を動かしたもの）上でこれらの機能を扱うために作られたのが，
-\texttt{fontspec}パッケージ(\S\ref{sec:fontspec})である．
+\texttt{fontspec}パッケージ(\S\ref{ssec:fontspec})である．
 \end{itemize}
 日本語で読める\XeTeX に関する情報としては，本文書の最初に挙げたもの以外に
 \begin{itemize}
@@ -388,18 +396,17 @@ OpenTypeフォント自身に含まれる合字・アクセント位置などの
 
 \medskip
 \pLaTeX に匹敵する品質の日本語組版を行うには，
-\href{http://www.ctan.org/pkg/xecjk}{\PKG{xeCJK}パッケージ}（Wen­chang Sun氏ら）や，
+\href{https://ctan.org/pkg/xecjk}{\PKG{xeCJK}パッケージ}（Wen­chang Sun氏ら）や，
 それに日本語用の設定を追加する
 \href{http://zrbabbler.sp.land.to/zxjatype.html}{\PKG{ZXjatype}パッケージ}（八登氏）を
 利用するのが良い．
-\href{http://oku.edu.mie-u.ac.jp/~okumura/texwiki/}{\TeX~Wiki}中の
+\href{https://texwiki.texjp.org/}{\TeX~Wiki}中の
 「xeCJK/ZXjatype」ページには，日本語の情報がある．
 
 クラスファイルも先に紹介した八登氏作の\PKG{BXjscls}を用いて，\emph{UTF-8}で
 以下のように記述するのが手っ取り早い：
 \begin{lstlisting}[numbers=left,numberstyle=\tiny,xleftmargin=4\jsZw]
-\documentclass{bxjsarticle}% 日本語用クラスファイル
-\usepackage{zxjatype}
+\documentclass[xelatex,ja=standard]{bxjsarticle}% 日本語用クラスファイル
 \setjamainfont{IPA明朝}%     \rmfamily に対応．本文など
 \setjasansfont{IPAゴシック}% \sffamily に対応．見出し，強調など
 \setjamonofont{IPAゴシック}% \ttfamily に対応．
@@ -413,6 +420,7 @@ OpenTypeフォント自身に含まれる合字・アクセント位置などの
 誰かが，「あっ」と言った．
 \end{document}
 \end{lstlisting}
+なお，\PKG{BXjscls}に適切なクラスオプションを渡していれば，\PKG{ZXjatype}パッケージは自動的に読み込まれる．
 
 タイプセットは
 \begin{lstlisting}
@@ -424,8 +432,7 @@ OpenTypeフォント自身に含まれる合字・アクセント位置などの
 \PKG{ZXjatype}パッケージは内部で\PKG{fontspec}パッケージを読み込んでいるため，
 欧文フォントもフォント名で指定できる．
 \begin{lstlisting}[numbers=left,numberstyle=\tiny,xleftmargin=4\jsZw]
-\documentclass{bxjsarticle}
-\usepackage{zxjatype}
+\documentclass[xelatex,ja=standard]{bxjsarticle}
 \setjamainfont{IPA明朝}%     \rmfamily に対応．本文など
 \setjasansfont{IPAゴシック}% \sffamily に対応．見出し，強調など
 \setjamonofont{IPAゴシック}% \ttfamily に対応．
@@ -445,7 +452,14 @@ Unicodeにおいて同じコードに割り当てられてしまうような細�
 文字の直後に\texttt{U+E0100}--\texttt{U+E01EF}のいずれかを続けたものである．
 
 \XeTeX では利用するフォントがIVSに対応していれば，それ以外には何もしなくてもIVSが利用できる．
-例えば，\texttt{U+E01$xy$}を<\texttt{xy}>と表記した時，
+例えば，\texttt{U+E01$xy$}を<\texttt{xy}>と表記した時\footnote{%
+  \LuaTeX{}と\XeTeX{}ではUnicodeコードポイントの入力に%
+  \texttt{\textasciicircum\textasciicircum\textasciicircum\textasciicircum xxxx}（\texttt{\textasciicircum} 4個に16進小文字4桁）%
+  または%
+  \texttt{\textasciicircum\textasciicircum\textasciicircum\textasciicircum\textasciicircum xxxxxx}（\texttt{\textasciicircum} 6個に16進小文字6桁）%
+  という表記ができるので，%
+  \TeX{}ソース中に「\texttt{\setxkanjiskip{0pt}東京都葛󠄁\textasciicircum\textasciicircum\textasciicircum\textasciicircum\textasciicircum 0e0101飾区}」と書くこともできる．
+}，
 \begin{lstlisting}
  \Large 東京都葛<01>飾区，奈良県葛<00>城市
 \end{lstlisting}
@@ -462,7 +476,7 @@ Unicodeにおいて同じコードに割り当てられてしまうような細�
 \subsection{\LuaTeX とは}
 \label{ssec:luatex}
 現在開発中の，\pdfTeX~2.0とでも言うべきものが
-\href{http://luatex.org/}{\emph{\LuaTeX}}である．
+\href{http://www.luatex.org/}{\emph{\LuaTeX}}である．
 いつものように，\LuaLaTeX は\LuaTeX 上で\LaTeX を動作させたものであり，また，
 \LuaTeX で\PKG{hyperref}パッケージを使用する際には
 \texttt{dvipdfmx}オプションを指定してはならず，
@@ -493,12 +507,19 @@ $x=0.73908513321516$である．
 途中「\verb+\directlua{ ... }+」の中身がLuaで書かれたスクリプトであり，
 二分法を用いて$x=\cos x$の数値解を求めている．
 
+% \medskip
+% Luaスクリプトを使うと，\TeX{}言語で実装するのが難しい複雑な処理（従来は外部コマンドに頼る必要があった）を簡単に記述することができる．
+% markdownパッケージ（他のTeXエンジンでも-shell-escapeすれば利用できる）
+% TikZのgraphdrawing
+% \TikZ{}パッケージの機能の大半は他の\TeX{}エンジンでも使用できるが，graphdrawingはLuaを使うので\LuaTeX{}が必須である．
+
+
 \medskip
 さらに，このLuaスクリプトを使い，従来では\TeX ソースではいじれなかった
 （プログラムとして\TeX を改造するしかなかった）\emph{内部の挙動を
 カスタマイズできる}という特徴がある．以下のような活用例がある：
 \begin{description}
- \item[\href{http://www.ctan.org/pkg/lua-visual-debug}{\PKG{lua-visual-debug}パッケージ}]
+ \item[\href{https://ctan.org/pkg/lua-visual-debug}{\PKG{lua-visual-debug}パッケージ}]
 見た目ではわからないグルー（伸縮可能な空白）やカーン（幅一定の詰め物）などを
 PDF上で確認できる．
  \item[\PKG{fontspec}パッケージと\PKG{luaotfload}パッケージ]
@@ -508,7 +529,7 @@ PDF上で確認できる．
 それに相当する部分が\PKG{luaotfload}パッケージである．
 \PKG{luaotfload}パッケージは，巨大なLuaスクリプトを用いて，\LuaTeX において
 OpenTypeの各種機能を扱えるようにしている．
-\item[\href{http://sourceforge.jp/projects/luatex-ja/wiki/FrontPage}{\emph{\LuaTeX-ja}パッケージ}]
+\item[\href{https://ja.osdn.net/projects/luatex-ja/wiki/FrontPage}{\emph{\LuaTeX-ja}パッケージ}]
 \pTeX 並み，あるいはそれ以上の品質・自由度の日本語組版を目指したパッケージであり，
 以下で詳しく解説する．
 
@@ -542,7 +563,7 @@ OpenTypeの各種機能を扱えるようにしている．
 \]
 ちょっとチェックしちゃった．
 
-$\pi \simeq \directlua{tex.print(math.pi())}$
+$\pi \simeq \directlua{tex.print(math.pi)}$
 \end{document}
 \end{lstlisting}
 その後
@@ -551,18 +572,15 @@ $\pi \simeq \directlua{tex.print(math.pi())}$
 \end{lstlisting}
 でタイプセットすると，\FNAME{lualatex_test.pdf}が生成されるはずである．
 \begin{curve}
-\TeX~Liveではこれでよいが，MiK\TeX では実はうまくいかない．\\\
+\TeX~Liveではこれでよいが，MiK\TeX では実はうまくいかない．\\
+% Mik\TeX にはなぜかltjsclassesのクラスファイルが収録されていないため
 \end{curve}
 
 \medskip
-\LuaTeX-jaは，\PKG{fontspec}パッケージも自動で読み込まず，また
-標準では和文フォントは埋め込まない（\pLaTeX の標準と同じ）ことになっている．
-だが，「\TeX 実習」で述べたように，表示の面から
-PDF内に日本語フォントを埋め込む方がよい場合がある．
-\LuaTeX-jaに関しては，もう一つの理由からも\emph{和文フォント埋め込みを
-推奨したい}．それは，フォント内部に含まれている各種の組版情報を利用するためである．
-
-和文フォントを埋め込む設定にする場合，
+\LuaTeX-jaは，標準でIPAexフォントを埋め込む（\pLaTeX{}の標準と同じ）ことになっている．
+% TeX Live 2015以降はIPAexフォントがデフォルト．
+% fontspecは自動では読み込まれない．
+フォントを変更する場合，
 \PKG{luatexja-fontspec}パッケージを読み込むのが簡便である．
 このパッケージを読み込むと，\texttt{fontspec}パッケージと
 その和文への拡張が使用可能となる：
@@ -591,22 +609,24 @@ Times New RomanとIPA明朝．
 開発版では一定の条件下で\texttt{\textbackslash setmonojfont}が使用可能になっている．}．
 \end{itemize}
 
-\medskip
-ちなみに，\LuaTeX 本体はIVS~(\S\ref{ssec:ivs})にはまだ未対応のようであるが，
-現行の\LuaTeX-jaでは
+よく使われるフォントの組み合わせに関しては，\PKG{luatexja-preset}パッケージを使って1行で指定することもできる．
+例えば，IPAフォントを使う場合には\PKG{luatexja-preset}パッケージへのクラスオプションとして\texttt{ipa}を指定すれば良い：
 \begin{lstlisting}
-\usepackage{luatexja-otf}
-\directlua{luatexja.otf.enable_ivs()}
+% \usepackage{luatexja-fontspec}
+% \setmainjfont{IPAMincho}
+% \setsansjfont{IPAGothic}
+% の代わり：
+\usepackage[ipa]{luatexja-preset}
 \end{lstlisting}
-をプリアンブルに書き加えることでIVSが使用可能になる．
 
 \newpage
-\section{\PKG{fontspec}パッケージ}
-\label{sec:fontspec}
+\section{\LuaTeX{}や\texorpdfstring{\XeTeX}{XeTeX}で使える便利なパッケージ}
+\subsection{\PKG{fontspec}パッケージ}
+\label{ssec:fontspec}
 \href{https://github.com/wspr/fontspec/}{\PKG{fontspec}パッケージ}は，
 \XeTeX と\LuaTeX において簡単にOpenTypeフォントやTrueTypeフォントを扱うためのパッケージである．
 \S\ref{ssec:luatex}で述べたように，\LuaTeX では内部処理に
-\href{http://www.ctan.org/pkg/luaotfload}{\PKG{luaotfload}パッケージ}を使っている．
+\href{https://ctan.org/pkg/luaotfload}{\PKG{luaotfload}パッケージ}を使っている．
 
 \medskip
 \PKG{fontspec} パッケージで標準のフォントを指定するには次の3命令を使う：
@@ -634,5 +654,27 @@ Times New RomanとIPA明朝．
 詳細は\PKG{fontspec}パッケージのマニュアルや以前に挙げた八登氏の
 「\href{http://zrbabbler.sp.land.to/xelatex.html}{\XeLaTeX で日本語する件について}」
 中の記述を参照して欲しい．
+
+\subsection{\PKG{unicode-math}パッケージ}
+\label{ssec:unicode-math}
+
+Unicodeにはたくさんの数学記号が収録されている．
+せっかくUnicodeに数学記号があるのだから，\TeX{}ソース中にそれらを直接記述できると便利である．
+また，数式用フォントとしてSTIXフォントやFira Mathなどの数式対応OpenTypeフォントを使えると良い．
+\LuaTeX{}と\XeTeX{}では，\PKG{unicode-math}パッケージを使うとこれらが可能になる．
+
+\begin{LTXexample}[caption={1行目は普通の\TeX{}の書き方，2行目は$\sum$と$\infty$にUnicode文字を直接使った書き方},basicstyle=\FiraMath]
+\[e=\sum_{n=0}^\infty \frac{1}{n!}\]
+\[e=∑_{n=0}^∞ \frac{1}{n!}\]
+\end{LTXexample}
+% できればLTXexampleのソースコード部分にInconsolataを使いたかったが，シグマや無限大記号が豆腐になってしまった．
+% 数学記号の部分だけを別のフォントに変えられたら良いのだが，やり方がよくわからないのでソースコード部分全体でFira Mathを使うことにする．
+
+数式用フォントを変更するには，\cs{setmathfont}コマンドを使う．
+注意点として，文書中で\cs{setmathfont}を呼ばなくても，\PKG{unicode-math}を読み込むだけで数式フォントは従来のComputer Modernから変更される\footnote{%
+  デフォルトではLatin Modern Mathになる．
+}．
+その結果，\cs{mathbb}などの一部の書体が変化して見えることがある．
+% https://tex.stackexchange.com/questions/360607/unicode-math-but-ordinary-blackboard-bold
 
 \end{document}
