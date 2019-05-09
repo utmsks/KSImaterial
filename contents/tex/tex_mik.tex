@@ -1,6 +1,12 @@
 %#!xelatex
 \documentclass[b5paper,xelatex,ja=standard]{bxjsarticle} % 日本語用クラスファイル
 
+\usepackage{showexpl}
+\lstset{pos=l, width=.4\textwidth,
+  explpreset={numbers=left,numberstyle=\tiny,literate={\\\\}{}0 }}
+% showexplの出力が邪魔なので表示しない
+\makeatletter\let\SX@Info=\relax\makeatother
+
 % 更新日時の印字に datetime2 パッケージの \DTMnow を使う
 % ただし， datetime2 パッケージは \today を上書きしようとするので，防止する
 % また，タイムゾーンは印字しない
@@ -11,6 +17,12 @@
 
 \usepackage{mystyle}
 \usepackage{pxrubrica} % should be loaded after xeCJK package
+
+\usepackage{fontspec}
+\usepackage{unicode-math}
+% \newfontfamily\LatinModernMath{latinmodern-math.otf}
+% \newfontfamily\STIXMath{STIXMath-Regular.otf}
+\newfontfamily\FiraMath{FiraMath-Regular.otf}
 
 \hypersetup{
   %pdfusetitle, % なぜか効かない
@@ -643,22 +655,26 @@ Times New RomanとIPA明朝．
 「\href{http://zrbabbler.sp.land.to/xelatex.html}{\XeLaTeX で日本語する件について}」
 中の記述を参照して欲しい．
 
-\newpage
 \subsection{\PKG{unicode-math}パッケージ}
 \label{ssec:unicode-math}
 
-実習資料では「数式中には和文文字は書けない」と書いた．
-一方，Unicodeにはたくさんの数学記号が収録されている．
+Unicodeにはたくさんの数学記号が収録されている．
 せっかくUnicodeに数学記号があるのだから，\TeX{}ソース中にそれらを直接記述できると便利である．
-\LuaTeX{}と\XeTeX{}では，\PKG{unicode-math}パッケージを使うとUnicodeの数学記号を直接記述することができるようになる．
-また，PDF中の数式からコピー＆ペーストした時にUnicodeの数学記号が含まれる文字列がペーストされるようになる．
+また，数式用フォントとしてSTIXフォントやFira Mathなどの数式対応OpenTypeフォントを使えると良い．
+\LuaTeX{}と\XeTeX{}では，\PKG{unicode-math}パッケージを使うとこれらが可能になる．
 
-TODO: 書きたい
+\begin{LTXexample}[caption={1行目は普通の\TeX{}の書き方，2行目は$\sum$と$\infty$にUnicode文字を直接使った書き方},basicstyle=\FiraMath]
+\[e=\sum_{n=0}^\infty \frac{1}{n!}\]
+\[e=∑_{n=0}^∞ \frac{1}{n!}\]
+\end{LTXexample}
+% できればLTXexampleのソースコード部分にInconsolataを使いたかったが，シグマや無限大記号が豆腐になってしまった．
+% 数学記号の部分だけを別のフォントに変えられたら良いのだが，やり方がよくわからないのでソースコード部分全体でFira Mathを使うことにする．
 
-\newpage
-\subsection{\TikZ{}パッケージ}
-\TikZ{}パッケージの機能の大半は他の\TeX{}エンジンでも使用できるが，graphdrawingはLuaを使うので\LuaTeX{}が必須である．
-
-TODO: 書きたい
+数式用フォントを変更するには，\cs{setmathfont}コマンドを使う．
+注意点として，文書中で\cs{setmathfont}を呼ばなくても，\PKG{unicode-math}を読み込むだけで数式フォントは従来のComputer Modernから変更される\footnote{%
+  デフォルトではLatin Modern Mathになる．
+}．
+その結果，\cs{mathbb}などの一部の書体が変化して見えることがある．
+% https://tex.stackexchange.com/questions/360607/unicode-math-but-ordinary-blackboard-bold
 
 \end{document}
