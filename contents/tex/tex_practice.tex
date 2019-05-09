@@ -2079,6 +2079,44 @@ Open直後のBinは（単項演算子として使用されたと判断され）O
 % TA小話
 % TeX WikiのTeX入門
 
+\clearpage
+\subsection{\pTeX{}系列で縦書き等をする場合に発生する問題とその対処}
+% plautopatchの紹介
+
+欧米で開発されているパッケージは日本語組版の事情，特に縦書きを考慮していない場合が多い．
+例えば，\PKG{array}パッケージと，\pLaTeX{}の\PKG{plext}パッケージは，どちらも\LaTeX{}標準の\ENV{tabular}環境を拡張しており，お互いに相容れない．
+他にも\pLaTeX{}で問題が起こりうるパッケージが多数あり，それらに対して対策をするパッケージが開発されている．
+例えば，\PKG{array}パッケージ+\PKG{plext}パッケージの問題に対しては\PKG{plextarray}パッケージ，という具合である．
+
+ただ，問題が起こりうるパッケージに対していちいち対策パッケージを調べて読み込むのは面倒である．
+この手間を省くために山下弘展氏が製作しているのが\href{https://www.ctan.org/pkg/plautopatch}{\PKG{plautopatch}パッケージ}である．
+% https://github.com/aminophen/plautopatch
+% \PKG{plautopatch}を使うには，\cs{documentclass}の前に\verb+\RequirePackage{plautopatch}+を書く．
+\begin{itemize}
+\item 山下弘展「日本語の\LaTeX で幸せになる，かもしれない方法」, TeXConf 2018
+  \url{https://aminophen.github.io/slide/hytexconf18.pdf}
+\end{itemize}
+
+% 関連？
+% pLaTeX の新しいパッケージバンドル「platex-tools」の紹介
+% http://acetaminophen.hatenablog.com/entry/2016/10/17/235850
+
+% 以下はボツ：
+% 高機能作図パッケージ\TikZ{}の機能に，「異なる\TikZ{}図形の位置を参照する」というものがある．
+% \begin{LTXexample}[pos=b]
+% \[a^{\tikz[remember picture] \node[draw,inner sep=1pt] (sisuu) {$\scriptstyle b$};}\]
+% べき乗の\tikz[remember picture,baseline=(kono.base)] \node[draw,inner sep=1pt] (kono) {この};部分を指数と呼ぶ．
+% \tikz[remember picture,overlay] \draw[->] (kono) -- (sisuu);
+% \end{LTXexample}
+% \begin{itemize}
+% \item \href{https://zrbabbler.hatenablog.com/entry/20130222/1361495591}{TikZ は dvipdfmx をどこまでサポートするか？ (1)}
+% \item \href{https://zrbabbler.hatenablog.com/entry/20130302/1362228901}{TikZ は dvipdfmx をどこまでサポートするか？ (2)}
+% \end{itemize}
+% そこで\PKG{pxpgfmark}を使う必要がある……と言いたいところだったが，
+% TeX Live 2018では pgfsys-dvipdfmx.pdf が改修されたのか，pxpgfmarkがなくてもremember picture系の機能が使えるようだ．
+% https://github.com/pgf-tikz/pgf/commit/bf7d99e9b81034a3dfbaa880f19a5f1cd132a546#diff-b929ac9caab8c299d30b6967d4a65e30
+% このコミットで \pdftexversion に対する検査が \pdfsavepos に対する検査に変わったためか．
+
 \newpage
 
 \subsection{難しい小ネタ}
