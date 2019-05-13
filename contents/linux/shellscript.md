@@ -168,8 +168,8 @@ $ for i in *
 ```
 $ for i in *
 > do
-> echo making backup of $;i
-> cp $i $;i.bak
+> echo making backup of $i
+> cp $i $i.bak
 > done
 ```
 cpをmvに変えれば名前の変更ができます。
