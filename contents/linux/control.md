@@ -83,7 +83,7 @@ fi
 if 条件
 then
  文
-elif
+elif 条件
  文
 else
  文
@@ -106,9 +106,9 @@ $ cat areyouthere
 #! /bin/sh
 if grep $1 /etc/passwd > /dev/null
 then
-echo "yes"
+ echo "yes"
 else
-echo "no"
+ echo "no"
 fi
 $ ./areyouthere ichii
 yes
