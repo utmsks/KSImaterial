@@ -48,7 +48,7 @@
   - [fileコマンドを使ってシェルスクリプトを探す](contents/linux/count.md)
 - [正規表現とsed](contents/linux/regexp.md)
 - おまけ：[kで始まる単語の数](contents/linux/kwords.md)
-- おまけ：[シェルスクリプト作成演習] (https://github.com/shingoichii/shellscriptpractice)
+- おまけ：[シェルスクリプト作成演習](https://github.com/shingoichii/shellscriptpractice)
 
 ### スクリプト言語プログラミング
 - [スクリプト言語プログラミング](contents/script/top.md)
