@@ -25,6 +25,7 @@
 
 ### MathLibre
 - [USBメモリからの起動手順](https://docs.google.com/presentation/d/1Hlz_6NpWCqOpGR78u4KOTNPCoO-N1DJ0vZxbEUCG8zc/edit?usp=sharing)
+- [Hyper-Vを用いてMathlibreを実行する](contents/mathlibre/hyper-v.md)
 
 ### Linux
 - [Ubuntu インストール (2018)](contents/linux/install.md)
