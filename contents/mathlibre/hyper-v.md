@@ -2,7 +2,7 @@
 
 Hyper-Vの作業を始める前に、以下の場所からMathlibreのDVDイメージファイルをダウンロードしておく。
 ```
-  ftp://download.ks.prv/mirror/mathlibre/mathlibre-debian-amd64-20190227-ja.iso
+ftp://download.ks.prv/mirror/mathlibre/mathlibre-debian-amd64-20190227-ja.iso
 ```
 
 ダウンロード先のフォルダ名を覚えておくこと。
