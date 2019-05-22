@@ -1,6 +1,7 @@
 # Hyper-Vを用いてMathlibreを実行する
 
 Hyper-Vの作業を始める前に、以下の場所からMathlibreのDVDイメージファイルをダウンロードしておく。
+（204号室内ネットワーク限定）
 ```
 ftp://download.ks.prv/mirror/mathlibre/mathlibre-debian-amd64-20190227-ja.iso
 ```
@@ -9,6 +10,7 @@ ftp://download.ks.prv/mirror/mathlibre/mathlibre-debian-amd64-20190227-ja.iso
 1. 「Windowsの機能の有効化と無効化」を開く。
 画面左下の「ここに入力して検索」を使うとよい。  
 1. 「Hyper-V」にチェックを入れる。
+（もしここが灰色になっていてチェックを入れられない時はTAを呼ぶ。）
 1. OKして再起動。
 1. 「Hyper-Vマネージャー」を起動。
 1. 左パネルにあるPCの名前をクリック。
