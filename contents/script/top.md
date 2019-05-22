@@ -21,11 +21,3 @@
 上の資料を読んで (もしくはすでに特定の言語に知っていて) 言語に慣れてきた人向けです。
 
 * [競技プログラミング](other/competitive.md) (2018 年度作成)
-
-## 注意
-
-現在、計算数学の実習資料集はサイト移行中です。
-2017 年度以前のスクリプト言語に関する資料集は以下のリンク先にあります。
-各ページは上のリンクからも辿れるようになっています。
-
-* [https://sites.google.com/a/utmsks.net/material/home/language-list](https://sites.google.com/a/utmsks.net/material/home/language-list)
