@@ -26,6 +26,13 @@
 ### MathLibre
 - [USBメモリからの起動手順](https://docs.google.com/presentation/d/1Hlz_6NpWCqOpGR78u4KOTNPCoO-N1DJ0vZxbEUCG8zc/edit?usp=sharing)
 - [Hyper-Vを用いてMathlibreを実行する](contents/mathlibre/hyper-v.md)
+- 数学ソフトウェア 参考資料（最近更新されていないので、内容が古くなっているかもしれません）
+    - [Octave入門](contents/mathlibre/octave/octave.md)
+    - [Maxima入門](contents/mathlibre/maxima/intro.md)
+    - [Reduce入門](contents/mathlibre/reduce/intro.md)
+    - [Risa/Asirはじめの一歩](contents/mathlibre/risa-asir/intro.md)
+    - [R Starter](contents/mathlibre/r/starter.md)
+    - [CHomP（ホモロジーの計算）](contents/mathlibre/chomp/README.md)
 
 ### Linux
 - [Ubuntu インストール (2018)](contents/linux/install.md)
