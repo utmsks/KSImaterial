@@ -55,7 +55,7 @@ __他のPC等にコピーしたり、他人に見せたりしてはいけませ�
 `id_rsa.pub`には公開鍵が入っています。
 1. 公開鍵をサーバにコピーする。
 ```
-$ scp ~/.ssh/id_rsa.pub ksuserNN@exp.ks.prv -p 外部SSHポート番号
+$ scp ~/.ssh/id_rsa.pub ksuserNN@exp.ks.prv: -P 外部SSHポート番号
 ```
 リターンを押す前に、コピー元が公開鍵（`id_rsa.pub`）になっていることを指さし確認する！
 1. もう一度サーバにログインする。
@@ -71,7 +71,10 @@ $ mkdir .ssh
 $ cat id_rsa.pub >> .ssh/authorized_keys
 $ rm id_rsa.pub
 ```
-1. 一度logout.
+（気になる人に：最初、.ssh/authorized_keysは存在しないので、
+`$ mv id_rsa.pub .ssh/authorized_keys`でもいいのだけれど、
+将来サーバを利用することになるといずれ複数のPCの公開鍵を登録することになり、その時は`>>`で追記するのがいいのでこうしてみた）
+1. 一度logoutする。
 1. もう一度サーバにログインする。今度はパスワードは聞かれないかわりに、公開鍵を作った時のパスフレーズが聞かれるはず。
 ```
 $ ssh ksuserNN@exp.ks.prv -p 外部SSHポート番号
