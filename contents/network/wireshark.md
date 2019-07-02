@@ -7,9 +7,9 @@ Wiresharkは、ネットワークを流れるデータを取得、解析して�
 多種多様な制御情報が付加されています。
 Wiresharkはその制御情報を解析し、見やすいように表示する機能を持っています。
 ネットワーク管理にはもとより、サーバ運用やトラブルシューティングにも不可欠の道具です。
-Linux, MacOS, 各種Unixの他Windowsでも動作します。なお、Windowsでは同様のことを行うMicrosoft Network Monitorというソフトウェアもあります。
+Linux, MacOS, 各種Unixの他Windowsでも動作します。なお、Windowsでは同様のことを行うMicrosoft Message Analyzerというソフトウェアもあります。
 
-なお、ネットワークを流れるデータを取り込むことを「キャプチャする」と言います。
+なお、ネットワークを流れるデータを取り込むことを「キャプチャcaptureする」と言います。
 
 ## 注意
 東京大学情報セキュリティポリシー実施手順（一般操作機器・端末編）には、「自端末宛以外のパケットを傍受するアプリケーション（パケットスニファ等）を利用してはならない」等の規定があります。
@@ -17,12 +17,16 @@ Linux, MacOS, 各種Unixの他Windowsでも動作します。なお、Windowsで
 Wiresharkはここで言う「自端末宛以外のパケットを傍受するアプリケーション」に該当します。
 
 204号室に設置されている実習用PCは実験・実習用機器で、一般操作端末ではないと解されるし、教育・研究目的で対象とするネットワークの管理者が許可したものでもあるので、その上でWiresharkを動かすのは問題ありません。
-しかし、自分のノートPCをUTokyo-Wifiに接続してWiresharkを動作させるのは上記規定に抵触しますので行わないでください。
+しかし、自分のノートPCをUTokyo-Wifiなどの学内ネットワークに接続してWiresharkを動作させるのは上記規定に抵触しますので行わないでください。
 
-## インストール
-Wiresharkをインストールして使えるようにする。
+## インストールと起動
+Wiresharkをインストールして使えるようにします。
 
-Ubuntuでは、
+### Ubuntu
+Microsoftストアアプリとして導入したUbuntu上ではWiresharkは使えません。
+Windows版Wiresharkを使ってください。
+
+ネイティブまたは仮想マシン上のUbuntuでは以下のようにしてインストールできます。
 ```
 $ sudo apt install wireshark-qt
 ```
@@ -36,9 +40,9 @@ $ sudo gpasswd -a username wireshark
 $ newgrp wireshark
 ```
 
-なお、開発・配布元のWebページ http://www.wireshark.org/ も見ておくこと。 Windows版バイナリはここでダウンロードできる。
+なお、開発・配布元のWebページ http://www.wireshark.org/ も見ておくこと。
 
-## 起動
+#### 起動
 Unix/LinuxではWiresharkを起動するのにroot特権が必要だが、
 上のようにインストールするとsudoせずに起動できる。
 ```
@@ -46,6 +50,9 @@ $ wireshark
 ```
 wiresharkが起動し、ウィンドウが一つ開く。
 以後、このウィンドウ内で操作する。
+
+### Windows
+開発・配布元のWebページ http://www.wireshark.org/ からインストーラをダウンロードし、実行する。
 
 ## キャプチャ開始
 1. 画面中央にインターフェイスのリストが出るので、一番上のenp0??を選ぶ。
