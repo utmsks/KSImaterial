@@ -69,6 +69,7 @@
 - [Wireshark](contents/network/wireshark.md)
 
 ### クライアント・サーバ
+- [SSHによるサーバ利用](contents/network/ssh.md)
 - [githubへのアクセス](contents/network/github.md)
 - [shogi-serverによる将棋対戦](contents/network/shogi.md)
 - [Shell scriptで液晶ディスプレイを操作する](https://github.com/utmsks/lcdshell)
