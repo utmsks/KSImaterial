@@ -20,12 +20,12 @@ sshを起動し、サーバにコマンドを入力するウィンドウを開�
 * ネイティブまたは仮想マシン上のLinuxの場合は、端末またはターミナル
 
 ## 手順
-1. パスワードを使ってログインする。
+１．パスワードを使ってログインする。
 ```
 $ ssh ksuserNN@ksexp.ks.prv -p 外部SSHポート番号
 Password: <<与えられた初期パスワードを入力>>
 ```
-1. ログインしたら、すぐパスワードを変更する。
+２．ログインしたら、すぐパスワードを変更する。
 ```
 $ passwd
 Changing password for ksuserNN
@@ -33,11 +33,11 @@ Current password: <<初期パスワードを入力>>
 New password: <<新しいパスワード>>
 Retype new password: <<もういちど>>
 ```
-1. いったんログアウトする。
+３．いったんログアウトする。
 ```
 $ logout
 ```
-1. 実習用PC上で公開鍵暗号の設定をする。
+４．実習用PC上で公開鍵暗号の設定をする。
 Linux, Windows共通です。
 ```
 $ ssh-keygen
@@ -45,7 +45,7 @@ Generating public/private rsa key pair.
 Enter file in which to save the hey (...): <<リターン>>
 Enter passphrase (empty for no passphrase): <<適当な長さのパスフレーズ>>
 ```
-1. 確認
+５．確認
 ```
 $ ls ~/.ssh
 id_rsa  id_rsa.pub
@@ -53,17 +53,17 @@ id_rsa  id_rsa.pub
 `id_rsa`には秘密鍵が入っています。
 __他のPC等にコピーしたり、他人に見せたりしてはいけません。__
 `id_rsa.pub`には公開鍵が入っています。
-1. 公開鍵をサーバにコピーする。
+６．公開鍵をサーバにコピーする。
 ```
 $ scp  -P 外部SSHポート番号 ~/.ssh/id_rsa.pub ksuserNN@ksexp.ks.prv:
 ```
 リターンを押す前に、コピー元が公開鍵（`id_rsa.pub`）になっていることを指さし確認する！
-1. もう一度サーバにログインする。
+７．もう一度サーバにログインする。
 ```
 $ ssh ksuserNN@ksexp.ks.prv -p 外部SSHポート番号
 Password: <<さっき変更した新しいパスワード>>
 ```
-1. 公開鍵がコピーされていることを確認し、この鍵を使えるようにする。
+８．公開鍵がコピーされていることを確認し、この鍵を使えるようにする。
 ```
 $ ls
 id_rsa.pub
@@ -74,14 +74,14 @@ $ rm id_rsa.pub
 （気になる人に：最初、.ssh/authorized_keysは存在しないので、
 `$ mv id_rsa.pub .ssh/authorized_keys`でもいいのだけれど、
 将来サーバを利用することになるといずれ複数のPCの公開鍵を登録することになり、その時は`>>`で追記するのがいいのでこうしてみた）
-1. 一度logoutする。
-1. もう一度サーバにログインする。今度はパスワードは聞かれないかわりに、公開鍵を作った時のパスフレーズが聞かれるはず。
+９．一度logoutする。
+１０．もう一度サーバにログインする。今度はパスワードは聞かれないかわりに、公開鍵を作った時のパスフレーズが聞かれるはず。
 ```
 $ ssh ksuserNN@ksexp.ks.prv -p 外部SSHポート番号
 Enter passphrase for key '...': <<パスフレーズ>>
 ```
 もしパスワードを聞くプロンプトが出たら、authorized_keysの設定が間違っている（ファイル名違いが多い）ので（パスワードを入力してログインして）確認する。
-1. 公開鍵認証でのログインができたら、パスワードでのログインを不可にする。
+１１．公開鍵認証でのログインができたら、パスワードでのログインを不可にする。
 ```
 $ sudo vi /etc/ssh/sshd_config
 ```
@@ -99,5 +99,5 @@ PasswordAuthentication no
 ```
 $ sudo systemctl restart sshd
 ```
-1. ログアウトして、再度ログインしてみる。
+１２．ログアウトして、再度ログインしてみる。
 公開鍵のパスフレーズをわざとまちがえて、パスワードを聞いてこないことを確かめるとよい。
