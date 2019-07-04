@@ -53,11 +53,13 @@ id_rsa  id_rsa.pub
 `id_rsa`には秘密鍵が入っています。
 __他のPC等にコピーしたり、他人に見せたりしてはいけません。__
 `id_rsa.pub`には公開鍵が入っています。
+
 ６．公開鍵をサーバにコピーする。
 ```
 $ scp  -P 外部SSHポート番号 ~/.ssh/id_rsa.pub ksuserNN@ksexp.ks.prv:
 ```
 リターンを押す前に、コピー元が公開鍵（`id_rsa.pub`）になっていることを指さし確認する！
+
 ７．もう一度サーバにログインする。
 ```
 $ ssh ksuserNN@ksexp.ks.prv -p 外部SSHポート番号
