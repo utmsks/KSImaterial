@@ -22,7 +22,7 @@ sshを起動し、サーバにコマンドを入力するウィンドウを開�
 ## 手順
 1. パスワードを使ってログインする。
 ```
-$ ssh ksuserNN@exp.ks.prv -p 外部SSHポート番号
+$ ssh ksuserNN@ksexp.ks.prv -p 外部SSHポート番号
 Password: <<与えられた初期パスワードを入力>>
 ```
 1. ログインしたら、すぐパスワードを変更する。
@@ -55,12 +55,12 @@ __他のPC等にコピーしたり、他人に見せたりしてはいけませ�
 `id_rsa.pub`には公開鍵が入っています。
 1. 公開鍵をサーバにコピーする。
 ```
-$ scp ~/.ssh/id_rsa.pub ksuserNN@exp.ks.prv: -P 外部SSHポート番号
+$ scp  -P 外部SSHポート番号 ~/.ssh/id_rsa.pub ksuserNN@ksexp.ks.prv:
 ```
 リターンを押す前に、コピー元が公開鍵（`id_rsa.pub`）になっていることを指さし確認する！
 1. もう一度サーバにログインする。
 ```
-$ ssh ksuserNN@exp.ks.prv -p 外部SSHポート番号
+$ ssh ksuserNN@ksexp.ks.prv -p 外部SSHポート番号
 Password: <<さっき変更した新しいパスワード>>
 ```
 1. 公開鍵がコピーされていることを確認し、この鍵を使えるようにする。
@@ -77,7 +77,7 @@ $ rm id_rsa.pub
 1. 一度logoutする。
 1. もう一度サーバにログインする。今度はパスワードは聞かれないかわりに、公開鍵を作った時のパスフレーズが聞かれるはず。
 ```
-$ ssh ksuserNN@exp.ks.prv -p 外部SSHポート番号
+$ ssh ksuserNN@ksexp.ks.prv -p 外部SSHポート番号
 Enter passphrase for key '...': <<パスフレーズ>>
 ```
 もしパスワードを聞くプロンプトが出たら、authorized_keysの設定が間違っている（ファイル名違いが多い）ので（パスワードを入力してログインして）確認する。
