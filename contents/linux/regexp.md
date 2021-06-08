@@ -5,21 +5,20 @@
 ## 始める前に
 作業用の材料として[Project Gutenberg](http://www.gutenberg.org)に収録されている[Moby Word Lists](http://www.gutenberg.org/ebooks/3201)に含まれる辞書ファイルを利用します。
 （Project Gutenberg, Moby Word List
-及びその作者の[Grady Ward](http://www.gutenberg.org/ebooks/author/1132)については各自調べておいてください。）
+及びその作者の[Grady Ward](http://www.gutenberg.org/ebooks/author/1132)については自分で調べておいてください。）
 
-実習用Linuxシステムの各自のホームディレクトリの下に適当な名前の作業用ディレクトリを作り、そこに次のリンク先（204号室実習用ネットワーク内からのみ）にある説明ファイル(`3201.txt`)及びアーカイブファイル(`files.zip`)をダウンロード・展開してください。
+以下のファイルを取得し、展開してください。
 
-[ftp://download.ks.prv/mirror/Text/](ftp://download.ks.prv/mirror/Text/)
+- [https://www.gutenberg.org/files/3201/files.zip](https://www.gutenberg.org/files/3201/files.zip)
+- [https://www.gutenberg.org/files/3201/3201.zip](https://www.gutenberg.org/files/3201/3201.zip)
 
-展開の仕方がわからない人は `$ man unzip` またはTAに尋ねてください。
-
-展開すると`files`というディレクトリができます。
+展開すると`3201.txt`というファイルと`files`というディレクトリができます。
 入っているファイルの説明は`3201.txt`（の末尾の方）にあります。
 
-実習には、`COMMONS.TXT`に含まれている辞書の見出し語データを用います。
+実習には、`COMMON.TXT`に含まれている辞書の見出し語データを用います。
 このままでは使いにくいので、次のおまじないを行って整形します。
 ```
-$ sed -e 's/\r$//' -e '/^-/d' -e '/-$/d' files/COMMONS.TXT > dict
+$ sed -e 's/\r$//' -e '/^-/d' -e '/-$/d' files/COMMON.TXT > dict
 ```
 以下の実行例では、整形したデータを上のように`dict`というファイルに入れたものと仮定します。
 （このおまじないの意味はsedの項目の後で説明します。）
